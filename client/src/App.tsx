@@ -7,6 +7,8 @@ import { Switch, Route } from 'wouter';
 import LoginPage from '@/pages/login';
 import HomeStable from '@/pages/home-stable';
 import DocumentsPage from '@/pages/documents-page';
+import CalculatorPage from '@/pages/calculator-page';
+import IsoAmpCalculator from '@/pages/iso-amp-calculator';
 import NotFound from '@/pages/not-found';
 // import { UnifiedAdminPanel } from '@/pages/unified-admin-panel'; // Disabled during Phase 2 cleanup
 // import { DragDropProvider } from '@/components/drag-drop-provider'; // Removed during Phase 2 cleanup
@@ -50,6 +52,8 @@ function AppContent() {
           <Route path="/" component={() => <HomeStable />} />
           <Route path="/chat/:chatId" component={() => <HomeStable />} />
           <Route path="/documents" component={() => <DocumentsPage />} />
+          <Route path="/calculator" component={() => <CalculatorPage />} />
+          <Route path="/iso-amp-calculator" component={() => <IsoAmpCalculator />} />
           {/* Admin panel temporarily disabled during Phase 2 cleanup */}
           {/* {(user && (user.role === 'admin' || user.role === 'client-admin' || user.role === 'dev-admin')) && (
             <Route path="/admin" component={() => <UnifiedAdminPanel />} />
