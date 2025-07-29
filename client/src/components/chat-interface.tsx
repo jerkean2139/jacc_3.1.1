@@ -88,25 +88,25 @@ const conversationStarters = [
     id: "rates",
     icon: Calculator,
     text: "I need help calculating processing rates and finding competitive pricing",
-    color: "bg-blue-500 hover:bg-blue-600 hover:text-white"
+    color: "bg-blue-600 hover:bg-blue-700"
   },
   {
-    id: "tracerpay", 
-    icon: TrendingUp,
-    text: "Show me how TracerPay beats my current processor and saves money",
-    color: "bg-green-500 hover:bg-green-600 hover:text-white"
+    id: "compare", 
+    icon: BarChart3,
+    text: "I need to compare payment processors - can you help me analyze different options?",
+    color: "bg-green-600 hover:bg-green-700"
   },
   {
     id: "proposal",
-    icon: BarChart3,
-    text: "I need help creating a merchant proposal with competitive rates and terms",
-    color: "bg-purple-500 hover:bg-purple-600 hover:text-white"
+    icon: TrendingUp,
+    text: "Help me create a professional proposal for a new merchant",
+    color: "bg-orange-600 hover:bg-orange-700"
   },
   {
     id: "marketing",
     icon: Brain,
-    text: "Create Marketing Strategy & Content",
-    color: "bg-purple-600 hover:bg-purple-700 hover:text-white"
+    text: "Let's Talk Marketing",
+    color: "bg-purple-600 hover:bg-purple-700"
   }
 ];
 
@@ -171,9 +171,11 @@ const conversationStarters = [
         <div className="max-w-4xl w-full space-y-8">
           <div className="text-center space-y-4">
             <div className="flex justify-center">
-              <div className="bg-blue-600 p-4 rounded-full shadow-lg">
-                <Brain className="w-12 h-12 text-white" />
-              </div>
+              <img 
+                src="/jacc-logo.jpg" 
+                alt="JACC Logo" 
+                className="w-20 h-20 rounded-full shadow-lg object-cover"
+              />
             </div>
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
               Welcome to JACC
@@ -181,9 +183,6 @@ const conversationStarters = [
             <p className="text-lg text-slate-600 dark:text-slate-300">
               Your AI-Powered Merchant Services Assistant
             </p>
-            <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 px-4 py-2 rounded-lg inline-block">
-              <strong>DEBUG:</strong> Welcome screen is displaying (no active chat)
-            </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
@@ -205,6 +204,33 @@ const conversationStarters = [
                 </button>
               );
             })}
+          </div>
+
+          {/* Add a chat input box on the welcome screen */}
+          <div className="border-t border-slate-200 dark:border-slate-700 p-4 mt-8">
+            <form onSubmit={handleSubmit} className="flex gap-2">
+              <Textarea
+                ref={textareaRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Or type your question here..."
+                className="flex-1 min-h-[44px] max-h-20 resize-none"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSubmit(e);
+                  }
+                }}
+              />
+              <Button
+                type="submit"
+                disabled={!input.trim() || isProcessing}
+                size="icon"
+                className="h-11 w-11"
+              >
+                <Send className="w-4 h-4" />
+              </Button>
+            </form>
           </div>
         </div>
       </div>
