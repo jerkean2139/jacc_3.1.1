@@ -30,12 +30,18 @@ function App() {
 }
 
 function AppContent() {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, error } = useAuth();
+  
+  // Debug logging for white screen issues
+  console.log('App render debug:', { user: !!user, isLoading, error, location: window.location.pathname });
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading JACC...</p>
+        </div>
       </div>
     );
   }

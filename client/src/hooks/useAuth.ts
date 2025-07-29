@@ -98,6 +98,7 @@ export function useAuth() {
   return {
     user,
     isLoading,
+    error,
     isAuthenticated: !!user && !error,
     loginMutation,
     logoutMutation,
