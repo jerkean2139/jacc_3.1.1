@@ -2,7 +2,6 @@ import { Link, useLocation } from "wouter";
 import { Badge } from "@/components/ui/badge";
 import { 
   MessageCircle, 
-  Calculator, 
   BookOpen, 
   Settings,
   Plus,
@@ -50,19 +49,11 @@ const navItems: NavItem[] = [
     label: "Admin",
     adminOnly: true
   },
-  {
-    href: "/calculator",
-    icon: Calculator,
-    label: "Calc",
-    disabled: false,
-    comingSoon: false,
-    hideForAdmin: false
-  },
+
   {
     href: "/vendor-intelligence",
     icon: TrendingUp,
     label: "Intel",
-    label: "Intelligence",
     disabled: true,
     comingSoon: true,
     hideForAdmin: true
@@ -71,7 +62,6 @@ const navItems: NavItem[] = [
     href: "/competitive-intelligence",
     icon: BarChart3,
     label: "Stats",
-    label: "Analytics",
     disabled: true,
     comingSoon: true,
     hideForAdmin: true

@@ -14,7 +14,6 @@ import {
   Trophy, 
   Target, 
   Brain,
-  Calculator,
   DollarSign,
   BarChart3,
   Calendar,
@@ -100,10 +99,10 @@ export default function DynamicWelcomeDashboard({
   const getSmartConversationStarters = () => {
     const starters = [
       {
-        title: "Calculate Processing Rates",
+        title: "Analyze Pricing",
         description: "Get competitive pricing analysis",
-        message: "I need help calculating processing rates and finding competitive pricing",
-        icon: <Calculator className="w-5 h-5" />,
+        message: "I need help analyzing processing rates and finding competitive pricing",
+        icon: <DollarSign className="w-5 h-5" />,
         color: "bg-blue-600 hover:bg-blue-700"
       },
       {
@@ -133,8 +132,8 @@ export default function DynamicWelcomeDashboard({
 
   // Calculate user's rank from leaderboard
   const getUserRank = () => {
-    if (!leaderboardData?.leaderboard || !user?.id) return null;
-    const userIndex = leaderboardData.leaderboard.findIndex((u: any) => u.id === user.id);
+    if (!leaderboardData || !Array.isArray(leaderboardData) || !user?.id) return null;
+    const userIndex = leaderboardData.findIndex((u: any) => u.id === user.id);
     return userIndex !== -1 ? userIndex + 1 : null;
   };
 
