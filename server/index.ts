@@ -120,18 +120,12 @@
           res.status(status).json({ message });
         });
 
-        // Dev vs Prod: Vite or static + HTTP server
+        // Dev vs Prod: Always use Vite for Replit environment
         const http = await import("http");
-        let server;
-        if (app.get("env") === "development") {
-          server = http.createServer(app);
-          await setupVite(app, server);
-        } else {
-          // Production: configure server and serve static
-          await configureProductionServer();
-          serveStatic(app);
-          server = http.createServer(app);
-        }
+        let server = http.createServer(app);
+        
+        // Always use Vite middleware in Replit to avoid deployment white screen
+        await setupVite(app, server);
 
         // Listen
         const port = process.env.PORT ? parseInt(process.env.PORT) : 5000;
