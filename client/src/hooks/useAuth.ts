@@ -13,6 +13,17 @@ export function useAuth() {
     gcTime: 0, // Disable cache for auth state
     queryFn: async () => {
       console.log('Checking user authentication...');
+      const response = await fetch('/api/user', {
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        throw new Error('Not authenticated');
+      }
+      
+      const userData = await response.json();
+      console.log('User data retrieved:', userData);
+      return userData;
     },
   });
 
