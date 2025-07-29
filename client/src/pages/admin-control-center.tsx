@@ -24,14 +24,14 @@ import {
 } from 'lucide-react';
 import DocumentDragDrop from '@/components/ui/document-drag-drop';
 import DocumentPreviewModal from '@/components/ui/document-preview-modal';
-import DocumentUpload from '@/components/document-upload-new';
+import DocumentUpload from '@/components/document-upload-simple';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { ContentQualityManager } from '@/components/admin/ContentQualityManager';
 import AdvancedOCRManager from '@/components/admin/AdvancedOCRManager';
-import { RichTextEditor } from '@/components/admin/RichTextEditor';
+import { RichTextEditor } from '@/components/admin/SimpleTextEditor';
 import AIProfileCreator from '@/components/ai-profile-creator';
 
 interface FAQ {
@@ -476,10 +476,7 @@ export default function AdminControlCenter() {
 
   // AI Configuration mutations
   const updateAiConfigMutation = useMutation({
-    mutationFn: (config: any) => apiRequest('/api/admin/ai-config', {
-      method: 'PUT',
-      body: JSON.stringify(config),
-    }),
+    mutationFn: (config: any) => apiRequest('PUT', '/api/admin/ai-config', config),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/ai-config'] });
       toast({
@@ -499,10 +496,7 @@ export default function AdminControlCenter() {
   // User Management Mutations
   const createUserMutation = useMutation({
     mutationFn: async (userData: any) => {
-      return apiRequest('/api/admin/users', {
-        method: 'POST',
-        body: JSON.stringify(userData)
-      });
+      return apiRequest('POST', '/api/admin/users', userData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
@@ -541,10 +535,7 @@ export default function AdminControlCenter() {
 
   const updateUserMutation = useMutation({
     mutationFn: async ({ id, userData }: { id: string; userData: any }) => {
-      return apiRequest(`/api/admin/users/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify(userData)
-      });
+      return apiRequest('PUT', `/api/admin/users/${id}`, userData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
@@ -566,9 +557,7 @@ export default function AdminControlCenter() {
 
   const deleteUserMutation = useMutation({
     mutationFn: async (userId: string) => {
-      return apiRequest(`/api/admin/users/${userId}`, {
-        method: 'DELETE'
-      });
+      return apiRequest('DELETE', `/api/admin/users/${userId}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
@@ -588,10 +577,7 @@ export default function AdminControlCenter() {
 
   const resetPasswordMutation = useMutation({
     mutationFn: async ({ userId, newPassword }: { userId: string; newPassword: string }) => {
-      return apiRequest(`/api/admin/users/${userId}/reset-password`, {
-        method: 'POST',
-        body: JSON.stringify({ newPassword })
-      });
+      return apiRequest('POST', `/api/admin/users/${userId}/reset-password`, { newPassword });
     },
     onSuccess: () => {
       setShowResetPassword(false);
@@ -613,10 +599,7 @@ export default function AdminControlCenter() {
 
   // Update search parameters mutation
   const updateSearchParamsMutation = useMutation({
-    mutationFn: (params: any) => apiRequest('/api/admin/search-params', {
-      method: 'PUT',
-      body: JSON.stringify(params),
-    }),
+    mutationFn: (params: any) => apiRequest('PUT', '/api/admin/search-params', params),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/search-params'] });
       toast({
@@ -635,9 +618,7 @@ export default function AdminControlCenter() {
 
   // Set default model mutation
   const setDefaultModelMutation = useMutation({
-    mutationFn: (modelId: string) => apiRequest(`/api/admin/ai-models/${modelId}/set-default`, {
-      method: 'POST',
-    }),
+    mutationFn: (modelId: string) => apiRequest('POST', `/api/admin/ai-models/${modelId}/set-default`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/ai-models'] });
       toast({
@@ -657,9 +638,7 @@ export default function AdminControlCenter() {
   // Google Sheets sync mutation
   const syncGoogleSheetsMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest('/api/admin/google-sheets/sync', {
-        method: 'POST'
-      });
+      const response = await apiRequest('POST', '/api/admin/google-sheets/sync');
       return response;
     },
     onSuccess: () => {
@@ -685,10 +664,7 @@ export default function AdminControlCenter() {
   // Save Google Sheets config mutation
   const saveGoogleSheetsConfigMutation = useMutation({
     mutationFn: async (config: any) => {
-      const response = await apiRequest('/api/admin/google-sheets/config', {
-        method: 'POST',
-        body: JSON.stringify(config)
-      });
+      const response = await apiRequest('POST', '/api/admin/google-sheets/config', config);
       return response;
     },
     onSuccess: () => {
@@ -712,10 +688,7 @@ export default function AdminControlCenter() {
   // Validate spreadsheet mutation
   const validateSpreadsheetMutation = useMutation({
     mutationFn: async (spreadsheetId: string) => {
-      const response = await apiRequest('/api/admin/google-sheets/validate', {
-        method: 'POST',
-        body: JSON.stringify({ spreadsheetId })
-      });
+      const response = await apiRequest('POST', '/api/admin/google-sheets/validate', { spreadsheetId });
       return response;
     },
     onSuccess: (data: any) => {
