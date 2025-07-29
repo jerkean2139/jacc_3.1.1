@@ -61,18 +61,12 @@ function AppContent() {
           <Route path="/calculator" component={() => <CalculatorPage />} />
           <Route path="/iso-amp-calculator" component={() => <IsoAmpCalculator />} />
           {/* Admin Control Center Routes */}
-          <Route path="/admin" component={() => {
-            if (user && (user.role === 'admin' || user.role === 'client-admin' || user.role === 'dev-admin')) {
-              return <AdminPanelWorking />;
-            }
-            return <NotFound />;
-          }} />
-          <Route path="/admin-control-center" component={() => {
-            if (user && (user.role === 'admin' || user.role === 'client-admin' || user.role === 'dev-admin')) {
-              return <AdminPanelWorking />;
-            }
-            return <NotFound />;
-          }} />
+          {user && (user.role === 'admin' || user.role === 'client-admin' || user.role === 'dev-admin') && (
+            <>
+              <Route path="/admin" component={AdminPanelWorking} />
+              <Route path="/admin-control-center" component={AdminPanelWorking} />
+            </>
+          )}
         </>
       )}
       <Route component={() => <NotFound />} />

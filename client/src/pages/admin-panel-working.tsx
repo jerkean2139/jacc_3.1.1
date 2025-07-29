@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -28,31 +29,34 @@ import {
   AlertCircle,
   CheckCircle,
   Clock,
-  TrendingUp
+  TrendingUp,
+  ArrowLeft
 } from "lucide-react";
 
 export function AdminPanelWorking() {
-  console.log('AdminPanelWorking component rendering...');
   const [activeTab, setActiveTab] = useState("overview");
   const [newQuestion, setNewQuestion] = useState("");
   const [newAnswer, setNewAnswer] = useState("");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Basic data queries
-  const { data: faqData = [], isLoading: faqLoading } = useQuery({
+  // Basic data queries with error handling
+  const { data: faqData = [], isLoading: faqLoading, error: faqError } = useQuery({
     queryKey: ['/api/admin/faq'],
     retry: false,
+    staleTime: 0,
   });
 
-  const { data: documentsData = [], isLoading: docsLoading } = useQuery({
+  const { data: documentsData = [], isLoading: docsLoading, error: docsError } = useQuery({
     queryKey: ['/api/admin/documents'],
     retry: false,
+    staleTime: 0,
   });
 
-  const { data: systemHealth } = useQuery({
+  const { data: systemHealth, error: healthError } = useQuery({
     queryKey: ['/api/admin/system/health'],
     retry: false,
+    staleTime: 30000, // Cache health data for 30 seconds
   });
 
   // Add FAQ mutation
@@ -93,15 +97,25 @@ export function AdminPanelWorking() {
       <div className="container mx-auto p-6">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <Shield className="w-8 h-8 text-blue-600" />
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
-              JACC Admin Control Center
-            </h1>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <Shield className="w-8 h-8 text-blue-600" />
+              <div>
+                <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
+                  JACC Admin Control Center
+                </h1>
+                <p className="text-slate-600 dark:text-slate-300">
+                  Manage your AI-powered merchant services platform
+                </p>
+              </div>
+            </div>
+            <Link href="/">
+              <Button variant="outline" className="flex items-center gap-2">
+                <ArrowLeft className="w-4 h-4" />
+                Back to Chat
+              </Button>
+            </Link>
           </div>
-          <p className="text-slate-600 dark:text-slate-300">
-            Manage your AI-powered merchant services platform
-          </p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -133,8 +147,18 @@ export function AdminPanelWorking() {
                   <MessageSquare className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{Array.isArray(faqData) ? faqData.length : 0}</div>
-                  <p className="text-xs text-muted-foreground">Total knowledge base entries</p>
+                  <div className="text-2xl font-bold">
+                    {faqLoading ? (
+                      <RefreshCw className="w-6 h-6 animate-spin" />
+                    ) : faqError ? (
+                      <span className="text-red-500">Error</span>
+                    ) : (
+                      Array.isArray(faqData) ? faqData.length : 0
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {faqError ? "Failed to load FAQ data" : "Total knowledge base entries"}
+                  </p>
                 </CardContent>
               </Card>
 
@@ -144,8 +168,18 @@ export function AdminPanelWorking() {
                   <FileText className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{Array.isArray(documentsData) ? documentsData.length : 0}</div>
-                  <p className="text-xs text-muted-foreground">Uploaded documents</p>
+                  <div className="text-2xl font-bold">
+                    {docsLoading ? (
+                      <RefreshCw className="w-6 h-6 animate-spin" />
+                    ) : docsError ? (
+                      <span className="text-red-500">Error</span>
+                    ) : (
+                      Array.isArray(documentsData) ? documentsData.length : 0
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {docsError ? "Failed to load document data" : "Uploaded documents"}
+                  </p>
                 </CardContent>
               </Card>
 
@@ -156,7 +190,12 @@ export function AdminPanelWorking() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {systemHealth?.overallHealth === 'healthy' ? (
+                    {healthError ? (
+                      <Badge variant="outline" className="bg-yellow-500">
+                        <Clock className="w-3 h-3 mr-1" />
+                        Unknown
+                      </Badge>
+                    ) : (systemHealth as any)?.overall === 'healthy' || (systemHealth as any)?.systems ? (
                       <Badge variant="default" className="bg-green-500">
                         <CheckCircle className="w-3 h-3 mr-1" />
                         Healthy
@@ -168,7 +207,12 @@ export function AdminPanelWorking() {
                       </Badge>
                     )}
                   </div>
-                  <p className="text-xs text-muted-foreground">Overall system status</p>
+                  <p className="text-xs text-muted-foreground">
+                    {(systemHealth as any)?.systems ? 
+                      `DB: ${(systemHealth as any).systems.database?.status || 'unknown'} | AI: Active` : 
+                      "Overall system status"
+                    }
+                  </p>
                 </CardContent>
               </Card>
 
@@ -276,9 +320,16 @@ export function AdminPanelWorking() {
                         </div>
                       ))}
                     </div>
+                  ) : faqError ? (
+                    <div className="text-center py-8">
+                      <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
+                      <p className="text-slate-500">Failed to load FAQ entries</p>
+                      <p className="text-xs text-slate-400 mt-1">Check API connection and authentication</p>
+                    </div>
                   ) : (
                     <div className="text-center py-8 text-slate-500">
-                      No FAQ entries found. Add your first entry above.
+                      <MessageSquare className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                      <p>No FAQ entries found. Add your first entry above.</p>
                     </div>
                   )}
                 </CardContent>
