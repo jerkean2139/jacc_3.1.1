@@ -53,13 +53,8 @@ export const queryClient = new QueryClient({
       retryDelay: 1000, // 1 second delay between retries
     },
     mutations: {
-      retry: 1,
+      retry: false,
       retryDelay: 1000,
-      staleTime: Infinity,
-      retry: false,
-    },
-    mutations: {
-      retry: false,
     },
   },
 });
