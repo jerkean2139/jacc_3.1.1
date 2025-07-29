@@ -110,5 +110,160 @@ const conversationStarters = [
   }
 ];
 
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
+  // Handle sending messages
+  const sendMessage = async (messageText: string) => {
+    if (!messageText.trim()) return;
+    
+    setIsProcessing(true);
+    try {
+      if (!chatId && onNewChatWithMessage) {
+        await onNewChatWithMessage(messageText);
+      } else if (chatId) {
+        await fetch(`/api/chats/${chatId}/messages`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            content: messageText,
+            role: 'user'
+          })
+        });
+        refetch();
+        onChatUpdate();
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send message",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isProcessing) return;
+    
+    const messageText = input.trim();
+    setInput("");
+    await sendMessage(messageText);
+  };
+
+  const handleConversationStarter = async (text: string) => {
+    await sendMessage(text);
+  };
+
+  if (!chatId) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center p-6 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
+        <div className="max-w-4xl w-full space-y-8">
+          <div className="text-center space-y-4">
+            <div className="flex justify-center">
+              <div className="bg-blue-600 p-4 rounded-full">
+                <Brain className="w-12 h-12 text-white" />
+              </div>
+            </div>
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
+              Welcome to JACC
+            </h1>
+            <p className="text-lg text-slate-600 dark:text-slate-300">
+              Your AI-Powered Merchant Services Assistant
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {conversationStarters.map((starter) => {
+              const IconComponent = starter.icon;
+              return (
+                <button
+                  key={starter.id}
+                  onClick={() => handleConversationStarter(starter.text)}
+                  className={`p-6 rounded-xl border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all duration-200 text-left group ${starter.color} text-white`}
+                  disabled={isProcessing}
+                >
+                  <div className="flex items-start space-x-4">
+                    <IconComponent className="w-8 h-8 flex-shrink-0" />
+                    <span className="text-base font-medium leading-relaxed">
+                      {starter.text}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex-1 flex flex-col h-full bg-white dark:bg-slate-900">
+      {/* Messages Area */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {isLoading ? (
+          <div className="flex justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          </div>
+        ) : messages.length === 0 ? (
+          <div className="text-center text-slate-500 dark:text-slate-400 py-8">
+            No messages yet. Start a conversation!
+          </div>
+        ) : (
+          messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`max-w-[80%] rounded-lg p-4 ${
+                  message.role === 'user'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white'
+                }`}
+              >
+                <MessageContent content={message.content} />
+              </div>
+            </div>
+          ))
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input Area */}
+      <div className="border-t border-slate-200 dark:border-slate-700 p-4">
+        <form onSubmit={handleSubmit} className="flex gap-2">
+          <Textarea
+            ref={textareaRef}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type your message..."
+            className="flex-1 min-h-[44px] max-h-32 resize-none"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(e);
+              }
+            }}
+          />
+          <Button
+            type="submit"
+            disabled={!input.trim() || isProcessing}
+            size="icon"
+            className="h-11 w-11"
+          >
+            <Send className="w-4 h-4" />
+          </Button>
+        </form>
+      </div>
+    </div>
+  );
 }

@@ -261,8 +261,6 @@ Would you like me to run a competitive analysis and show you better processing o
                 user={user}
                 chats={chats as any[]}
                 folders={folders as any[]}
-                chats={chats}
-                folders={folders}
                 activeChatId={activeChatId}
                 onNewChat={handleNewChat}
                 onChatSelect={handleChatSelect}
@@ -290,7 +288,6 @@ Would you like me to run a competitive analysis and show you better processing o
       </div>
 
       {/* Mobile Chat Area */}
-      <div className="lg:hidden flex-1 h-[calc(100vh-64px-80px)] w-full overflow-hidden flex flex-col">
       <div className="lg:hidden flex-1 h-[calc(100vh-80px)]">
         <ChatInterface 
           chatId={activeChatId} 
@@ -307,8 +304,6 @@ Would you like me to run a competitive analysis and show you better processing o
             user={user}
             chats={chats as any[]}
             folders={folders as any[]}
-            chats={chats}
-            folders={folders}
             activeChatId={activeChatId}
             onNewChat={handleNewChat}
             onChatSelect={handleChatSelect}
@@ -369,7 +364,6 @@ Would you like me to run a competitive analysis and show you better processing o
           </div>
         </DialogContent>
       </Dialog>
-    </div>
     </div>
   );
 }
