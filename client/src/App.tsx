@@ -10,7 +10,7 @@ import DocumentsPage from '@/pages/documents-page';
 import CalculatorPage from '@/pages/calculator-page';
 import IsoAmpCalculator from '@/pages/iso-amp-calculator';
 import NotFound from '@/pages/not-found';
-// import { UnifiedAdminPanel } from '@/pages/unified-admin-panel'; // Disabled during Phase 2 cleanup
+import { AdminPanelWorking } from '@/pages/admin-panel-working';
 // import { DragDropProvider } from '@/components/drag-drop-provider'; // Removed during Phase 2 cleanup
 // import { GamificationProvider } from '@/components/gamification-provider'; // Removed during Phase 2 cleanup
 import PWAStatus from '@/components/pwa-status';
@@ -60,10 +60,19 @@ function AppContent() {
           <Route path="/documents" component={() => <DocumentsPage />} />
           <Route path="/calculator" component={() => <CalculatorPage />} />
           <Route path="/iso-amp-calculator" component={() => <IsoAmpCalculator />} />
-          {/* Admin panel temporarily disabled during Phase 2 cleanup */}
-          {/* {(user && (user.role === 'admin' || user.role === 'client-admin' || user.role === 'dev-admin')) && (
-            <Route path="/admin" component={() => <UnifiedAdminPanel />} />
-          )} */}
+          {/* Admin Control Center Routes */}
+          <Route path="/admin" component={() => {
+            if (user && (user.role === 'admin' || user.role === 'client-admin' || user.role === 'dev-admin')) {
+              return <AdminPanelWorking />;
+            }
+            return <NotFound />;
+          }} />
+          <Route path="/admin-control-center" component={() => {
+            if (user && (user.role === 'admin' || user.role === 'client-admin' || user.role === 'dev-admin')) {
+              return <AdminPanelWorking />;
+            }
+            return <NotFound />;
+          }} />
         </>
       )}
       <Route component={() => <NotFound />} />
