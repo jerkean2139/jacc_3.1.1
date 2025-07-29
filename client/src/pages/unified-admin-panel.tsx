@@ -412,8 +412,6 @@ export function UnifiedAdminPanel() {
     });
   };
 
-  const queryClient = useQueryClient();
-
   // Data fetching
   const { data: faqData = [] } = useQuery({
     queryKey: ['/api/admin/faq'],
@@ -534,7 +532,6 @@ export function UnifiedAdminPanel() {
     retry: false,
   });
 
-  const { data: testingData, isLoading: testingLoading } = useQuery<any>({
   const { data: testingData, isLoading: testingLoading } = useQuery({
     queryKey: ['/api/testing/dashboard'],
     retry: false,
@@ -801,7 +798,6 @@ export function UnifiedAdminPanel() {
   });
 
   const testDashboardData = testingData || {};
-  const summary = (testingData as any)?.summary || {
   const summary = testingData?.summary || {
     totalScenarios: 0,
     passedScenarios: 0,
@@ -992,8 +988,6 @@ export function UnifiedAdminPanel() {
 
 
   // Delete chat mutation (removed duplicate)
-  const scenarios: TestScenario[] = testingData?.scenarios || [];
-  const recentResults = testingData?.recentResults || [];
 
   // Mutations
   const runTestMutation = useMutation({
@@ -1331,9 +1325,6 @@ export function UnifiedAdminPanel() {
                 <div className="text-2xl font-bold">{Array.isArray(faqData) ? faqData.length : 0}</div>
                 <p className="text-xs text-muted-foreground">
                   {Array.isArray(faqData) ? faqData.filter((f: any) => f.isActive).length : 0} active
-                <div className="text-2xl font-bold">{faqData.length}</div>
-                <p className="text-xs text-muted-foreground">
-                  {faqData.filter((f: FAQ) => f.isActive).length} active
                 </p>
               </CardContent>
             </Card>
@@ -1347,9 +1338,6 @@ export function UnifiedAdminPanel() {
                 <div className="text-2xl font-bold">{Array.isArray(documentsData) ? documentsData.length : 0}</div>
                 <p className="text-xs text-muted-foreground">
                   {Array.isArray(documentsData) ? (documentsData.reduce((sum: number, doc: any) => sum + (doc.size || 0), 0) / 1024 / 1024).toFixed(1) : '0.0'} MB total
-                <div className="text-2xl font-bold">{documentsData.length}</div>
-                <p className="text-xs text-muted-foreground">
-                  {(documentsData.reduce((sum: number, doc: any) => sum + (doc.size || 0), 0) / 1024 / 1024).toFixed(1)} MB total
                 </p>
               </CardContent>
             </Card>
@@ -1360,9 +1348,6 @@ export function UnifiedAdminPanel() {
                 <Target className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{testDashboardData?.summary?.totalScenarios || 0}</div>
-                <p className="text-xs text-muted-foreground">
-                  {testDashboardData?.summary?.passed || 0} passed
                 <div className="text-2xl font-bold">{summary.totalScenarios}</div>
                 <p className="text-xs text-muted-foreground">
                   {summary.passedScenarios} passed
@@ -1379,9 +1364,6 @@ export function UnifiedAdminPanel() {
                 <div className="text-2xl font-bold">{Array.isArray(chatMonitoringData) ? chatMonitoringData.length : 0}</div>
                 <p className="text-xs text-muted-foreground">
                   {Array.isArray(chatMonitoringData) ? chatMonitoringData.filter((chat: any) => chat.firstUserMessage).length : 0} with messages
-                <div className="text-2xl font-bold">{chatMonitoringData.length}</div>
-                <p className="text-xs text-muted-foreground">
-                  {chatMonitoringData.filter((chat: any) => chat.firstUserMessage).length} with messages
                 </p>
               </CardContent>
             </Card>
@@ -1509,23 +1491,6 @@ export function UnifiedAdminPanel() {
               <Button 
                 onClick={() => setActiveSection('documents')}
                 className="flex items-center gap-2 h-16 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Button 
-                onClick={() => setActiveSection('testing')}
-                className="flex items-center gap-2 h-16"
-              >
-                <PlayCircle className="h-5 w-5" />
-                Run All Tests
-              </Button>
-              <Button 
-                variant="outline"
-                onClick={() => setActiveSection('documents')}
-                className="flex items-center gap-2 h-16"
               >
                 <Upload className="h-5 w-5" />
                 Upload Documents
@@ -1537,21 +1502,6 @@ export function UnifiedAdminPanel() {
               >
                 <BarChart3 className="h-5 w-5" />
                 View Analytics
-              <Button 
-                variant="outline"
-                onClick={() => setActiveSection('qa')}
-                className="flex items-center gap-2 h-16"
-              >
-                <Plus className="h-5 w-5" />
-                Add FAQ
-              </Button>
-              <Button 
-                variant="outline"
-                onClick={() => setActiveSection('monitoring')}
-                className="flex items-center gap-2 h-16"
-              >
-                <Activity className="h-5 w-5" />
-                View Live Chats
               </Button>
             </CardContent>
           </Card>
@@ -1604,7 +1554,6 @@ export function UnifiedAdminPanel() {
         <TabsContent value="qa" className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">Q&A Knowledge Base Management</h2>
-            <h2 className="text-2xl font-bold">Q&A Knowledge Base</h2>
             <div className="flex gap-2">
               <Input
                 placeholder="Search FAQs..."
@@ -1626,14 +1575,6 @@ export function UnifiedAdminPanel() {
             {/* FAQ Management Tab */}
             <TabsContent value="faq" className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Add FAQ
-              </Button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left Side - Q&A Knowledge Base Entry Form */}
             <div className="space-y-4">
               <Card>

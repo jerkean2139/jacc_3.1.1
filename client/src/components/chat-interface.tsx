@@ -192,12 +192,27 @@ const conversationStarters = [
                 <button
                   key={starter.id}
                   onClick={() => handleConversationStarter(starter.text)}
-                  className={`p-6 rounded-xl border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all duration-200 text-left group ${starter.color} text-white`}
+                  className="p-6 rounded-xl border-2 hover:shadow-lg transition-all duration-300 text-left group bg-white dark:bg-slate-800 hover:scale-105"
+                  style={{
+                    borderColor: starter.id === '1' ? 'hsl(var(--navy-600))' : 
+                                starter.id === '2' ? 'hsl(var(--green-400))' : 
+                                starter.id === '3' ? 'hsl(var(--navy-600))' : 
+                                'hsl(var(--green-400))',
+                    borderWidth: '2px'
+                  }}
                   disabled={isProcessing}
                 >
                   <div className="flex items-start space-x-4">
-                    <IconComponent className="w-8 h-8 flex-shrink-0" />
-                    <span className="text-base font-medium leading-relaxed">
+                    <IconComponent 
+                      className="w-8 h-8 flex-shrink-0" 
+                      style={{
+                        color: starter.id === '1' ? 'hsl(var(--navy-600))' : 
+                               starter.id === '2' ? 'hsl(var(--green-400))' : 
+                               starter.id === '3' ? 'hsl(var(--navy-600))' : 
+                               'hsl(var(--green-400))'
+                      }}
+                    />
+                    <span className="text-base font-medium leading-relaxed text-slate-900 dark:text-white">
                       {starter.text}
                     </span>
                   </div>
