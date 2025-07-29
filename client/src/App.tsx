@@ -1,16 +1,16 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/hooks/useAuth';
 import { Toaster } from '@/components/ui/toaster';
 import { Switch, Route } from 'wouter';
 
 // Import components
 import LoginPage from '@/pages/login';
 import HomeStable from '@/pages/home-stable';
-import { DocumentsPage } from '@/pages/documents';
+import DocumentsPage from '@/pages/documents-page';
 import NotFound from '@/pages/not-found';
-import { UnifiedAdminPanel } from '@/components/unified-admin-panel';
-import { DragDropProvider } from '@/components/drag-drop-provider';
-import { GamificationProvider } from '@/components/gamification-provider';
+// import { UnifiedAdminPanel } from '@/pages/unified-admin-panel'; // Disabled during Phase 2 cleanup
+// import { DragDropProvider } from '@/components/drag-drop-provider'; // Removed during Phase 2 cleanup
+// import { GamificationProvider } from '@/components/gamification-provider'; // Removed during Phase 2 cleanup
 import PWAStatus from '@/components/pwa-status';
 
 const queryClient = new QueryClient();
@@ -18,15 +18,11 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <GamificationProvider userId="default">
-        <DragDropProvider>
-          <div className="min-h-screen bg-background">
-            <Toaster />
-            <PWAStatus />
-            <AppContent />
-          </div>
-        </DragDropProvider>
-      </GamificationProvider>
+      <div className="min-h-screen bg-background">
+        <Toaster />
+        <PWAStatus />
+        <AppContent />
+      </div>
     </QueryClientProvider>
   );
 }
@@ -46,20 +42,21 @@ function AppContent() {
     <Switch>
       {!user ? (
         <>
-          <Route path="/login" component={LoginPage} />
-          <Route path="/" component={LoginPage} />
+          <Route path="/login" component={() => <LoginPage />} />
+          <Route path="/" component={() => <LoginPage />} />
         </>
       ) : (
         <>
-          <Route path="/" component={HomeStable} />
-          <Route path="/chat/:chatId" component={HomeStable} />
-          <Route path="/documents" component={DocumentsPage} />
-          {(user?.role === 'admin' || user?.role === 'client-admin' || user?.role === 'dev-admin') && (
-            <Route path="/admin" component={UnifiedAdminPanel} />
-          )}
+          <Route path="/" component={() => <HomeStable />} />
+          <Route path="/chat/:chatId" component={() => <HomeStable />} />
+          <Route path="/documents" component={() => <DocumentsPage />} />
+          {/* Admin panel temporarily disabled during Phase 2 cleanup */}
+          {/* {(user && (user.role === 'admin' || user.role === 'client-admin' || user.role === 'dev-admin')) && (
+            <Route path="/admin" component={() => <UnifiedAdminPanel />} />
+          )} */}
         </>
       )}
-      <Route component={NotFound} />
+      <Route component={() => <NotFound />} />
     </Switch>
   );
 }

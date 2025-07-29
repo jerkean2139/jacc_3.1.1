@@ -346,17 +346,6 @@ export default function DocumentsPage() {
                           </div>
                         </CardContent>
                       </Card>
-                      <DroppableFolder
-                        key={folder.id}
-                        folder={{
-                          id: folder.id,
-                          name: folder.name,
-                          documentCount: folder.document_count || folder.documentCount || folderDocuments.length,
-                          createdAt: folder.createdAt ? new Date(folder.createdAt).toISOString() : undefined,
-                          documents: folderDocuments
-                        }}
-                        onDocumentMove={handleDocumentMove}
-                      />
                     );
                   })}
                 </div>

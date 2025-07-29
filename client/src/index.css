@@ -106,6 +106,8 @@
 /* Global box-sizing fix */
 *, *::before, *::after {
   box-sizing: border-box;
+}
+
 @layer base {
   :root {
     --background: 210 20% 98%; /* Very light blue-gray background */

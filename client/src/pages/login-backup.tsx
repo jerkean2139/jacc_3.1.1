@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Brain, LogIn } from 'lucide-react';
 import { useLocation } from 'wouter';
+import { queryClient } from '@/lib/queryClient';
 
 export default function LoginPage() {
   const [, setLocation] = useLocation();
@@ -13,21 +14,78 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    const formData = new FormData(e.target as HTMLFormElement);
-    const username = formData.get('username') as string;
-    const password = formData.get('password') as string;
 
     try {
-      const response = await fetch('/api/auth/simple-login', {
+      // Clear any existing session cookies before login
+      document.cookie = 'sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'connect.sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      
+      const formData = new FormData(e.target as HTMLFormElement);
+      const username = formData.get('username') as string;
+      const password = formData.get('password') as string;
+
+      console.log('Attempting login for:', username);
+
+      // Try multiple login endpoints for deployment compatibility  
+      const endpoints = ['/api/login', '/api/test-login', '/api/auth/simple-login'];
+      let loginSuccess = false;
+      
+      for (const endpoint of endpoints) {
+        try {
+          console.log(`Trying login at ${endpoint}...`);
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+            credentials: 'include'
+          });
+
+          console.log(`Login response status for ${endpoint}:`, response.status);
+
+          if (response.ok) {
+            const loginData = await response.json();
+            console.log('Login successful, user data:', loginData);
+            loginSuccess = true;
+            
+            // Add delay to ensure cookie is set
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Clear query cache before redirect
+            queryClient.clear();
+            
+            // Force page refresh to ensure cookie sync
+            window.location.href = '/';
+            break;
+          }
+        } catch (error) {
+          console.log(`Login attempt failed at ${endpoint}:`, error);
+          continue;
+        }
+      }
+      
+      if (!loginSuccess) {
+        alert('Login failed - please check your credentials and try again');
+      }
+    } catch (outerError) {
+      console.error('Outer login error:', outerError);
+      try {
+        const response = await fetch('/api/auth/simple-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
         credentials: 'include'
       });
 
+      console.log('Login response status:', response.status);
+
       if (response.ok) {
+        const loginData = await response.json();
+        console.log('Login successful, user data:', loginData);
+        
+        // Add delay to ensure cookie is set
         await new Promise(resolve => setTimeout(resolve, 200));
+        
+        // Force page refresh to ensure cookie sync
         window.location.href = '/';
       } else {
         const error = await response.json();
@@ -100,6 +158,7 @@ export default function LoginPage() {
             </Button>
           </form>
           
+
           <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
             <p className="font-medium mb-2">Available Demo Accounts:</p>
             <div className="space-y-1 text-xs">
@@ -113,3 +172,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+

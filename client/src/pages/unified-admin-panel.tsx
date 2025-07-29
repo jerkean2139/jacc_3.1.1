@@ -34,10 +34,6 @@ import { useGamification } from '@/hooks/useGamification';
 import { useToast } from '@/hooks/use-toast';
 import { MessageContent } from '@/components/message-content';
 import { Link as RouterLink } from 'wouter';
-  BarChart3, Timer, ChevronDown, ChevronRight, Target, BookOpen
-} from 'lucide-react';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { apiRequest } from '@/lib/queryClient';
 
 interface FAQ {
   id: number;

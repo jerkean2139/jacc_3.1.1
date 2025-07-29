@@ -341,7 +341,6 @@ export default function MyDocumentsPage() {
                       <Folder 
                         className="h-5 w-5" 
                         style={{ color: folder.color || '#3B82F6' }}
-                        style={{ color: folder.color }}
                       />
                       <CardTitle className="text-lg">{folder.name}</CardTitle>
                     </div>
@@ -554,7 +553,6 @@ function DocumentCard({
               <CardTitle className="text-base truncate">{document.name}</CardTitle>
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 {document.createdAt ? new Date(document.createdAt).toLocaleDateString() : 'No date'}
-                {new Date(document.createdAt).toLocaleDateString()}
               </p>
             </div>
           </div>
@@ -609,10 +607,6 @@ function DocumentCard({
               onClick={() => onDownload(document)}
               title="Download Document"
             >
-            <Button variant="ghost" size="sm">
-              <Eye className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm">
               <Download className="h-4 w-4" />
             </Button>
           </div>

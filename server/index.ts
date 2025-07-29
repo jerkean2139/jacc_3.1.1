@@ -121,14 +121,15 @@
         });
 
         // Dev vs Prod: Vite or static + HTTP server
+        const http = await import("http");
         let server;
         if (app.get("env") === "development") {
-          server = await setupVite(app);
+          server = http.createServer(app);
+          await setupVite(app, server);
         } else {
           // Production: configure server and serve static
-          await configureProductionServer(app);
+          await configureProductionServer();
           serveStatic(app);
-          const http = await import("http");
           server = http.createServer(app);
         }
 
