@@ -65,7 +65,11 @@ export default function LoginPage() {
       
       if (!loginSuccess) {
         alert('Login failed - please check your credentials and try again');
-      const response = await fetch('/api/auth/simple-login', {
+      }
+    } catch (outerError) {
+      console.error('Outer login error:', outerError);
+      try {
+        const response = await fetch('/api/auth/simple-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -169,4 +173,4 @@ export default function LoginPage() {
       </Card>
     </div>
   );
-}
+}      }

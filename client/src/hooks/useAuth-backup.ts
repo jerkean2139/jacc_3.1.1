@@ -13,6 +13,36 @@ export function useAuth() {
     gcTime: 0, // Disable cache for auth state
     queryFn: async () => {
       console.log('Checking user authentication...');
+import { useQuery } from "@tanstack/react-query";
+import type { User } from "@shared/schema";
+
+export function useAuth() {
+  const { data: user, isLoading, error } = useQuery({
+    queryKey: ["/api/user"],
+    retry: false,
+    refetchOnWindowFocus: false, // Prevent constant refetching
+    staleTime: 5 * 60 * 1000, // 5 minutes cache time for auth state
+    queryFn: async () => {
+      const res = await fetch("/api/user", {
+        credentials: "include",
+      });
+      
+      console.log('Auth check response status:', res.status);
+      
+      if (res.status === 401) {
+        console.log('User not authenticated');
+      if (res.status === 401) {
+        return null; // Return null for unauthenticated users
+      }
+      
+      if (!res.ok) {
+        console.log('Auth check failed:', res.status, res.statusText);
+        throw new Error(`${res.status}: ${res.statusText}`);
+      }
+      
+      const userData = await res.json();
+      console.log('User authenticated:', userData);
+      return userData;
     },
   });
 
@@ -81,6 +111,10 @@ export function useAuth() {
       // Clear auth state and redirect to login
       queryClient.clear();
       window.location.href = '/login';
+        throw new Error(`${res.status}: ${res.statusText}`);
+      }
+      
+      return await res.json();
     },
   });
 

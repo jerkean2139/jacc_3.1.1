@@ -10,8 +10,8 @@ export function setupOAuthHelper(app: Express) {
   const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
   const REDIRECT_URI = 'https://02aa0592-869c-416a-869f-4cb3baafbabd-00-17ngv8bepjtga.picard.replit.dev/auth/callback';
 
-  if (!CLIENT_ID || !CLIENT_SECRET) {
-    console.log('OAuth helper not available - missing CLIENT_ID or CLIENT_SECRET');
+  if (!CLIENT_ID || !CLIENT_SECRET || !google) {
+    console.log('OAuth helper not available - missing CLIENT_ID, CLIENT_SECRET, or google library disabled');
     return;
   }
 

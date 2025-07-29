@@ -34,7 +34,7 @@ import {
   BookmarkCheck,
   ExternalLink,
   Shield,
-  HelpCircle
+  HelpCircle,
   Trophy
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -333,6 +333,10 @@ export default function Sidebar({
                     <a href="/admin-control-center" className="flex items-center">
                       <Shield className="w-4 h-4 mr-2" />
                       Admin Control Center
+                    </a>
+                  </DropdownMenuItem>
+                </>
+              )}
               {user?.role === 'admin' && (
                 <>
                   <DropdownMenuItem asChild>
@@ -670,15 +674,7 @@ export default function Sidebar({
             >
               <HelpCircle className="w-4 h-4 text-green-500" />
               <span className="text-sm text-slate-700 dark:text-slate-300">Help Center</span>
-              <div className="flex items-center space-x-3 p-2 rounded-lg cursor-not-allowed opacity-60 bg-gray-50 dark:bg-gray-900/20">
-                <Brain className="w-4 h-4 text-gray-400" />
-                <span className="text-sm text-gray-500 dark:text-gray-400">AI Prompts</span>
-                <span className="text-xs bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-300 px-2 py-1 rounded-full ml-auto">Coming Soon</span>
-              </div>
-              <span className="absolute left-1/2 transform -translate-x-1/2 -bottom-8 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
-                Coming Soon
-              </span>
-            </div>
+            </a>
             <a 
               href="/guide" 
               className="flex items-center space-x-3 p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg cursor-pointer transition-colors"

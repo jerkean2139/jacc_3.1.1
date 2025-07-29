@@ -11,7 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import Sidebar from "@/components/sidebar";
 import ChatInterface from "@/components/chat-interface";
 import { useAuth } from "@/hooks/useAuth";
-import { useNewChatFAB } from "@/components/bottom-nav";
+// import { useNewChatFAB } from "@/components/bottom-nav"; // Commented out during Phase 1 cleanup
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { UsageMeter } from "@/components/gamification/usage-meter";
@@ -243,11 +243,10 @@ Would you like me to run a competitive analysis and show you better processing o
   };
 
   // Connect the floating action button to new chat creation
-  useNewChatFAB(handleNewChat);
+  // useNewChatFAB(handleNewChat); // Commented out during Phase 1 cleanup
 
   return (
     <div className="h-screen bg-slate-50 dark:bg-slate-900 overflow-hidden w-full max-w-full">
-    <div className="h-screen bg-slate-50 dark:bg-slate-900">
       {/* Mobile Header - Always visible on mobile */}
       <div className="lg:hidden bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 flex items-center justify-between">
         <div className="flex items-center space-x-3">
@@ -370,6 +369,7 @@ Would you like me to run a competitive analysis and show you better processing o
           </div>
         </DialogContent>
       </Dialog>
+    </div>
     </div>
   );
 }
