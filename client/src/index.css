@@ -72,6 +72,52 @@
     gap: 0.25rem !important;
     align-items: flex-start !important;
   }
+}
+
+/* Navy and Green color variables */
+:root {
+  --navy-600: #003D7A;
+  --green-400: #16A34A;
+}
+
+/* Chat input glowing border animation */
+@keyframes glowingBorder {
+  0% { 
+    border-color: var(--navy-600);
+    box-shadow: 0 0 10px rgba(0, 61, 122, 0.3);
+  }
+  25% { 
+    border-color: var(--green-400);
+    box-shadow: 0 0 15px rgba(22, 163, 74, 0.4);
+  }
+  50% { 
+    border-color: var(--navy-600);
+    box-shadow: 0 0 20px rgba(0, 61, 122, 0.5);
+  }
+  75% { 
+    border-color: var(--green-400);
+    box-shadow: 0 0 15px rgba(22, 163, 74, 0.4);
+  }
+  100% { 
+    border-color: var(--navy-600);
+    box-shadow: 0 0 10px rgba(0, 61, 122, 0.3);
+  }
+}
+
+.chat-glow-container {
+  border: 2px solid transparent;
+  border-radius: 9999px;
+  animation: glowingBorder 3s ease-in-out infinite;
+  padding: 2px;
+  background: linear-gradient(45deg, var(--navy-600), var(--green-400), var(--navy-600));
+  background-size: 300% 300%;
+  animation: glowingBorder 3s ease-in-out infinite, gradientShift 4s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
   
   .chat-glow-container form > div:first-child {
     flex: 1 !important;

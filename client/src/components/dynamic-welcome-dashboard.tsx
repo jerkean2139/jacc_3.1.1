@@ -103,28 +103,28 @@ export default function DynamicWelcomeDashboard({
         description: "Get competitive pricing analysis",
         message: "I need help analyzing processing rates and finding competitive pricing",
         icon: <DollarSign className="w-5 h-5" />,
-        color: "bg-blue-600 hover:bg-blue-700"
+        color: "bg-[#003D7A] hover:bg-[#002B5A] text-white"
       },
       {
         title: "Compare Processors",
         description: "Analyze different payment solutions",
         message: "I need to compare payment processors - can you help me analyze different options?",
         icon: <BarChart3 className="w-5 h-5" />,
-        color: "bg-green-600 hover:bg-green-700"
+        color: "bg-[#16A34A] hover:bg-[#15803D] text-white"
       },
       {
         title: "Let's Talk Marketing",
         description: "Get marketing and sales insights",
         message: "Show me the latest market intelligence and sales strategies",
         icon: <Brain className="w-5 h-5" />,
-        color: "bg-purple-600 hover:bg-purple-700"
+        color: "bg-[#003D7A] hover:bg-[#002B5A] text-white"
       },
       {
         title: "Create Proposal",
         description: "Generate professional proposals",
         message: "Help me create a professional proposal for a new merchant",
         icon: <FileText className="w-5 h-5" />,
-        color: "bg-orange-600 hover:bg-orange-700"
+        color: "bg-[#16A34A] hover:bg-[#15803D] text-white"
       }
     ];
     return starters;
@@ -316,7 +316,7 @@ export default function DynamicWelcomeDashboard({
                   <Button
                     key={index}
                     onClick={() => onNewChatWithMessage(starter.message)}
-                    className={`${starter.color} text-white p-4 h-auto justify-start`}
+                    className={`${starter.color} p-4 h-auto justify-start`}
                     variant="default"
                   >
                     <div className="flex items-center gap-3 text-left">
