@@ -59,7 +59,6 @@ export default function UserGuide() {
       color: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
       description: 'Front-line sales representatives using JACC for merchant services'
     },
-<<<<<<< HEAD
     'client-admin': {
       name: 'Client Admin',
       icon: Settings,
@@ -95,7 +94,6 @@ export default function UserGuide() {
   };
 
   const roles = getUserVisibleRoles();
-=======
     'manager': {
       name: 'Manager',
       icon: Users,
@@ -112,7 +110,6 @@ export default function UserGuide() {
 
   // Show all roles to all users
   const roles = allRoles;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto p-6">
@@ -260,13 +257,10 @@ export default function UserGuide() {
         {/* Onboarding */}
         <TabsContent value="onboarding">
           {activeRole === 'sales-agent' && <SalesAgentOnboarding />}
-<<<<<<< HEAD
           {activeRole === 'client-admin' && <ClientAdminOnboarding />}
           {activeRole === 'dev-admin' && <DevAdminOnboarding />}
-=======
           {activeRole === 'manager' && <ManagerOnboarding />}
           {activeRole === 'admin' && <AdminOnboarding />}
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         </TabsContent>
 
 
@@ -277,18 +271,14 @@ export default function UserGuide() {
             <CardHeader>
               <CardTitle>Tips & Tricks for {roles[activeRole].name}</CardTitle>
               <CardDescription>
-<<<<<<< HEAD
                 Pro tips, marketing strategies, sales techniques, and personal development to maximize your success with JACC
-=======
                 Pro tips to maximize your productivity with JACC
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {activeRole === 'sales-agent' && (
                 <div className="space-y-4">
                   <div className="p-4 bg-green-50 dark:bg-green-950 rounded-lg">
-<<<<<<< HEAD
                     <h4 className="font-semibold text-green-700 dark:text-green-300 mb-2">💰 Advanced Sales Strategies</h4>
                     <ul className="space-y-1 text-sm">
                       <li>• Ask JACC: "Write me a cold outbound email for [business type]"</li>
@@ -346,7 +336,6 @@ export default function UserGuide() {
                       <li>• Ask JACC: "Write compelling case studies from successful installs"</li>
                       <li>• Ask JACC: "Create talking points for a 2-minute sales pitch"</li>
                       <li>• Ask JACC: "Help me write testimonial request emails"</li>
-=======
                     <h4 className="font-semibold text-green-700 dark:text-green-300 mb-2">Rate Calculator Pro Tips</h4>
                     <ul className="space-y-1 text-sm">
                       <li>• Use voice input for faster data entry during calls</li>
@@ -370,17 +359,13 @@ export default function UserGuide() {
                       <li>• Upload personal rate sheets, proposals, and notes</li>
                       <li>• Keep client presentations separate from company documents</li>
                       <li>• Use search to quickly find your uploaded documents</li>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                     </ul>
                   </div>
                 </div>
               )}
 
-<<<<<<< HEAD
               {activeRole === 'client-admin' && (
-=======
               {activeRole === 'manager' && (
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                 <div className="space-y-4">
                   <div className="p-4 bg-purple-50 dark:bg-purple-950 rounded-lg">
                     <h4 className="font-semibold text-purple-700 dark:text-purple-300 mb-2">Team Management</h4>
@@ -403,11 +388,8 @@ export default function UserGuide() {
                 </div>
               )}
 
-<<<<<<< HEAD
               {activeRole === 'dev-admin' && (
-=======
               {activeRole === 'admin' && (
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                 <div className="space-y-4">
                   <div className="p-4 bg-red-50 dark:bg-red-950 rounded-lg">
                     <h4 className="font-semibold text-red-700 dark:text-red-300 mb-2">System Optimization</h4>
@@ -607,31 +589,25 @@ function SalesAgentOnboarding() {
   );
 }
 
-<<<<<<< HEAD
 // Client Admin Onboarding Component
 function ClientAdminOnboarding() {
-=======
 // Manager Onboarding Component
 function ManagerOnboarding() {
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-<<<<<<< HEAD
             <Settings className="w-5 h-5 text-blue-600" />
             Client Admin Onboarding
         </CardTitle>
         <CardDescription>
           Complete setup and management guide for client administrators
-=======
             <Users className="w-5 h-5 text-orange-600" />
             Manager Onboarding
         </CardTitle>
         <CardDescription>
           Complete setup and management guide for team managers
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -761,30 +737,24 @@ function ManagerOnboarding() {
   );
 }
 
-<<<<<<< HEAD
 // Dev Admin Onboarding Component
 function DevAdminOnboarding() {
-=======
 // Admin Onboarding Component
 function AdminOnboarding() {
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="w-5 h-5 text-purple-600" />
-<<<<<<< HEAD
             System Admin Onboarding
           </CardTitle>
           <CardDescription>
             Complete technical setup and system management guide for development administrators
-=======
             Admin Onboarding
           </CardTitle>
           <CardDescription>
             Complete technical setup and system management guide for administrators
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">

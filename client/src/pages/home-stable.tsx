@@ -15,11 +15,8 @@ import { useNewChatFAB } from "@/components/bottom-nav";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { UsageMeter } from "@/components/gamification/usage-meter";
-<<<<<<< HEAD
 // import { Leaderboard } from "@/components/gamification/leaderboard";
-=======
 import { Leaderboard } from "@/components/gamification/leaderboard";
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
 export default function HomeStable() {
   const { user } = useAuth();
@@ -101,7 +98,6 @@ export default function HomeStable() {
       // Send the message immediately without timeout
       try {
         console.log("Sending message to new chat:", newChat.id);
-<<<<<<< HEAD
         await apiRequest("POST", `/api/chat/send`, {
           chatId: newChat.id,
           message: message
@@ -111,7 +107,6 @@ export default function HomeStable() {
         // Properly invalidate queries and update state without page reload
         queryClient.invalidateQueries({ queryKey: [`/api/chats/${newChat.id}/messages`] });
         queryClient.invalidateQueries({ queryKey: ["/api/chats"] });
-=======
         await apiRequest("POST", `/api/chats/${newChat.id}/messages`, {
           content: message,
           role: "user"
@@ -120,7 +115,6 @@ export default function HomeStable() {
         
         // Refresh messages for the new chat using correct array format
         queryClient.invalidateQueries({ queryKey: ['/api/chats', newChat.id, 'messages'] });
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       } catch (messageError) {
         console.error("Failed to send message:", messageError);
         toast({
@@ -252,11 +246,8 @@ Would you like me to run a competitive analysis and show you better processing o
   useNewChatFAB(handleNewChat);
 
   return (
-<<<<<<< HEAD
     <div className="h-screen bg-slate-50 dark:bg-slate-900 overflow-hidden w-full max-w-full">
-=======
     <div className="h-screen bg-slate-50 dark:bg-slate-900">
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       {/* Mobile Header - Always visible on mobile */}
       <div className="lg:hidden bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 flex items-center justify-between">
         <div className="flex items-center space-x-3">
@@ -269,13 +260,10 @@ Would you like me to run a competitive analysis and show you better processing o
             <SheetContent side="left" className="w-80 p-0">
               <Sidebar
                 user={user}
-<<<<<<< HEAD
                 chats={chats as any[]}
                 folders={folders as any[]}
-=======
                 chats={chats}
                 folders={folders}
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                 activeChatId={activeChatId}
                 onNewChat={handleNewChat}
                 onChatSelect={handleChatSelect}
@@ -303,11 +291,8 @@ Would you like me to run a competitive analysis and show you better processing o
       </div>
 
       {/* Mobile Chat Area */}
-<<<<<<< HEAD
       <div className="lg:hidden flex-1 h-[calc(100vh-64px-80px)] w-full overflow-hidden flex flex-col">
-=======
       <div className="lg:hidden flex-1 h-[calc(100vh-80px)]">
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         <ChatInterface 
           chatId={activeChatId} 
           onChatUpdate={refetchChats}
@@ -321,13 +306,10 @@ Would you like me to run a competitive analysis and show you better processing o
         <div className="border-r border-border overflow-hidden">
           <Sidebar
             user={user}
-<<<<<<< HEAD
             chats={chats as any[]}
             folders={folders as any[]}
-=======
             chats={chats}
             folders={folders}
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
             activeChatId={activeChatId}
             onNewChat={handleNewChat}
             onChatSelect={handleChatSelect}

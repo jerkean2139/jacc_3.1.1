@@ -1,8 +1,5 @@
 import { useState } from "react";
-<<<<<<< HEAD
 import { Link } from "wouter";
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -36,12 +33,9 @@ import {
   FileText,
   BookmarkCheck,
   ExternalLink,
-<<<<<<< HEAD
   Shield,
   HelpCircle
-=======
   Trophy
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -201,23 +195,17 @@ export default function Sidebar({
       // Clear any local storage/session data
       localStorage.clear();
       sessionStorage.clear();
-<<<<<<< HEAD
       // Redirect to login screen
       window.location.href = "/login";
-=======
       // Redirect to root which will show login screen
       window.location.href = "/";
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     } catch (error) {
       console.error("Logout error:", error);
       // Still clear data and redirect even if logout request fails
       localStorage.clear();
       sessionStorage.clear();
-<<<<<<< HEAD
       window.location.href = "/login";
-=======
       window.location.href = "/";
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     }
   };
 
@@ -325,15 +313,12 @@ export default function Sidebar({
                 : user?.email || "User"
               }
             </h3>
-<<<<<<< HEAD
             <p className="text-sm text-slate-500 dark:text-slate-400">
               {user?.role === 'client-admin' ? 'Client Admin' : 
                user?.role === 'dev-admin' ? 'System Admin' : 
                user?.role === 'admin' ? 'Admin' : 'Sales Agent'}
             </p>
-=======
             <p className="text-sm text-slate-500 dark:text-slate-400">Sales Agent</p>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -342,21 +327,18 @@ export default function Sidebar({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-<<<<<<< HEAD
               {(user?.role === 'admin' || user?.role === 'client-admin' || user?.role === 'dev-admin') && (
                 <>
                   <DropdownMenuItem asChild>
                     <a href="/admin-control-center" className="flex items-center">
                       <Shield className="w-4 h-4 mr-2" />
                       Admin Control Center
-=======
               {user?.role === 'admin' && (
                 <>
                   <DropdownMenuItem asChild>
                     <a href="/admin/training" className="flex items-center">
                       <Brain className="w-4 h-4 mr-2" />
                       AI Training
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                     </a>
                   </DropdownMenuItem>
                   <DropdownMenuItem disabled className="relative">
@@ -465,12 +447,9 @@ export default function Sidebar({
                           });
                           
                           if (response.ok) {
-<<<<<<< HEAD
                             // Use the chat delete callback to refresh the list
                             onChatDelete?.(chat.id);
-=======
                             window.location.reload();
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                           } else {
                             alert("Failed to delete chat");
                           }
@@ -523,12 +502,9 @@ export default function Sidebar({
                             });
                             
                             if (response.ok) {
-<<<<<<< HEAD
                               // Use the chat delete callback to refresh the list
                               onChatDelete?.(chat.id);
-=======
                               window.location.reload();
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                             } else {
                               alert("Failed to delete chat");
                             }
@@ -683,7 +659,6 @@ export default function Sidebar({
           </h4>
           <div className="space-y-1">
             <div className="relative group">
-<<<<<<< HEAD
               <Link href="/prompt-customization" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                 <Brain className="w-4 h-4 text-slate-700 dark:text-slate-300" />
                 <span className="text-sm text-slate-700 dark:text-slate-300">AI Prompts</span>
@@ -695,7 +670,6 @@ export default function Sidebar({
             >
               <HelpCircle className="w-4 h-4 text-green-500" />
               <span className="text-sm text-slate-700 dark:text-slate-300">Help Center</span>
-=======
               <div className="flex items-center space-x-3 p-2 rounded-lg cursor-not-allowed opacity-60 bg-gray-50 dark:bg-gray-900/20">
                 <Brain className="w-4 h-4 text-gray-400" />
                 <span className="text-sm text-gray-500 dark:text-gray-400">AI Prompts</span>
@@ -711,7 +685,6 @@ export default function Sidebar({
             >
               <FileText className="w-4 h-4 text-blue-500" />
               <span className="text-sm text-slate-700 dark:text-slate-300">Guide</span>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
             </a>
           </div>
         </div>
@@ -748,12 +721,10 @@ export default function Sidebar({
                 Coming Soon
               </span>
             </div>
-<<<<<<< HEAD
             <Link href="/merchant-insights" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
               <TrendingUp className="w-4 h-4 text-slate-700 dark:text-slate-300" />
               <span className="text-sm text-slate-700 dark:text-slate-300">Merchant Insights</span>
             </Link>
-=======
             <div className="relative group">
               <div className="flex items-center space-x-3 p-2 rounded-lg cursor-not-allowed opacity-60 transition-colors">
                 <TrendingUp className="w-4 h-4 text-gray-400" />
@@ -764,7 +735,6 @@ export default function Sidebar({
                 Coming Soon
               </span>
             </div>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
           </div>
         </div>
 
@@ -783,11 +753,8 @@ export default function Sidebar({
             </a>
           </div>
         </div>
-<<<<<<< HEAD
-=======
 
 
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       </ScrollArea>
 
       {/* Footer */}

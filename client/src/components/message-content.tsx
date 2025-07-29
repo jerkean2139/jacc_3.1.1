@@ -1,9 +1,6 @@
 import React from 'react';
-<<<<<<< HEAD
 import HtmlContentRenderer from './html-content-renderer';
-=======
 import { DocumentLink } from './document-link';
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
 interface MessageContentProps {
   content: string;
@@ -11,10 +8,8 @@ interface MessageContentProps {
 }
 
 export function MessageContent({ content, className = '' }: MessageContentProps) {
-<<<<<<< HEAD
   // Use the user-friendly HTML content renderer
   return <HtmlContentRenderer content={content} className={className} />;
-=======
   // Check if content contains HTML tags
   const hasHtmlTags = /<[^>]*>/g.test(content);
   
@@ -180,5 +175,4 @@ export function MessageContent({ content, className = '' }: MessageContentProps)
       ))}
     </div>
   );
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 }

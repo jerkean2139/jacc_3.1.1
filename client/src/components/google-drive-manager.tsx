@@ -21,11 +21,8 @@ import {
   Star,
   Eye,
   MoreVertical,
-<<<<<<< HEAD
   RefreshCw as Sync,
-=======
   Sync,
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   AlertCircle,
   CheckCircle
 } from 'lucide-react';
@@ -69,11 +66,8 @@ export default function GoogleDriveManager() {
   const queryClient = useQueryClient();
 
   // Fetch Google Drive files
-<<<<<<< HEAD
   const { data: driveFilesResponse = {}, isLoading, refetch } = useQuery({
-=======
   const { data: driveFiles = [], isLoading, refetch } = useQuery({
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     queryKey: ['/api/google-drive/files'],
   });
 
@@ -82,12 +76,9 @@ export default function GoogleDriveManager() {
     queryKey: ['/api/admin/tags'],
   });
 
-<<<<<<< HEAD
   // Extract files array from API response
   const driveFiles = driveFilesResponse?.files || [];
 
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   // Process documents mutation
   const processDocumentsMutation = useMutation({
     mutationFn: (fileIds: string[]) => apiRequest('POST', '/api/google-drive/process', { fileIds }),

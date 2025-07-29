@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-<<<<<<< HEAD
 /* Global mobile overflow fix - ENHANCED VERSION */
 @media (max-width: 767px) {
   html {
@@ -107,7 +106,6 @@
 /* Global box-sizing fix */
 *, *::before, *::after {
   box-sizing: border-box;
-=======
 @layer base {
   :root {
     --background: 210 20% 98%; /* Very light blue-gray background */
@@ -190,7 +188,6 @@
   body {
     @apply bg-background text-foreground;
   }
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 }
 
 /* Accessibility Enhancement Styles */
@@ -228,7 +225,6 @@
 [data-font-size="medium"] { font-size: 16px; }
 [data-font-size="large"] { font-size: 18px; }
 
-<<<<<<< HEAD
 /* Chat Glow Animation */
 @keyframes glowingBorder {
   0% {
@@ -261,8 +257,6 @@
   background: rgb(31, 41, 55);
 }
 
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 /* Reduced Motion */
 .reduced-motion *,
 .reduced-motion *::before,
@@ -448,7 +442,6 @@ select.glass-input option {
   height: 1px;
 }
 
-<<<<<<< HEAD
 /* Enhanced slider styling */
 .slider {
   -webkit-appearance: none;
@@ -523,8 +516,6 @@ select.glass-input option {
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7) !important;
 }
 
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 /* Animated glass effects */
 .glass-shimmer {
   position: relative;
@@ -550,7 +541,6 @@ select.glass-input option {
   100% { left: 100%; }
 }
 
-<<<<<<< HEAD
 /* Hide scrollbar for bottom navigation */
 .scrollbar-hide {
   -ms-overflow-style: none;  /* IE and Edge */
@@ -640,8 +630,6 @@ select.glass-input option {
   }
 }
 
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 /* Focus Indicators */
 .focus-visible:focus-visible {
   outline: 2px solid hsl(var(--ring));
@@ -663,7 +651,6 @@ select.glass-input option {
 
 .skip-link:focus { top: 6px; }
 
-<<<<<<< HEAD
 :root {
   --background: 210 20% 98%; /* Very light blue-gray background */
   --foreground: 210 30% 20%; /* Dark blue-gray text */
@@ -738,23 +725,18 @@ select.glass-input option {
   --sidebar-ring: 220 100% 60%; /* Blue ring */
 }
 
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 @layer base {
   * {
     @apply border-border;
   }
 
   body {
-<<<<<<< HEAD
     @apply font-sans antialiased bg-background text-foreground overflow-x-hidden;
   }
   
   #root {
     @apply overflow-x-hidden min-h-screen;
-=======
     @apply font-sans antialiased bg-background text-foreground;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-weight: 500;
     -webkit-font-smoothing: antialiased;

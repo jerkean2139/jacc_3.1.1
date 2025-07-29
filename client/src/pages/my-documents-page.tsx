@@ -121,7 +121,6 @@ export default function MyDocumentsPage() {
     },
   });
 
-<<<<<<< HEAD
   // Handle document view
   const handleViewDocument = (document: PersonalDocument) => {
     // Open document in new tab for viewing
@@ -144,8 +143,6 @@ export default function MyDocumentsPage() {
     });
   };
 
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   // Delete folder mutation
   const deleteFolderMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -343,11 +340,8 @@ export default function MyDocumentsPage() {
                     <div className="flex items-center gap-2">
                       <Folder 
                         className="h-5 w-5" 
-<<<<<<< HEAD
                         style={{ color: folder.color || '#3B82F6' }}
-=======
                         style={{ color: folder.color }}
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                       />
                       <CardTitle className="text-lg">{folder.name}</CardTitle>
                     </div>
@@ -420,11 +414,8 @@ export default function MyDocumentsPage() {
                   <DocumentCard 
                     key={document.id} 
                     document={document}
-<<<<<<< HEAD
                     onView={handleViewDocument}
                     onDownload={handleDownloadDocument}
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                     onEdit={handleEditDocument}
                     onDelete={handleDeleteDocument}
                     onToggleFavorite={handleToggleFavorite}
@@ -442,11 +433,8 @@ export default function MyDocumentsPage() {
               <DocumentCard 
                 key={document.id} 
                 document={document}
-<<<<<<< HEAD
                 onView={handleViewDocument}
                 onDownload={handleDownloadDocument}
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                 onEdit={handleEditDocument}
                 onDelete={handleDeleteDocument}
                 onToggleFavorite={handleToggleFavorite}
@@ -464,11 +452,8 @@ export default function MyDocumentsPage() {
                 <DocumentCard 
                   key={document.id} 
                   document={document}
-<<<<<<< HEAD
                   onView={handleViewDocument}
                   onDownload={handleDownloadDocument}
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                   onEdit={handleEditDocument}
                   onDelete={handleDeleteDocument}
                   onToggleFavorite={handleToggleFavorite}
@@ -546,21 +531,15 @@ export default function MyDocumentsPage() {
 // Document Card Component
 function DocumentCard({ 
   document, 
-<<<<<<< HEAD
   onView,
   onDownload,
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   onEdit, 
   onDelete, 
   onToggleFavorite 
 }: {
   document: PersonalDocument;
-<<<<<<< HEAD
   onView: (doc: PersonalDocument) => void;
   onDownload: (doc: PersonalDocument) => void;
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   onEdit: (doc: PersonalDocument) => void;
   onDelete: (id: string) => void;
   onToggleFavorite: (doc: PersonalDocument) => void;
@@ -574,11 +553,8 @@ function DocumentCard({
             <div className="min-w-0 flex-1">
               <CardTitle className="text-base truncate">{document.name}</CardTitle>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-<<<<<<< HEAD
                 {document.createdAt ? new Date(document.createdAt).toLocaleDateString() : 'No date'}
-=======
                 {new Date(document.createdAt).toLocaleDateString()}
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
               </p>
             </div>
           </div>
@@ -619,7 +595,6 @@ function DocumentCard({
         
         <div className="flex justify-between items-center pt-2">
           <div className="flex gap-1">
-<<<<<<< HEAD
             <Button 
               variant="ghost" 
               size="sm"
@@ -634,12 +609,10 @@ function DocumentCard({
               onClick={() => onDownload(document)}
               title="Download Document"
             >
-=======
             <Button variant="ghost" size="sm">
               <Eye className="h-4 w-4" />
             </Button>
             <Button variant="ghost" size="sm">
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
               <Download className="h-4 w-4" />
             </Button>
           </div>

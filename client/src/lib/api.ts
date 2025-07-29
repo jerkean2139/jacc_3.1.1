@@ -24,11 +24,8 @@ export const api = {
     create: (data: CreateChatRequest) => apiRequest('POST', '/api/chats', data),
     getMessages: (chatId: string) => apiRequest('GET', `/api/chats/${chatId}/messages`),
     sendMessage: (chatId: string, data: SendMessageRequest) => 
-<<<<<<< HEAD
       apiRequest('POST', `/api/chat/send`, { message: data.content, chatId }),
-=======
       apiRequest('POST', `/api/chats/${chatId}/messages`, data),
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   },
 
   // Folder operations
@@ -64,7 +61,4 @@ export const api = {
     logout: () => { window.location.href = '/api/logout'; },
   }
 };
-<<<<<<< HEAD
 // Force reload - Sat Jul 19 06:44:17 PM UTC 2025
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8

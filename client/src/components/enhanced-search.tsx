@@ -4,10 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-<<<<<<< HEAD
-=======
 import { DocumentLink } from './document-link';
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
 interface SearchResult {
   id: string;
@@ -83,7 +80,6 @@ export function EnhancedSearch({
     }
 
     document.addEventListener('mousedown', handleClickOutside);
-<<<<<<< HEAD
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -107,7 +103,6 @@ export function EnhancedSearch({
       }
     } catch (error) {
       console.error('Search error:', error);
-=======
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
@@ -127,7 +122,6 @@ export function EnhancedSearch({
       }
     } catch (error) {
       console.error('Search failed:', error);
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     } finally {
       setIsSearching(false);
     }
@@ -135,7 +129,6 @@ export function EnhancedSearch({
 
   const loadSuggestions = async (searchQuery: string) => {
     try {
-<<<<<<< HEAD
       const response = await fetch('/api/search-suggestions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -158,7 +151,6 @@ export function EnhancedSearch({
     setShowResults(false);
   };
 
-=======
       const response = await fetch(`/api/documents/search/suggestions?query=${encodeURIComponent(searchQuery)}`);
       if (response.ok) {
         const suggestionList = await response.json();
@@ -169,18 +161,15 @@ export function EnhancedSearch({
     }
   };
 
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   const handleSuggestionClick = (suggestion: string) => {
     setQuery(suggestion);
     performSearch(suggestion);
   };
 
-<<<<<<< HEAD
   return (
     <div ref={searchRef} className="relative w-full max-w-2xl">
       <div className="relative">
         <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-=======
   const getFileIcon = (mimeType: string) => {
     if (mimeType?.includes('pdf')) return '📄';
     if (mimeType?.includes('spreadsheet') || mimeType?.includes('excel')) return '📊';
@@ -199,31 +188,26 @@ export function EnhancedSearch({
       {/* Search Input */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         <Input
           type="text"
           placeholder={placeholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-<<<<<<< HEAD
           className="pl-10 pr-4"
         />
         {isSearching && (
           <div className="absolute right-3 top-3">
             <div className="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full" />
-=======
           onFocus={() => query.length > 2 && setShowResults(true)}
           className="pl-10 pr-4 py-2 text-base"
         />
         {isSearching && (
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
           </div>
         )}
       </div>
 
-<<<<<<< HEAD
       {/* Suggestions */}
       {showSuggestions && suggestions.length > 0 && query.length > 1 && !showResults && (
         <Card className="absolute top-full left-0 right-0 mt-1 z-50 max-h-48 overflow-y-auto">
@@ -238,7 +222,6 @@ export function EnhancedSearch({
                 <Search className="h-3 w-3 mr-2 text-muted-foreground flex-shrink-0" />
                 <span className="truncate">{suggestion}</span>
               </Button>
-=======
       {/* Search Suggestions */}
       {showSuggestions && suggestions.length > 0 && query.length > 1 && !showResults && (
         <Card className="absolute top-full left-0 right-0 mt-1 z-50 shadow-lg">
@@ -253,7 +236,6 @@ export function EnhancedSearch({
                 <Search className="inline w-3 h-3 mr-2 text-gray-400" />
                 {suggestion}
               </button>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
             ))}
           </CardContent>
         </Card>
@@ -261,7 +243,6 @@ export function EnhancedSearch({
 
       {/* Search Results */}
       {showResults && results.length > 0 && (
-<<<<<<< HEAD
         <Card className="absolute top-full left-0 right-0 mt-1 z-50 max-h-96 overflow-y-auto">
           <CardContent className="p-2">
             <div className="text-sm text-muted-foreground mb-2 px-2">
@@ -306,7 +287,6 @@ export function EnhancedSearch({
                     )}
                   </div>
                 )}
-=======
         <Card className="absolute top-full left-0 right-0 mt-1 z-50 shadow-lg max-h-96 overflow-y-auto">
           <CardContent className="p-0">
             <div className="p-3 border-b bg-gray-50">
@@ -383,7 +363,6 @@ export function EnhancedSearch({
                     className="flex-shrink-0"
                   />
                 </div>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
               </div>
             ))}
           </CardContent>
@@ -391,7 +370,6 @@ export function EnhancedSearch({
       )}
 
       {/* No Results */}
-<<<<<<< HEAD
       {showResults && results.length === 0 && !isSearching && (
         <Card className="absolute top-full left-0 right-0 mt-1 z-50">
           <CardContent className="p-4 text-center">
@@ -402,7 +380,6 @@ export function EnhancedSearch({
             <p className="text-xs text-muted-foreground mt-1">
               Try different keywords or check your spelling
             </p>
-=======
       {showResults && results.length === 0 && !isSearching && query.length > 2 && (
         <Card className="absolute top-full left-0 right-0 mt-1 z-50 shadow-lg">
           <CardContent className="p-4 text-center">
@@ -410,7 +387,6 @@ export function EnhancedSearch({
             <div className="text-sm text-gray-400">
               Try different keywords or check spelling
             </div>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
           </CardContent>
         </Card>
       )}

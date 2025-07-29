@@ -12,21 +12,15 @@
   "scope": "/",
   "icons": [
     {
-<<<<<<< HEAD
       "src": "/icons/icon-192x192.png",
-=======
       "src": "/icon-192.png",
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-<<<<<<< HEAD
       "src": "/icons/icon-512x512.png",
-=======
       "src": "/icon-512.png",
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
@@ -40,11 +34,8 @@
       "url": "/?action=new-chat",
       "icons": [
         {
-<<<<<<< HEAD
           "src": "/icons/icon-192x192.png",
-=======
           "src": "/icon-192.png",
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
           "sizes": "192x192"
         }
       ]
@@ -56,11 +47,8 @@
       "url": "/calculator",
       "icons": [
         {
-<<<<<<< HEAD
           "src": "/icons/icon-192x192.png",
-=======
           "src": "/icon-192.png",
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
           "sizes": "192x192"
         }
       ]

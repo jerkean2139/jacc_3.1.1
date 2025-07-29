@@ -35,14 +35,11 @@ export default function Landing() {
     }
   };
 
-<<<<<<< HEAD
 
-=======
   const fillCredentials = (email: string, password: string) => {
     setEmail(email);
     setPassword(password);
   };
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
@@ -138,9 +135,7 @@ export default function Landing() {
                 </Button>
               </form>
 
-<<<<<<< HEAD
 
-=======
               {/* Demo Accounts */}
               <div className="mt-6 pt-6 border-t">
                 <p className="text-sm text-center text-slate-600 mb-4">Demo Accounts (Click to auto-fill):</p>
@@ -174,7 +169,6 @@ export default function Landing() {
                   </Button>
                 </div>
               </div>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
             </CardContent>
           </Card>
         </div>

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -6,12 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
-=======
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 import { 
   MessageCircle, 
   Calculator, 
@@ -21,7 +18,6 @@ import {
   Users,
   Settings,
   HelpCircle,
-<<<<<<< HEAD
   ExternalLink,
   Zap,
   Smartphone,
@@ -47,12 +43,10 @@ export default function HelpPage() {
     { role: "Sales Agent", username: "tracer-user", password: "tracer123", access: "Chat interface and documents" }
   ];
 
-=======
   ExternalLink
 } from 'lucide-react';
 
 export default function HelpPage() {
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   const quickAnswers = [
     {
       question: "What POS is best for restaurants?",
@@ -90,7 +84,6 @@ export default function HelpPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
-<<<<<<< HEAD
       <div className="max-w-6xl mx-auto p-4 space-y-6">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -1009,7 +1002,6 @@ export default function HelpPage() {
   );
 }
 
-=======
       <div className="max-w-4xl mx-auto p-4 space-y-6">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">Help & Quick Reference</h1>
@@ -1144,4 +1136,3 @@ export default function HelpPage() {
     </div>
   );
 }
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8

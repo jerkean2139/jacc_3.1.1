@@ -3,7 +3,6 @@ import {
   achievements, 
   userAchievements, 
   userStats,
-<<<<<<< HEAD
   type Achievement,
   type UserAchievement,
   type UserStats,
@@ -11,7 +10,6 @@ import {
   type InsertUserStats
 } from '@shared/schema';
 import { eq, and } from 'drizzle-orm';
-=======
   users,
   chatRatings,
   dailyUsage,
@@ -29,7 +27,6 @@ import { eq, and } from 'drizzle-orm';
   type InsertDailyUsage
 } from '@shared/schema';
 import { eq, and, desc, gte, lte, avg, count, sum } from 'drizzle-orm';
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
 // Achievement definitions with unlock criteria
 export const DEFAULT_ACHIEVEMENTS: Omit<Achievement, 'id' | 'createdAt'>[] = [
@@ -232,7 +229,6 @@ export class GamificationService {
     const existingStats = await this.getUserStats(userId);
     if (existingStats) return existingStats;
 
-<<<<<<< HEAD
     const newStats: InsertUserStats = {
       userId,
       totalMessages: 0,
@@ -249,7 +245,6 @@ export class GamificationService {
 
     const [stats] = await db.insert(userStats).values(newStats).returning();
     return stats;
-=======
     // Verify user exists before creating stats
     try {
       const [user] = await db.select().from(users).where(eq(users.id, userId));
@@ -278,7 +273,6 @@ export class GamificationService {
       console.error(`Failed to initialize user stats for ${userId}:`, error);
       throw error;
     }
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   }
 
   // Get user stats
@@ -493,8 +487,6 @@ export class GamificationService {
       console.error('Failed to initialize achievements:', error);
     }
   }
-<<<<<<< HEAD
-=======
 
   // Chat Rating System Methods
   async submitChatRating(chatId: string, userId: string, rating: number, feedback?: string): Promise<void> {
@@ -862,7 +854,6 @@ export class GamificationService {
       return null;
     }
   }
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 }
 
 export const gamificationService = new GamificationService();

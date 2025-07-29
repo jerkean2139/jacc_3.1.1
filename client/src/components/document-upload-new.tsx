@@ -32,16 +32,13 @@ interface DocumentUploadProps {
 }
 
 export default function DocumentUpload({ folderId, onUploadComplete }: DocumentUploadProps) {
-<<<<<<< HEAD
   // State management - Skip to permissions step if folder is pre-selected
   const [currentStep, setCurrentStep] = useState<'files' | 'folder' | 'permissions'>(
     folderId ? 'files' : 'files'
   );
-=======
   // State management - Always start with files step
   const [currentStep, setCurrentStep] = useState<'files' | 'folder' | 'permissions' | 'final'>('files');
   const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [selectedFolderId, setSelectedFolderId] = useState<string>(folderId || "");
   const [permissions, setPermissions] = useState({
@@ -171,7 +168,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
     });
   };
 
-<<<<<<< HEAD
   // Final upload mutation
   const uploadMutation = useMutation({
     mutationFn: async () => {
@@ -193,7 +189,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
       
       // First upload to temp, then process placement
       const uploadResponse = await fetch('/api/documents/upload-temp', {
-=======
   // Step 1: Initial upload mutation (upload files to temp storage)
   const initialUploadMutation = useMutation({
     mutationFn: async () => {
@@ -220,12 +215,10 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
       });
 
       const response = await fetch('/api/documents/upload', {
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         method: 'POST',
         body: formData,
         credentials: 'include',
       });
-<<<<<<< HEAD
       
       if (!uploadResponse.ok) {
         throw new Error('Upload failed');
@@ -235,7 +228,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
       
       // Then process placement
       const processResponse = await fetch('/api/documents/process-placement', {
-=======
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -274,13 +266,11 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
       }
 
       const response = await fetch('/api/documents/assign-folder-permissions', {
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-<<<<<<< HEAD
           documentIds: uploadData.files.map((f: any) => f.id),
           folderId: selectedFolderId,
           permissions: permissions,
@@ -307,7 +297,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
       
       // Reset form
       setSelectedFiles([]);
-=======
           fileIds: uploadedFiles.map(f => f.document?.id || f.id),
           folderId: selectedFolderId,
           permissions: permissions,
@@ -330,7 +319,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
       // Reset form
       setSelectedFiles([]);
       setUploadedFiles([]);
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       setCurrentStep('files');
       setFileNames({});
       setDuplicateWarnings([]);
@@ -342,33 +330,26 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
       });
       
       toast({
-<<<<<<< HEAD
         title: "Upload successful",
         description: "Documents have been uploaded and processed successfully.",
-=======
         title: "Processing complete",
         description: `${data.processed?.length || uploadedFiles.length} documents processed successfully.`,
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       });
       
       if (onUploadComplete) onUploadComplete();
     },
     onError: (error: any) => {
       toast({
-<<<<<<< HEAD
         title: "Upload failed",
         description: error.message || "Failed to upload documents. Please try again.",
-=======
         title: "Processing failed",
         description: error.message || "Failed to process documents. Please try again.",
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         variant: "destructive",
       });
     },
   });
 
   // Navigation functions
-<<<<<<< HEAD
   const goToStep = (step: 'files' | 'folder' | 'permissions') => {
     // Skip folder selection if folder is pre-selected
     if (step === 'folder' && folderId) {
@@ -380,7 +361,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
       toast({
         title: "No files selected",
         description: "Please select files before choosing a folder.",
-=======
   const goToStep = (step: 'files' | 'folder' | 'permissions' | 'final') => {
     console.log('Navigation attempt:', { step, uploadedFilesCount: uploadedFiles.length, selectedFolderId });
     
@@ -388,22 +368,18 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
       toast({
         title: "No files uploaded",
         description: "Please upload files first.",
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         variant: "destructive",
       });
       return;
     }
-<<<<<<< HEAD
     if (step === 'permissions' && (!selectedFolderId || selectedFiles.length === 0)) {
       toast({
         title: "Missing requirements",
         description: "Please select files and choose a folder first.",
-=======
     if (step === 'permissions' && (!selectedFolderId || uploadedFiles.length === 0)) {
       toast({
         title: "Missing requirements",
         description: "Please upload files and assign a folder first.",
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         variant: "destructive",
       });
       return;
@@ -411,7 +387,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
     setCurrentStep(step);
   };
 
-<<<<<<< HEAD
   const handleFinalUpload = () => {
     if (!selectedFolderId) {
       toast({
@@ -424,9 +399,7 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
     setIsUploading(true);
     uploadMutation.mutate();
   };
-=======
 
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
   // Helper functions
   const getFileIcon = (fileType: string) => {
@@ -447,7 +420,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
 
   return (
     <div className="space-y-6">
-<<<<<<< HEAD
       {/* Step Indicator - Show simplified version when folder is pre-selected */}
       {folderId ? (
         <div className="flex items-center justify-center space-x-4 mb-6">
@@ -494,7 +466,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
           </div>
         </div>
       )}
-=======
       {/* Clean 4-Step Process */}
       <div className="flex items-center justify-center space-x-2 mb-6">
         <div className={cn(
@@ -529,7 +500,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
           <span className="font-medium">4. Process</span>
         </div>
       </div>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
       {/* Step 1: File Selection */}
       {currentStep === 'files' && (
@@ -631,14 +601,12 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
             {/* Navigation */}
             <div className="flex justify-end pt-4">
               <Button
-<<<<<<< HEAD
                 onClick={() => folderId ? goToStep('permissions') : goToStep('folder')}
                 disabled={selectedFiles.length === 0}
                 className="flex items-center gap-2"
               >
                 {folderId ? 'Next: Set Permissions' : 'Next: Choose Folder'}
                 <ArrowRight className="h-4 w-4" />
-=======
                 onClick={() => {
                   if (selectedFiles.length === 0) {
                     toast({
@@ -665,7 +633,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
                     Upload Files
                   </>
                 )}
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
               </Button>
             </div>
           </CardContent>
@@ -678,20 +645,14 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Folder className="h-5 w-5" />
-<<<<<<< HEAD
               Choose Destination Folder
-=======
               Assign Folder
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-<<<<<<< HEAD
               <Label>Select Folder</Label>
-=======
               <Label>Choose destination folder for uploaded files</Label>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
               <Select value={selectedFolderId} onValueChange={setSelectedFolderId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Choose a folder..." />
@@ -709,7 +670,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
               </Select>
             </div>
 
-<<<<<<< HEAD
             {/* Selected Files Summary */}
             <div className="bg-gray-50 p-3 rounded-lg">
               <p className="text-sm font-medium text-gray-700 mb-2">
@@ -724,7 +684,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
                 ))}
                 {selectedFiles.length > 3 && (
                   <p className="text-xs text-gray-500">+{selectedFiles.length - 3} more files</p>
-=======
             {/* Uploaded Files Summary */}
             <div className="bg-green-50 p-3 rounded-lg border border-green-200">
               <p className="text-sm font-medium text-green-800 mb-2">
@@ -739,7 +698,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
                 ))}
                 {uploadedFiles.length > 3 && (
                   <p className="text-xs text-green-600">+{uploadedFiles.length - 3} more files</p>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                 )}
               </div>
             </div>
@@ -752,20 +710,14 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
                 className="flex items-center gap-2"
               >
                 <ArrowLeft className="h-4 w-4" />
-<<<<<<< HEAD
                 Back to Files
-=======
                 Back to Upload
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
               </Button>
               <Button
                 onClick={() => goToStep('permissions')}
                 disabled={!selectedFolderId}
-<<<<<<< HEAD
                 className="flex items-center gap-2"
-=======
                 className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
               >
                 Next: Set Permissions
                 <ArrowRight className="h-4 w-4" />
@@ -830,7 +782,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
             </div>
 
             {/* Summary */}
-<<<<<<< HEAD
             <div className="bg-blue-50 p-4 rounded-lg">
               <h4 className="font-medium text-blue-900 mb-2">Upload Summary</h4>
               <div className="space-y-1 text-sm text-blue-800">
@@ -839,7 +790,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
                 <p>Access: {permissions.adminOnly ? 'Admin Only' : 'All Users'}</p>
                 <p>AI Training: {permissions.trainingData ? 'Enabled' : 'Disabled'}</p>
                 <p>Search: {permissions.autoVectorize ? 'Enabled' : 'Disabled'}</p>
-=======
             <div className="bg-green-50 p-4 rounded-lg border border-green-200">
               <h4 className="font-medium text-green-900 mb-2">Processing Summary</h4>
               <div className="space-y-1 text-sm text-green-800">
@@ -848,7 +798,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
                 <p>🔒 Access: {permissions.adminOnly ? 'Admin Only' : 'All Users'}</p>
                 <p>🤖 AI Training: {permissions.trainingData ? 'Enabled' : 'Disabled'}</p>
                 <p>🔍 Search: {permissions.autoVectorize ? 'Enabled' : 'Disabled'}</p>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
               </div>
             </div>
 
@@ -863,7 +812,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
                 Back to Folder
               </Button>
               <Button
-<<<<<<< HEAD
                 onClick={handleFinalUpload}
                 disabled={uploadMutation.isPending || isUploading}
                 className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
@@ -877,7 +825,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
                   <>
                     <Upload className="h-4 w-4" />
                     Upload Documents
-=======
                 onClick={() => finalProcessMutation.mutate()}
                 disabled={finalProcessMutation.isPending}
                 className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
@@ -891,7 +838,6 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
                   <>
                     <CheckCircle className="h-4 w-4" />
                     Complete Processing
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                   </>
                 )}
               </Button>

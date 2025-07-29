@@ -26,7 +26,6 @@ export default function LoginPage() {
 
       console.log('Attempting login for:', username);
 
-<<<<<<< HEAD
       // Try multiple login endpoints for deployment compatibility  
       const endpoints = ['/api/login', '/api/test-login', '/api/auth/simple-login'];
       let loginSuccess = false;
@@ -66,7 +65,6 @@ export default function LoginPage() {
       
       if (!loginSuccess) {
         alert('Login failed - please check your credentials and try again');
-=======
       const response = await fetch('/api/auth/simple-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -88,7 +86,6 @@ export default function LoginPage() {
       } else {
         const error = await response.json();
         alert(error.message || 'Login failed');
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       }
     } catch (error) {
       console.error('Login failed:', error);
@@ -121,11 +118,8 @@ export default function LoginPage() {
                 name="username"
                 type="text"
                 placeholder="Enter your username"
-<<<<<<< HEAD
                 defaultValue="cburnell"
-=======
                 defaultValue="tracer-user"
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                 disabled={isLoading}
                 required
               />
@@ -137,11 +131,8 @@ export default function LoginPage() {
                 name="password"
                 type="password"
                 placeholder="Enter your password"
-<<<<<<< HEAD
                 defaultValue="cburnell123"
-=======
                 defaultValue="demo-password"
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                 disabled={isLoading}
                 required
               />
@@ -165,9 +156,7 @@ export default function LoginPage() {
             </Button>
           </form>
           
-<<<<<<< HEAD
 
-=======
           <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
             <p className="font-medium mb-2">Available Demo Accounts:</p>
             <div className="space-y-1 text-xs">
@@ -176,7 +165,6 @@ export default function LoginPage() {
               <p><strong>Manager:</strong> manager / manager123</p>
             </div>
           </div>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         </CardContent>
       </Card>
     </div>

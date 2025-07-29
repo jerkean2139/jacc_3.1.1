@@ -6,10 +6,7 @@ import { Menu } from "lucide-react";
 import Sidebar from "@/components/sidebar";
 import ChatInterface from "@/components/chat-interface";
 import UserStatsDashboard from "@/components/user-stats-dashboard";
-<<<<<<< HEAD
-=======
 import DynamicWelcomeDashboard from "@/components/dynamic-welcome-dashboard";
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 import { useAuth } from "@/hooks/useAuth";
 import { useNewChatFAB } from "@/components/bottom-nav";
 import type { Chat, Folder } from "@shared/schema";
@@ -29,7 +26,6 @@ export default function Home() {
     queryKey: ["/api/folders"],
   });
 
-<<<<<<< HEAD
   // Set active chat to most recent if none selected
   useEffect(() => {
     if (!activeChatId && chats.length > 0) {
@@ -39,10 +35,8 @@ export default function Home() {
       setActiveChatId(mostRecentChat.id);
     }
   }, [chats, activeChatId]);
-=======
   // Don't auto-select a chat to allow welcome dashboard to show
   // Users can manually select chats from the sidebar
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
   const handleNewChat = async () => {
     try {
@@ -71,10 +65,7 @@ export default function Home() {
 
   const handleNewChatWithMessage = async (message: string) => {
     try {
-<<<<<<< HEAD
       // Create new chat first
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       const response = await fetch("/api/chats", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -91,7 +82,6 @@ export default function Home() {
         setActiveChatId(newChat.id);
         await refetchChats();
         
-<<<<<<< HEAD
         // We're already on the home page, just set the active chat
         
         // Send the message immediately after navigation completes
@@ -121,7 +111,6 @@ export default function Home() {
           }
         }, 500);
         
-=======
         // Send the initial message and trigger AI response
         setTimeout(async () => {
           try {
@@ -146,7 +135,6 @@ export default function Home() {
             console.error("Failed to send initial message:", error);
           }
         }, 200);
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       } else {
         console.error("Failed to create chat:", await response.text());
       }
@@ -250,11 +238,8 @@ export default function Home() {
             chatId={activeChatId}
             onChatUpdate={refetchChats}
             onNewChatWithMessage={handleNewChatWithMessage}
-<<<<<<< HEAD
-=======
             chats={chats}
             folders={folders}
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
           />
         </div>
       </div>
@@ -264,15 +249,12 @@ export default function Home() {
         <ResizablePanelGroup direction="horizontal" className="flex-1">
           {/* Sidebar Panel */}
           <ResizablePanel
-<<<<<<< HEAD
             defaultSize={20}
             minSize={15}
             maxSize={30}
-=======
             defaultSize={25}
             minSize={20}
             maxSize={40}
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
             collapsible
             onCollapse={() => setSidebarCollapsed(true)}
             onExpand={() => setSidebarCollapsed(false)}
@@ -294,16 +276,12 @@ export default function Home() {
           <ResizableHandle withHandle />
 
           {/* Chat Panel */}
-<<<<<<< HEAD
           <ResizablePanel defaultSize={55} minSize={40}>
-=======
           <ResizablePanel defaultSize={75} minSize={60}>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
             <ChatInterface
               chatId={activeChatId}
               onChatUpdate={refetchChats}
               onNewChatWithMessage={handleNewChatWithMessage}
-<<<<<<< HEAD
             />
           </ResizablePanel>
 
@@ -317,12 +295,10 @@ export default function Home() {
               </div>
             </div>
           </ResizablePanel>
-=======
               chats={chats}
               folders={folders}
             />
           </ResizablePanel>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         </ResizablePanelGroup>
       </div>
     </div>

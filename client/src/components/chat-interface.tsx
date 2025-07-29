@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-<<<<<<< HEAD
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,7 +10,6 @@ interface MessageWithActions {
   id: string;
   role: "user" | "assistant";
   content: string;
-=======
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -38,12 +36,10 @@ interface MessageWithActions {
     url?: string;
     query?: string;
   }>;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 }
 
 interface ChatInterfaceProps {
   chatId: string | null;
-<<<<<<< HEAD
   onNewChatWithMessage?: (message: string) => Promise<void>;
   onChatUpdate: () => void;
   isDemo?: boolean;
@@ -103,7 +99,6 @@ export default function ChatInterface({
       
       return Array.isArray(data) ? data : [];
     },
-=======
   onChatUpdate: () => void;
   onNewChatWithMessage?: (message: string) => Promise<void>;
   chats?: any[];
@@ -164,7 +159,6 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     refetchInterval: 2000, // Poll every 2 seconds to catch AI responses
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   });
 
   // Auto-scroll to bottom when messages change
@@ -174,7 +168,6 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
     }
   }, [messages]);
 
-<<<<<<< HEAD
   // Initialize speech recognition
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -259,7 +252,6 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
   }, [chatId, safeMessages.length, isLoading]);
 
   // High-performance send message mutation
-=======
   // Fetch saved prompts for the dropdown (only when authenticated)
   const { data: savedPrompts = [] } = useQuery({
     queryKey: ["/api/user/prompts"],
@@ -357,12 +349,10 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
   });
 
   // Send message mutation - SIMPLIFIED VERSION WITHOUT POLLING
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   const sendMessageMutation = useMutation({
     mutationFn: async (content: string) => {
       if (!chatId) throw new Error("No active chat");
       
-<<<<<<< HEAD
       setIsProcessing(true); // Start processing indicator
       
       const response = await fetch(`/api/chat/send`, {
@@ -377,7 +367,6 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
           chatId: chatId,
           timestamp: Date.now(),
           requestId: `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-=======
       const response = await fetch(`/api/chats/${chatId}/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -385,12 +374,10 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
         body: JSON.stringify({
           content,
           role: "user"
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         }),
       });
 
       if (!response.ok) {
-<<<<<<< HEAD
         const errorText = await response.text();
         console.error("Send message failed:", errorText);
         throw new Error(`Failed to send message: ${response.status}`);
@@ -432,7 +419,6 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
     onError: (error) => {
       console.error("Failed to send message:", error);
       setIsProcessing(false); // Clear processing indicator on error
-=======
         throw new Error("Failed to send message");
       }
 
@@ -458,7 +444,6 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
     },
     onError: (error) => {
       console.error("Failed to send message:", error);
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
@@ -467,7 +452,6 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
     },
   });
 
-<<<<<<< HEAD
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -492,7 +476,6 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
       setIsProcessing(false); // Clear processing on error
       // Restore the input text if message failed
       setInput(messageText);
-=======
   // Handle conversation starter clicks
   const handleConversationStarter = async (starter: typeof conversationStarters[0]) => {
     try {
@@ -642,7 +625,6 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
       }
     } catch (error) {
       console.error("Send message error:", error);
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
@@ -651,7 +633,6 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
     }
   };
 
-<<<<<<< HEAD
   const toggleVoiceRecording = () => {
     if (!recognition) {
       toast({
@@ -679,12 +660,10 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
       }
     }
   };
-=======
   // Auto-scroll to bottom when new messages are added
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [safeMessages]);
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
   // Auto-resize textarea
   useEffect(() => {
@@ -694,7 +673,6 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
     }
   }, [input]);
 
-<<<<<<< HEAD
   // Render content based on chat state - moved after all hooks to avoid conditional hook calls
   const renderContent = () => {
     // Welcome screen with conversation starters when no chat is selected
@@ -942,7 +920,6 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
       <div className="border-t bg-white dark:bg-gray-800 p-4 pb-4">
         <form onSubmit={handleSubmit} className="flex items-end gap-2 md:gap-2">
           <div className="flex-1" style={{ width: '90%' }}>
-=======
   // Add PDF generation functions to global window object
   useEffect(() => {
     (window as any).generatePersonalizedPDF = function() {
@@ -1162,18 +1139,14 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
       <div className="border-t p-4 bg-white dark:bg-gray-800">
         <form onSubmit={handleSubmit} data-chat-form className="flex gap-3">
           <div className="flex-1 relative">
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
             <Textarea
               ref={textareaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-<<<<<<< HEAD
               placeholder="Ask about processing rates, compare processors..."
               className="min-h-[60px] max-h-32 resize-none text-lg w-full"
-=======
               placeholder="Ask about processing rates, compare processors, or request market insights..."
               className="min-h-[44px] max-h-20 resize-none pr-14 text-base py-3 px-4"
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
@@ -1181,32 +1154,25 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
                 }
               }}
             />
-<<<<<<< HEAD
           </div>
           <div className="flex flex-col gap-1 flex-shrink-0" style={{ width: '10%' }}>
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
             <Button
               type="button"
               variant="ghost"
               size="sm"
               onClick={toggleVoiceRecording}
-<<<<<<< HEAD
               className={`h-8 w-full md:h-10 md:w-full p-0 rounded-lg transition-all ${
                 isRecording 
                   ? 'bg-red-500 hover:bg-red-600 text-white' 
                   : 'bg-gray-100 hover:bg-gray-200 text-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300'
-=======
               className={`absolute right-3 top-2 p-2 h-8 w-8 rounded-full ${
                 isRecording 
                   ? 'text-red-500 hover:text-red-600 bg-red-50 hover:bg-red-100' 
                   : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
               }`}
               disabled={!recognition}
               title={isRecording ? "Stop recording" : "Start voice recording"}
             >
-<<<<<<< HEAD
               {isRecording ? <MicOff className="w-3 h-3 md:w-4 md:h-4" /> : <Mic className="w-3 h-3 md:w-4 md:h-4" />}
             </Button>
             
@@ -1231,7 +1197,6 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
   // Return the rendered content
   return renderContent();
 }
-=======
               {isRecording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
             </Button>
           </div>
@@ -1250,4 +1215,3 @@ export function ChatInterface({ chatId, onChatUpdate, onNewChatWithMessage, chat
 }
 
 export default ChatInterface;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8

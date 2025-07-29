@@ -16,12 +16,9 @@ interface LeaderboardAgent {
   lastActivity: string;
   joinedDate: string;
   activityScore: number;
-<<<<<<< HEAD
-=======
   profileImageUrl?: string;
   firstName?: string;
   lastName?: string;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 }
 
 interface LeaderboardWidgetProps {
@@ -38,7 +35,6 @@ export function LeaderboardWidget({ showFullLeaderboard = false, maxEntries = 5 
   const agents = (leaderboardData && typeof leaderboardData === 'object' && 'leaderboard' in leaderboardData && Array.isArray((leaderboardData as any).leaderboard)) ? (leaderboardData as any).leaderboard : [];
   const displayAgents = showFullLeaderboard ? agents : agents.slice(0, maxEntries);
 
-<<<<<<< HEAD
   if (isLoading) {
     return (
       <Card>
@@ -57,10 +53,8 @@ export function LeaderboardWidget({ showFullLeaderboard = false, maxEntries = 5 
       </Card>
     );
   }
-=======
   // Skip loading state since API endpoints are working properly
   // Use live data from endpoints that are already responding successfully
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
   if (!agents.length) {
     return (
@@ -83,7 +77,6 @@ export function LeaderboardWidget({ showFullLeaderboard = false, maxEntries = 5 
   }
 
   return (
-<<<<<<< HEAD
     <Card className="relative overflow-hidden border-0 shadow-xl">
       {/* Animated Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 dark:from-yellow-900/20 dark:via-orange-900/20 dark:to-red-900/20"></div>
@@ -103,7 +96,6 @@ export function LeaderboardWidget({ showFullLeaderboard = false, maxEntries = 5 
         {!showFullLeaderboard && (
           <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">
             🏆 Top {maxEntries} most active agents
-=======
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
@@ -113,7 +105,6 @@ export function LeaderboardWidget({ showFullLeaderboard = false, maxEntries = 5 
         {!showFullLeaderboard && (
           <div className="text-sm text-gray-600">
             Top {maxEntries} most active agents
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
           </div>
         )}
       </CardHeader>
@@ -142,7 +133,6 @@ export function LeaderboardWidget({ showFullLeaderboard = false, maxEntries = 5 
           </div>
         )}
 
-<<<<<<< HEAD
         <div className="space-y-3 relative z-10">
           {displayAgents.map((agent: LeaderboardAgent, index: number) => (
             <div 
@@ -200,7 +190,6 @@ export function LeaderboardWidget({ showFullLeaderboard = false, maxEntries = 5 
                         {index === 0 && <span className="text-xs font-bold text-yellow-600">🥇 Champion</span>}
                         {index === 1 && <span className="text-xs font-bold text-gray-600">🥈 Runner-up</span>}
                         {index === 2 && <span className="text-xs font-bold text-orange-600">🥉 3rd Place</span>}
-=======
         <div className="space-y-3">
           {displayAgents.map((agent: LeaderboardAgent, index: number) => (
             <div 
@@ -246,23 +235,19 @@ export function LeaderboardWidget({ showFullLeaderboard = false, maxEntries = 5 
                         {index === 0 && <Trophy className="h-3 w-3 text-yellow-600" />}
                         {index === 1 && <Medal className="h-3 w-3 text-gray-600" />}
                         {index === 2 && <Award className="h-3 w-3 text-orange-600" />}
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                       </div>
                     )}
                   </div>
                   
                   {showFullLeaderboard && (
                     <>
-<<<<<<< HEAD
                       <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">{agent.email}</div>
                       {agent.lastActivity && (
                         <div className="text-xs text-gray-500 mt-1 flex items-center gap-1">
                           <Activity className="h-3 w-3" />
-=======
                       <div className="text-xs text-gray-600">{agent.email}</div>
                       {agent.lastActivity && (
                         <div className="text-xs text-gray-500">
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                           Last active: {new Date(agent.lastActivity).toLocaleDateString()}
                         </div>
                       )}
@@ -271,7 +256,6 @@ export function LeaderboardWidget({ showFullLeaderboard = false, maxEntries = 5 
                 </div>
               </div>
               
-<<<<<<< HEAD
               {/* Stats Display */}
               <div className="text-right">
                 {showFullLeaderboard ? (
@@ -292,7 +276,6 @@ export function LeaderboardWidget({ showFullLeaderboard = false, maxEntries = 5 
                 ) : (
                   <div className="text-center p-3 bg-white/50 rounded-lg min-w-[80px]">
                     <div className="font-bold text-blue-600 text-xl">{agent.totalMessages}</div>
-=======
               <div className="text-right">
                 {showFullLeaderboard ? (
                   <div className="grid grid-cols-3 gap-3 text-xs">
@@ -312,12 +295,10 @@ export function LeaderboardWidget({ showFullLeaderboard = false, maxEntries = 5 
                 ) : (
                   <div className="text-center">
                     <div className="font-bold text-blue-600">{agent.totalMessages}</div>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                     <div className="text-xs text-gray-500">Messages</div>
                   </div>
                 )}
                 
-<<<<<<< HEAD
                 <div className="mt-2 text-center">
                   <div className={`
                     inline-flex items-center gap-1 px-3 py-1 rounded-full font-bold text-xs
@@ -330,10 +311,8 @@ export function LeaderboardWidget({ showFullLeaderboard = false, maxEntries = 5 
                     <MessageSquare className="h-3 w-3" />
                     {agent.activityScore} pts
                   </div>
-=======
                 <div className="mt-1">
                   <div className="font-bold text-xs text-purple-600">{agent.activityScore} pts</div>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                 </div>
               </div>
             </div>
@@ -350,10 +329,7 @@ export function LeaderboardWidget({ showFullLeaderboard = false, maxEntries = 5 
       </CardContent>
     </Card>
   );
-<<<<<<< HEAD
 }
 
 export default LeaderboardWidget;
-=======
 }
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8

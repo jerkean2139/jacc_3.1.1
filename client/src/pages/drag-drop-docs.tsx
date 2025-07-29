@@ -4,11 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
-<<<<<<< HEAD
 // import DragDropDocuments from '@/components/drag-drop-documents'; // REMOVED
-=======
 import DragDropDocuments from '@/components/drag-drop-documents';
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 import { 
   ArrowLeft, 
   FolderOpen, 
@@ -227,16 +224,13 @@ export default function DragDropDocsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-<<<<<<< HEAD
               {/* <DragDropDocuments /> REMOVED */}
               <div className="p-8 text-center text-muted-foreground">
                 <FileText className="mx-auto h-12 w-12 mb-4" />
                 <h3 className="text-lg font-medium mb-2">Drag & Drop Feature</h3>
                 <p>This advanced drag-and-drop document organization feature is currently under development.</p>
               </div>
-=======
               <DragDropDocuments />
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
             </CardContent>
           </Card>
         </TabsContent>

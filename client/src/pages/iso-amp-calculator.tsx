@@ -164,15 +164,12 @@ export default function ISOAmpCalculator() {
     },
     proposedProcessor: {
       name: 'TracerPay',
-<<<<<<< HEAD
       qualifiedRate: 2.49,
       midQualifiedRate: 2.89,
       nonQualifiedRate: 3.29,
-=======
       qualifiedRate: 3.25,
       midQualifiedRate: 3.65,
       nonQualifiedRate: 4.05,
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       debitRate: 0.95,
       authFee: 0.10,
       monthlyFee: 15,

@@ -1,9 +1,7 @@
-<<<<<<< HEAD
 import OpenAI from 'openai';
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 import axios from 'axios';
-=======
 // MEMORY OPTIMIZATION: Disabled OpenAI
 let OpenAI: any = null;
 // MEMORY OPTIMIZATION: Disabled puppeteer (12MB)
@@ -14,17 +12,13 @@ let puppeteer: any = null;
 // import axios from 'axios';
 let cheerio: any = null;
 let axios: any = null;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 import robotsParser from 'robots-parser';
 import { db } from './db';
 import { documents, vendors, vendorIntelligence, type InsertVendorIntelligence } from '@shared/schema';
 import { eq, desc } from 'drizzle-orm';
 
-<<<<<<< HEAD
 const openai = process.env.OPENAI_API_KEY ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) : null;
-=======
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
 interface VendorUpdate {
   vendorName: string;
@@ -354,11 +348,8 @@ export class VendorIntelligenceEngine {
   private async analyzePricingChanges(vendorName: string, content: string): Promise<VendorUpdate[]> {
     try {
       const response = await openai.chat.completions.create({
-<<<<<<< HEAD
         model: 'gpt-4o',
-=======
         model: 'gpt-4.1-mini',
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         messages: [
           {
             role: 'system',
@@ -403,11 +394,8 @@ export class VendorIntelligenceEngine {
   private async analyzeFeatureAnnouncements(vendorName: string, content: string): Promise<VendorUpdate[]> {
     try {
       const response = await openai.chat.completions.create({
-<<<<<<< HEAD
         model: 'gpt-4o',
-=======
         model: 'gpt-4.1-mini',
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         messages: [
           {
             role: 'system',
@@ -456,11 +444,8 @@ export class VendorIntelligenceEngine {
       const newsContent = await this.searchVendorNews(vendorName);
       
       const response = await openai.chat.completions.create({
-<<<<<<< HEAD
         model: 'gpt-4o',
-=======
         model: 'gpt-4.1-mini',
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         messages: [
           {
             role: 'system',
@@ -545,11 +530,8 @@ export class VendorIntelligenceEngine {
       if (!industryNews) return [];
 
       const response = await openai.chat.completions.create({
-<<<<<<< HEAD
         model: 'gpt-4o',
-=======
         model: 'gpt-4.1-mini',
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         messages: [
           {
             role: 'system',
@@ -691,11 +673,8 @@ export class VendorIntelligenceEngine {
 
   private async generateIntelligenceReport(updates: VendorUpdate[]): Promise<string> {
     const response = await openai.chat.completions.create({
-<<<<<<< HEAD
       model: 'gpt-4o',
-=======
       model: 'gpt-4.1-mini',
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       messages: [
         {
           role: 'system',

@@ -34,7 +34,6 @@ interface UserStats {
   rank: number;
 }
 
-<<<<<<< HEAD
 interface Achievement {
   id: string;
   name: string;
@@ -51,8 +50,6 @@ interface Achievement {
   };
 }
 
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 interface StatCardProps {
   title: string;
   value: number;
@@ -96,7 +93,6 @@ interface LeaderboardEntryProps {
 
 function LeaderboardEntry({ user, currentUserId, position }: LeaderboardEntryProps) {
   const isCurrentUser = user.id === currentUserId;
-<<<<<<< HEAD
   
   return (
     <div className={cn(
@@ -135,7 +131,6 @@ function LeaderboardEntry({ user, currentUserId, position }: LeaderboardEntryPro
           <span>Level {user.level}</span>
           <span>{user.totalPoints} pts</span>
           <span>{user.totalChats} chats</span>
-=======
   const displayName = user.firstName && user.lastName 
     ? `${user.firstName} ${user.lastName}` 
     : user.username;
@@ -175,25 +170,20 @@ function LeaderboardEntry({ user, currentUserId, position }: LeaderboardEntryPro
         <div className="flex items-center space-x-4 mt-1 text-xs text-muted-foreground">
           <span>{user.totalChats} chats</span>
           <span>{user.currentStreak} streak</span>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         </div>
       </div>
       
       <div className="text-right">
-<<<<<<< HEAD
         <div className="text-sm font-semibold">{user.totalPoints}</div>
-=======
         <div className="text-sm font-bold text-blue-600">
           {user.totalPoints.toLocaleString()}
         </div>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         <div className="text-xs text-muted-foreground">points</div>
       </div>
     </div>
   );
 }
 
-<<<<<<< HEAD
 function AchievementCard({ achievement }: { achievement: Achievement }) {
   const rarityColors = {
     common: "border-gray-300 bg-gray-50 dark:bg-gray-900",
@@ -260,7 +250,6 @@ export default function GamificationDashboard() {
   const { data: leaderboard, isLoading: leaderboardLoading } = useQuery({
     queryKey: ['/api/leaderboard'],
     enabled: true
-=======
 interface GamificationDashboardProps {
   currentUserId: string;
 }
@@ -273,19 +262,16 @@ export function GamificationDashboard({ currentUserId }: GamificationDashboardPr
   const { data: leaderboard, isLoading: leaderboardLoading } = useQuery({
     queryKey: ["/api/gamification/leaderboard", 10],
     refetchInterval: 30000,
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   });
 
   if (statsLoading) {
     return (
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-<<<<<<< HEAD
           {[...Array(4)].map((_, i) => (
             <Card key={i} className="animate-pulse">
               <CardContent className="p-4">
                 <div className="h-16 bg-muted rounded"></div>
-=======
           {Array.from({ length: 4 }).map((_, i) => (
             <Card key={i}>
               <CardContent className="p-4">
@@ -298,7 +284,6 @@ export function GamificationDashboard({ currentUserId }: GamificationDashboardPr
                     </div>
                   </div>
                 </div>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
               </CardContent>
             </Card>
           ))}
@@ -307,7 +292,6 @@ export function GamificationDashboard({ currentUserId }: GamificationDashboardPr
     );
   }
 
-<<<<<<< HEAD
   const currentUser = userStats?.user;
   const stats = userStats?.stats;
 
@@ -424,7 +408,6 @@ export function GamificationDashboard({ currentUserId }: GamificationDashboardPr
     </div>
   );
 }
-=======
   if (!userStats) {
     return (
       <Card>
@@ -555,4 +538,3 @@ export function GamificationDashboard({ currentUserId }: GamificationDashboardPr
 }
 
 export default GamificationDashboard;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8

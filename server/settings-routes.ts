@@ -1,20 +1,13 @@
 import { Express } from 'express';
 import { neon } from '@neondatabase/serverless';
-<<<<<<< HEAD
-=======
 import { requireSecureAuth, requireRole } from './secure-auth';
 import { auditLog } from './security-config';
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
 const sql = neon(process.env.DATABASE_URL!);
 
 export function registerSettingsRoutes(app: Express) {
   // Get all admin settings
-<<<<<<< HEAD
-  app.get('/api/admin/settings', async (req, res) => {
-=======
   app.get('/api/admin/settings', requireSecureAuth, requireRole(['admin', 'dev-admin', 'client-admin']), async (req, res) => {
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     try {
       const defaultSettings = {
         'user-management': {
@@ -70,11 +63,8 @@ export function registerSettingsRoutes(app: Express) {
   });
 
   // Update specific setting
-<<<<<<< HEAD
   app.put('/api/admin/settings/:category/:subcategory/:key', async (req, res) => {
-=======
   app.put('/api/admin/settings/:category/:subcategory/:key', requireSecureAuth, requireRole(['admin', 'dev-admin', 'client-admin']), async (req, res) => {
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     try {
       const { category, subcategory, key } = req.params;
       const { value } = req.body;
@@ -97,11 +87,8 @@ export function registerSettingsRoutes(app: Express) {
   });
 
   // Bulk update settings for a category/subcategory
-<<<<<<< HEAD
   app.put('/api/admin/settings/:category/:subcategory', async (req, res) => {
-=======
   app.put('/api/admin/settings/:category/:subcategory', requireSecureAuth, requireRole(['admin', 'dev-admin', 'client-admin']), async (req, res) => {
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     try {
       const { category, subcategory } = req.params;
       const { settings } = req.body;
@@ -117,10 +104,8 @@ export function registerSettingsRoutes(app: Express) {
     }
   });
 
-<<<<<<< HEAD
   // Get active user sessions
   app.get('/api/admin/sessions', async (req, res) => {
-=======
   // Generic settings update endpoint to handle all settings updates
   app.put('/api/admin/settings', requireSecureAuth, requireRole(['admin', 'dev-admin', 'client-admin']), async (req, res) => {
     try {
@@ -147,7 +132,6 @@ export function registerSettingsRoutes(app: Express) {
 
   // Get active user sessions
   app.get('/api/admin/sessions', requireSecureAuth, requireRole(['admin', 'dev-admin', 'client-admin']), async (req, res) => {
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     try {
       // Use existing users table to get real session data
       const users = await sql`
@@ -176,11 +160,8 @@ export function registerSettingsRoutes(app: Express) {
   });
 
   // End a user session
-<<<<<<< HEAD
   app.delete('/api/admin/sessions/:sessionId', async (req, res) => {
-=======
   app.delete('/api/admin/sessions/:sessionId', requireSecureAuth, requireRole(['admin', 'dev-admin', 'client-admin']), async (req, res) => {
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     try {
       const { sessionId } = req.params;
       
@@ -195,10 +176,8 @@ export function registerSettingsRoutes(app: Express) {
     }
   });
 
-<<<<<<< HEAD
   // Get system performance metrics
   app.get('/api/admin/performance', async (req, res) => {
-=======
   // Generate SSO token for iframe integration
   app.post('/api/admin/generate-sso-token', requireSecureAuth, requireRole(['admin', 'dev-admin', 'client-admin']), async (req, res) => {
     try {
@@ -222,7 +201,6 @@ export function registerSettingsRoutes(app: Express) {
 
   // Get system performance metrics
   app.get('/api/admin/performance', requireSecureAuth, requireRole(['admin', 'dev-admin', 'client-admin']), async (req, res) => {
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     try {
       const metrics = {
         database: {

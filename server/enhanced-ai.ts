@@ -1,16 +1,11 @@
-<<<<<<< HEAD
 import Anthropic from '@anthropic-ai/sdk';
-=======
 // MEMORY OPTIMIZATION: Disabled Anthropic
 let Anthropic: any = null;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 import { pineconeVectorService, type VectorSearchResult } from "./pinecone-vector";
 import { perplexitySearchService, type ExternalSearchResult } from "./perplexity-search";
 import { aiEnhancedSearchService } from "./ai-enhanced-search";
 import { promptChainService } from "./prompt-chain";
 import { smartRoutingService } from "./smart-routing";
-<<<<<<< HEAD
-=======
 import { unifiedLearningSystem } from "./unified-learning-system";
 import { aiFallbackService } from "./ai-fallback-service";
 import { documentGraphIntelligence } from "./document-graph-intelligence";
@@ -18,12 +13,10 @@ import { multiStepReasoningEngine } from "./multi-step-reasoning-engine";
 import { realTimeFactVerification } from "./real-time-fact-verification";
 import { adaptiveLearningSystem } from "./adaptive-learning-system";
 import { advancedCitationEngine } from "./advanced-citation-engine";
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 import { db } from "./db";
 import { webSearchLogs, adminSettings } from "@shared/schema";
 import { eq } from "drizzle-orm";
 import type { ChatMessage, AIResponse } from "./openai";
-<<<<<<< HEAD
 import { vectorCache } from './vector-cache';
 import { queryOptimizer } from './query-optimizer';
 import { reranker } from './reranker';
@@ -32,7 +25,6 @@ import { batchProcessor } from './batch-processor';
 // the newest Anthropic model is "claude-3-5-sonnet-20241022" which was released October 22, 2024
 const anthropic = new Anthropic({ 
   apiKey: process.env.ANTHROPIC_API_KEY_JACC
-=======
 
 /*
 <important_code_snippet_instructions>
@@ -47,7 +39,6 @@ const DEFAULT_MODEL_STR = "claude-sonnet-4-20250514";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 });
 
 export interface EnhancedAIResponse extends AIResponse {
@@ -66,8 +57,6 @@ export interface EnhancedAIResponse extends AIResponse {
     timeframe: string;
     type: 'call' | 'email' | 'meeting' | 'document' | 'other';
   }>;
-<<<<<<< HEAD
-=======
   reasoningChain?: any;
   factVerification?: any;
   advancedCitations?: any[];
@@ -77,7 +66,6 @@ export interface EnhancedAIResponse extends AIResponse {
     evidenceStrength: string;
     verificationStatus: string;
   };
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 }
 
 export interface DocumentSource {
@@ -89,12 +77,9 @@ export interface DocumentSource {
 }
 
 export class EnhancedAIService {
-<<<<<<< HEAD
   private documentCache = new Map<string, { results: VectorSearchResult[], timestamp: number }>();
   private responseCache = new Map<string, { response: EnhancedAIResponse, timestamp: number }>();
   private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   
   async getAdminSettings() {
     const [settings] = await db
@@ -115,7 +100,6 @@ export class EnhancedAIService {
     conversationHistory: ChatMessage[],
     userId: string
   ): Promise<EnhancedAIResponse> {
-<<<<<<< HEAD
     try {
       console.log(`🔍 Step 1: Searching internal document database for user ${userId}`);
       
@@ -153,7 +137,6 @@ export class EnhancedAIService {
     }
   }
 
-=======
     console.log('🧠 Starting enhanced AI processing with advanced reasoning...');
 
     // Get user personalization
@@ -413,13 +396,11 @@ export class EnhancedAIService {
     };
   }
 
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   async generateStandardResponse(
     message: string,
     conversationHistory: ChatMessage[],
     userId?: string
   ): Promise<EnhancedAIResponse> {
-<<<<<<< HEAD
     // Step 1: Get user's custom prompt if available
     let customPrompt = null;
     if (userId) {
@@ -439,7 +420,6 @@ export class EnhancedAIService {
     // Step 3: If no internal documents found, still use custom prompt for general response
     const messages = [...conversationHistory, { role: 'user' as const, content: message }];
     return await this.generateResponseWithDocuments(messages, { customPrompt });
-=======
     // Check response cache first for instant responses
     const { responseCache } = await import('./response-cache');
     const cached = await responseCache.get(message);
@@ -500,7 +480,6 @@ export class EnhancedAIService {
     console.log(`🌐 STEP 3: No internal matches found - providing general response`);
     const messages = [{ role: 'user' as const, content: message }];
     return await this.generateResponseWithDocuments(messages, {});
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   }
 
   async generateResponseWithDocuments(
@@ -513,10 +492,7 @@ export class EnhancedAIService {
       spreadsheetData?: any;
     }
   ): Promise<EnhancedAIResponse> {
-<<<<<<< HEAD
-=======
     const startTime = Date.now();
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     try {
       // Find the last user message in the conversation
       const lastUserMessage = messages.slice().reverse().find(msg => msg.role === 'user');
@@ -524,7 +500,6 @@ export class EnhancedAIService {
         throw new Error('No user message found in conversation');
       }
 
-<<<<<<< HEAD
       // Use provided search results from context or search documents
       let searchResults = context?.searchResults || [];
       let webSearchResults = null;
@@ -536,7 +511,6 @@ export class EnhancedAIService {
           console.log(`Found ${searchResults.length} document matches for: "${lastUserMessage.content}"`);
         } catch (error) {
           console.log("Document search failed");
-=======
       // STEP 1: Search FAQ Knowledge Base FIRST
       let faqResults = [];
       let searchResults = context?.searchResults || [];
@@ -710,7 +684,6 @@ ${topFaq.answer}
           }
         } catch (error) {
           console.log("FAQ and document search failed");
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
           searchResults = [];
         }
       }
@@ -736,7 +709,6 @@ ${topFaq.answer}
         }
       }
       
-<<<<<<< HEAD
       // Only use web search if absolutely no relevant documents found after comprehensive search
       let webSearchReason = null;
       if (searchResults.length === 0) {
@@ -746,7 +718,6 @@ ${topFaq.answer}
           try {
             webSearchResults = await perplexitySearchService.searchWeb(lastUserMessage.content);
             console.log("Web search completed successfully - no internal documents found");
-=======
       // STEP 3: Web search only if no FAQ or document matches found
       let webSearchReason = null;
       if (searchResults.length === 0) {
@@ -757,7 +728,6 @@ ${topFaq.answer}
           try {
             webSearchResults = await perplexitySearchService.searchWeb(lastUserMessage.content);
             console.log("✅ Web search completed - providing external results with JACC Memory disclaimer");
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
             
             // Log the web search usage
             await this.logWebSearchUsage(lastUserMessage.content, webSearchResults.content, webSearchReason, context);
@@ -769,16 +739,12 @@ ${topFaq.answer}
           webSearchReason = "Query outside business scope - external search restricted";
         }
       } else {
-<<<<<<< HEAD
         console.log("Using internal documents, web search not needed");
-=======
         console.log("Using internal knowledge base, web search not needed");
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       }
       
       // Create context from search results
       const documentContext = this.formatDocumentContext(searchResults);
-<<<<<<< HEAD
       const webContext = webSearchResults ? `\nWEB SEARCH RESULTS:\n${webSearchResults.content}\n${webSearchResults.citations.length > 0 ? `Sources: ${webSearchResults.citations.join(', ')}` : ''}` : '';
       
       // Create document examples for response (show top 3)
@@ -792,7 +758,6 @@ ${topFaq.answer}
         return `<div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin: 8px 0; background: #f9fafb;">
 <h4 style="margin: 0 0 8px 0; color: #1f2937; font-weight: 600;">📄 ${docName}</h4>
 <p style="margin: 0 0 12px 0; color: #6b7280; font-size: 14px; line-height: 1.4;">${docType} • ${snippet}...</p>
-=======
       const webContext = webSearchResults ? `\n\n**EXTERNAL WEB SEARCH RESULTS:**\n${webSearchResults.content}\n${webSearchResults.citations.length > 0 ? `\nSources: ${webSearchResults.citations.join(', ')}` : ''}` : '';
       
       // Create document examples for response - only for exact matches or when specifically requested
@@ -806,7 +771,6 @@ ${topFaq.answer}
           return `<div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin: 8px 0; background: #f9fafb;">
 <h4 style="margin: 0 0 8px 0; color: #1f2937; font-weight: 600;">📄 ${docName}</h4>
 <p style="margin: 0 0 12px 0; color: #6b7280; font-size: 14px; line-height: 1.4;">${docType}</p>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 <div style="display: flex; gap: 12px;">
 <a href="/documents/${doc.documentId}" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #3b82f6; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500;" target="_blank">
 🔗 View Document
@@ -816,7 +780,6 @@ ${topFaq.answer}
 </a>
 </div>
 </div>`;
-<<<<<<< HEAD
       }).join('\n');
       
       // Enhanced system prompt with document and web context
@@ -857,7 +820,6 @@ User context: ${context?.userRole || 'Merchant Services Sales Agent'}
 DOCUMENT CONTEXT:
 ${documentContext}
 
-=======
         }).join('\n');
       };
       
@@ -1111,7 +1073,6 @@ ${documentContext}
 
 ${webContext}
 
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 ACTION ITEMS AND TASK EXTRACTION:
 - **AUTOMATICALLY IDENTIFY**: Extract action items, follow-up tasks, and deadlines from transcriptions and conversations
 - **CATEGORIZE TASKS**: Organize by type (Client Communication, Documentation, Internal Process, Scheduling)
@@ -1121,7 +1082,6 @@ ACTION ITEMS AND TASK EXTRACTION:
 
 When appropriate, suggest actions like saving payment processing information to folders, downloading rate comparisons, creating merchant proposals, and tracking action items from conversations.`;
 
-<<<<<<< HEAD
       const response = await anthropic.messages.create({
         model: "claude-3-5-sonnet-20241022",
         system: systemPrompt,
@@ -1145,7 +1105,6 @@ When appropriate, suggest actions like saving payment processing information to 
         }
         
         content += `\n\n**Available Documents:**\n${documentExamples}`;
-=======
       // Dynamic temperature and token limits based on context
       const isFirstMessage = messages.filter(msg => msg.role === 'user').length === 1;
       const hasWebResults = webSearchResults !== null;
@@ -1261,7 +1220,6 @@ When appropriate, suggest actions like saving payment processing information to 
         if (!content.includes('href="/documents/')) {
           content += `\n\n${documentLink}`;
         }
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       }
       
       // Extract action items and follow-up tasks
@@ -1279,23 +1237,18 @@ When appropriate, suggest actions like saving payment processing information to 
         ? `Found ${searchResults.length} relevant documents in your knowledge base`
         : "No relevant documents found in internal database";
 
-<<<<<<< HEAD
       return {
         message: content,
         actions: actions.length > 0 ? actions : undefined,
-=======
       const aiResponse = {
         message: content,
         actions: actions.length > 0 ? actions.filter(action => 
           ['save_to_folder', 'download', 'create_proposal', 'find_documents'].includes(action.type)
         ) : undefined,
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         sources: sources.length > 0 ? sources : undefined,
         reasoning,
         actionItems: actionItems.length > 0 ? actionItems : undefined,
         followupTasks: followupTasks.length > 0 ? followupTasks : undefined,
-<<<<<<< HEAD
-=======
         // Include document metadata for pagination
         documentResults: searchResults.length > 0 ? {
           query: lastUserMessage.content,
@@ -1312,7 +1265,6 @@ When appropriate, suggest actions like saving payment processing information to 
           })),
           totalCount: searchResults.length
         } : undefined,
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         suggestions: [
           "Find similar merchant documents in our knowledge base",
           "Create a merchant proposal from this information",
@@ -1320,8 +1272,6 @@ When appropriate, suggest actions like saving payment processing information to 
           "Show me processing rate comparisons for this business type"
         ]
       };
-<<<<<<< HEAD
-=======
 
       // Capture interaction for unified learning system
       try {
@@ -1341,15 +1291,12 @@ When appropriate, suggest actions like saving payment processing information to 
       }
 
       return aiResponse;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     } catch (error) {
       console.error("Enhanced AI service error:", error);
       throw new Error("Failed to generate AI response with document context. Please check your API keys and try again.");
     }
   }
 
-<<<<<<< HEAD
-=======
   private applyHormoziFormatting(content: string, userMessage: string): string {
     // Disabled - marketing requests should use conversational workflow instead
     // Check if this is a marketing request
@@ -1419,13 +1366,11 @@ When appropriate, suggest actions like saving payment processing information to 
     return content;
   }
 
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   private formatDocumentContext(searchResults: VectorSearchResult[]): string {
     if (searchResults.length === 0) {
       return "No relevant documents found in the knowledge base.";
     }
 
-<<<<<<< HEAD
     if (searchResults.length > 3) {
       return `MULTIPLE DOCUMENTS FOUND (${searchResults.length} total):
 ${searchResults.map((result, index) => 
@@ -1443,13 +1388,11 @@ Relevance Score: ${(result.score * 100).toFixed(1)}%
 IMPORTANT: When referencing this document in your response, always include the clickable link: [${result.metadata.documentName}](${result.metadata.webViewLink})
 ---`;
     }).join('\n');
-=======
     // Always keep context concise - show max 3 documents
     const topResults = searchResults.slice(0, 3);
     return topResults.map(result => 
       `${result.metadata.documentName}: ${result.content.substring(0, 150)}...`
     ).join('\n\n');
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   }
 
   private formatSources(searchResults: VectorSearchResult[]): DocumentSource[] {
@@ -1800,7 +1743,6 @@ IMPORTANT: When referencing this document in your response, always include the c
     return matches / queryWords.length;
   }
 
-<<<<<<< HEAD
   async searchDocuments(query: string): Promise<VectorSearchResult[]> {
     try {
       // Check vector cache first
@@ -1850,7 +1792,6 @@ IMPORTANT: When referencing this document in your response, always include the c
         // Extract search terms from the knowledge base answers to guide document search
         const guidanceTerms = this.extractSearchTermsFromGuidance(knowledgeBaseGuidance, searchQuery);
         searchTerms = [...searchTerms, ...guidanceTerms];
-=======
   async searchFAQKnowledgeBase(query: string): Promise<any[]> {
     try {
       const { db } = await import('./db');
@@ -1965,7 +1906,6 @@ IMPORTANT: When referencing this document in your response, always include the c
         console.log(`✅ Found guidance in ZenBot Knowledge Base for: "${query}"`);
         // Extract search terms from the knowledge base answers to guide document search
         searchTerms = this.extractSearchTermsFromGuidance(knowledgeBaseGuidance, query);
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         console.log(`🔍 Using enhanced search terms: ${searchTerms.join(', ')}`);
       }
 
@@ -1979,22 +1919,18 @@ IMPORTANT: When referencing this document in your response, always include the c
       for (const searchTerm of searchTerms) {
         console.log(`🔍 Searching for: "${searchTerm}"`);
         
-<<<<<<< HEAD
-=======
         // Add Auth.net specific search variations
         const searchVariations = [searchTerm];
         if (searchTerm.toLowerCase().includes('auth.net') || searchTerm.toLowerCase().includes('authnet')) {
           searchVariations.push('authorize.net', 'authorize net', 'authorize');
         }
         
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         // Strategy 1: Search document content chunks
         const { documentChunks } = await import('../shared/schema');
         const { db } = await import('./db');
         const { like, or, ilike } = await import('drizzle-orm');
         
         try {
-<<<<<<< HEAD
           const contentMatches = await db
             .select()
             .from(documentChunks)
@@ -2011,7 +1947,6 @@ IMPORTANT: When referencing this document in your response, always include the c
                 ilike(documentChunks.content, `%merchant%`)
               )
             )
-=======
           // Extract specific terms from the query for precise matching
           const queryTerms = searchTerm.toLowerCase().split(' ');
           const exactTermsOnly = queryTerms.filter(term => term.length > 3);
@@ -2030,13 +1965,11 @@ IMPORTANT: When referencing this document in your response, always include the c
             .select()
             .from(documentChunks)
             .where(or(...searchConditions))
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
             .limit(20);
 
           if (contentMatches.length > 0) {
             console.log(`📄 Found ${contentMatches.length} content matches for "${searchTerm}"`);
             
-<<<<<<< HEAD
             const chunkResults = contentMatches.map(chunk => ({
               id: chunk.id,
               score: 0.9,
@@ -2063,7 +1996,6 @@ IMPORTANT: When referencing this document in your response, always include the c
             }
             
             return rerankedResults;
-=======
             // Score results based on relevance and specificity
             const scoredResults = contentMatches.map(chunk => {
               let score = 0;
@@ -2120,13 +2052,11 @@ IMPORTANT: When referencing this document in your response, always include the c
             })));
             
             return sortedResults;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
           }
         } catch (error) {
           console.log(`Error searching chunks: ${error}`);
         }
         
-<<<<<<< HEAD
         // Strategy 2: Enhanced document name and metadata matching
         const termMatches = documents.filter(doc => {
           const searchText = `${doc.name} ${doc.originalName} ${doc.description || ''}`.toLowerCase();
@@ -2158,7 +2088,6 @@ IMPORTANT: When referencing this document in your response, always include the c
           ];
           
           return [...processorMatches, ...serviceMatches, ...directMatches].some(match => match);
-=======
         // Strategy 2: Precise document name and metadata matching
         const termMatches = documents.filter(doc => {
           const searchText = `${doc.name} ${doc.originalName}`.toLowerCase();
@@ -2213,7 +2142,6 @@ IMPORTANT: When referencing this document in your response, always include the c
           
           // Only return documents with meaningful relevance
           return relevanceScore >= 5;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         });
         
         matchingDocs.push(...termMatches);
@@ -2224,11 +2152,9 @@ IMPORTANT: When referencing this document in your response, always include the c
       
       if (matchingDocs.length > 0) {
         console.log(`✅ Found ${matchingDocs.length} uploaded documents for query: "${query}"`);
-<<<<<<< HEAD
         const results = matchingDocs.map(doc => ({
           id: doc.id,
           score: 0.9,
-=======
         
         // Calculate relevance scores for final ranking
         const scoredDocs = matchingDocs.map(doc => {
@@ -2269,7 +2195,6 @@ IMPORTANT: When referencing this document in your response, always include the c
         return sortedDocs.map(doc => ({
           id: doc.id,
           score: doc.calculatedScore,
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
           documentId: doc.id,
           content: `Found document: ${doc.originalName || doc.name} - This document contains information relevant to your query.`,
           metadata: {
@@ -2281,7 +2206,6 @@ IMPORTANT: When referencing this document in your response, always include the c
             mimeType: doc.mimeType
           }
         }));
-<<<<<<< HEAD
         
         // Rerank results
         const rerankedResults = await reranker.rerank(results, query);
@@ -2295,13 +2219,10 @@ IMPORTANT: When referencing this document in your response, always include the c
         });
         
         return rerankedResults;
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       }
       
       console.log(`No uploaded documents found for query: "${query}"`);
       // Fallback to vector search if available
-<<<<<<< HEAD
       const pineconeResults = await pineconeVectorService.searchDocuments(query, 10);
       
       if (pineconeResults.length > 0) {
@@ -2330,12 +2251,10 @@ IMPORTANT: When referencing this document in your response, always include the c
       }
       
       return fallbackResults;
-=======
       return await pineconeVectorService.searchDocuments(query, 10);
     } catch (error) {
       console.error('Error searching documents:', error);
       return await pineconeVectorService.searchDocuments(query, 10);
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     }
   }
 
@@ -2343,7 +2262,6 @@ IMPORTANT: When referencing this document in your response, always include the c
     const alternatives: string[] = [];
     const lowercaseQuery = originalQuery.toLowerCase();
     
-<<<<<<< HEAD
     // Extract key terms and create variations
     const keyTerms = lowercaseQuery.split(' ').filter(word => word.length > 2);
     
@@ -2396,7 +2314,6 @@ IMPORTANT: When referencing this document in your response, always include the c
     
     // Remove duplicates and return unique alternatives
     return [...new Set(alternatives)].slice(0, 5); // Limit to 5 alternatives
-=======
     // Comprehensive Auth.net/Authorize.net variations
     if (lowercaseQuery.includes('auth.net') || lowercaseQuery.includes('authnet') || 
         lowercaseQuery.includes('auth net') || lowercaseQuery.includes('authorize')) {
@@ -2586,7 +2503,6 @@ IMPORTANT: When referencing this document in your response, always include the c
     
     // Remove duplicates and return more alternatives (increase from 5 to 15)
     return [...new Set(alternatives)].slice(0, 15);
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   }
 
   private extractSuggestions(response: string): string[] {
@@ -2690,11 +2606,8 @@ Provide your response in this EXACT format:
 Keep it conversational but data-driven. Only use information actually found in the documents.`;
 
       const response = await anthropic.messages.create({
-<<<<<<< HEAD
         model: "claude-3-5-sonnet-20241022",
-=======
         model: "claude-3-haiku-20240307",
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         messages: [{ role: 'user', content: analysisPrompt }],
         temperature: 0.3,
         max_tokens: 800,

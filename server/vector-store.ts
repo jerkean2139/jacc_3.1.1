@@ -1,14 +1,11 @@
-<<<<<<< HEAD
 import { Pinecone } from '@pinecone-database/pinecone';
 import OpenAI from 'openai';
-=======
 // MEMORY OPTIMIZATION: Lazy load Pinecone
 // import { Pinecone } from '@pinecone-database/pinecone';
 let Pinecone: any = null;
 // MEMORY OPTIMIZATION: Disabled OpenAI (9.7MB)
 // import OpenAI from 'openai';
 let OpenAI: any = null;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 import type { ProcessedDocument, DocumentChunk } from './google-drive';
 
 export interface VectorSearchResult {

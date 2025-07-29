@@ -4,11 +4,8 @@ import { eq, desc, and, gte } from "drizzle-orm";
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
 
-<<<<<<< HEAD
 // the newest Anthropic model is "claude-sonnet-4-20250514" which was released May 14, 2025
-=======
 // the newest Anthropic model is "claude-3-7-sonnet-20250219" which was released May 14, 2025
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -37,8 +34,6 @@ export class AIConfigurationService {
     if (existingModels.length === 0) {
       const defaultModels: InsertAIModel[] = [
         {
-<<<<<<< HEAD
-=======
           name: "GPT-4.1 Mini",
           provider: "openai",
           modelId: "gpt-4.1-mini",
@@ -56,7 +51,6 @@ export class AIConfigurationService {
           description: "OpenAI's latest efficient model optimized for logical reasoning and calculations"
         },
         {
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
           name: "Claude 4.0 Sonnet",
           provider: "anthropic",
           modelId: "claude-sonnet-4-20250514",
@@ -66,26 +60,20 @@ export class AIConfigurationService {
           isDefault: true,
           capabilities: {
             vision: true,
-<<<<<<< HEAD
             functions: false,
-=======
             functions: true,
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
             reasoning: true,
             analysis: true,
             longContext: true
           },
-<<<<<<< HEAD
           description: "Latest Claude 4.0 model with enhanced reasoning and analysis capabilities"
         },
         {
           name: "GPT-4.1-Mini",
-=======
           description: "Claude 4.0 Sonnet with superior reasoning and document analysis capabilities"
         },
         {
           name: "GPT-4.1 Mini",
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
           provider: "openai",
           modelId: "gpt-4.1-mini",
           isActive: true,
@@ -93,17 +81,13 @@ export class AIConfigurationService {
           costPerToken: 0.000005,
           isDefault: false,
           capabilities: {
-<<<<<<< HEAD
             vision: true,
-=======
             vision: false,
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
             functions: true,
             reasoning: true,
             analysis: true,
             longContext: false
           },
-<<<<<<< HEAD
           description: "OpenAI's latest optimized model with improved performance and lower costs"
         },
         {
@@ -122,9 +106,7 @@ export class AIConfigurationService {
             longContext: true
           },
           description: "Previous generation Claude model for fallback scenarios"
-=======
           description: "OpenAI's efficient model optimized for fast queries and general tasks"
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         }
       ];
 

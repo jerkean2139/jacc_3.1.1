@@ -29,11 +29,8 @@ export class UnifiedLearningSystem {
         query: interaction.query,
         response: interaction.response,
         source: interaction.source,
-<<<<<<< HEAD
         userId: interaction.userId || 'admin-user',
-=======
         userId: interaction.userId || 'system',
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         sessionId: interaction.sessionId || this.generateSessionId(),
         quality: interaction.quality || null,
         wasCorrect: interaction.wasCorrect ?? true,

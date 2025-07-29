@@ -9,13 +9,10 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-<<<<<<< HEAD
 // import { DraggableDocument } from "@/components/draggable-document"; // REMOVED
 // import { DroppableFolder } from "@/components/droppable-folder"; // REMOVED
-=======
 import { DraggableDocument } from "@/components/draggable-document";
 import { DroppableFolder } from "@/components/droppable-folder";
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
 import { apiRequest } from "@/lib/queryClient";
 import { Search, FileText, Folder, Trash2, ArrowLeft, Home, Plus, FolderPlus, User as UserIcon } from "lucide-react";
@@ -334,7 +331,6 @@ export default function DocumentsPage() {
                     });
                     
                     return (
-<<<<<<< HEAD
                       <Card key={folder.id} className="hover:shadow-md transition-shadow">
                         <CardContent className="p-4">
                           <div className="flex items-center gap-3">
@@ -350,7 +346,6 @@ export default function DocumentsPage() {
                           </div>
                         </CardContent>
                       </Card>
-=======
                       <DroppableFolder
                         key={folder.id}
                         folder={{
@@ -362,7 +357,6 @@ export default function DocumentsPage() {
                         }}
                         onDocumentMove={handleDocumentMove}
                       />
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                     );
                   })}
                 </div>

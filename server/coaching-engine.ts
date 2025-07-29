@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 import OpenAI from 'openai';
-=======
 // MEMORY OPTIMIZATION: Disabled OpenAI
 let OpenAI: any = null;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 import Anthropic from '@anthropic-ai/sdk';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -89,11 +86,8 @@ Focus on merchant services, payment processing, TracerPay, TracerFlex, TracerAut
 
     try {
       const response = await openai.chat.completions.create({
-<<<<<<< HEAD
         model: 'gpt-4o',
-=======
         model: 'gpt-4.1-mini',
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         messages: [{ role: 'user', content: prompt }],
         response_format: { type: "json_object" },
         temperature: 0.1
@@ -193,11 +187,8 @@ JSON format: [{"type":"...", "title":"...", "message":"...", "priority":"...", "
 
     try {
       const response = await openai.chat.completions.create({
-<<<<<<< HEAD
         model: 'gpt-4o',
-=======
         model: 'gpt-4.1-mini',
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         messages: [{ role: 'user', content: urgentPrompt }],
         response_format: { type: "json_object" },
         temperature: 0.1,

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // Clear popup flags utility - simplified and optimized
 const POPUP_FLAGS = [
   'hasSeenOnboarding',
@@ -25,7 +24,6 @@ export function clearPopupFlags() {
       console.log(`Cleared ${clearedCount} popup flags from localStorage`);
     }
   });
-=======
 // Utility to clear all onboarding and tutorial popup flags from localStorage
 export function clearAllPopupFlags() {
   try {
@@ -62,5 +60,4 @@ export function clearAllPopupFlags() {
 // Auto-clear on app load
 if (typeof window !== 'undefined') {
   clearAllPopupFlags();
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 }

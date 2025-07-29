@@ -1,9 +1,9 @@
-import { 
-  users, 
-  folders, 
-  chats, 
-  messages, 
-  documents, 
+import {
+  users,
+  folders,
+  chats,
+  messages,
+  documents,
   favorites,
   apiKeys,
   userChatLogs,
@@ -14,13 +14,12 @@ import {
   userSessions,
   promptUsageLog,
   adminSettings,
-  type User, 
-  type UpsertUser,
-<<<<<<< HEAD
-  type InsertUser,
-=======
+  personalDocuments,
+  personalFolders,
 
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
+  type User,
+  type UpsertUser,
+  type InsertUser,
   type Folder,
   type Chat,
   type Message,
@@ -46,19 +45,12 @@ import {
   type PromptUsageLog,
   type InsertPromptUsageLog,
   type AdminSetting,
-<<<<<<< HEAD
   type InsertAdminSetting
 } from "@shared/schema";
-import { db } from "./db";
-import { eq, desc, and } from "drizzle-orm";
-=======
-  type InsertAdminSetting,
-  personalDocuments,
-  personalFolders
-} from "@shared/schema";
+
 import { db } from "./db";
 import { eq, desc, and, inArray, gte } from "drizzle-orm";
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
+
 
 // Interface for storage operations
 export interface IStorage {
@@ -67,10 +59,7 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-<<<<<<< HEAD
-=======
   updateUser(id: string, updates: Partial<User>): Promise<User>;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   upsertUser(user: UpsertUser): Promise<User>;
   
   // API Key operations
@@ -85,11 +74,8 @@ export interface IStorage {
   createChat(chat: InsertChat): Promise<Chat>;
   getChat(id: string): Promise<Chat | undefined>;
   updateChat(id: string, updates: Partial<Chat>): Promise<Chat>;
-<<<<<<< HEAD
   updateChatTitle(id: string, title: string): Promise<Chat>;
-=======
   updateChatTitle(chatId: string, title: string): Promise<void>;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   deleteChat(id: string): Promise<void>;
   
   // Message operations
@@ -104,16 +90,11 @@ export interface IStorage {
   
   // Document operations
   getUserDocuments(userId: string): Promise<Document[]>;
-<<<<<<< HEAD
   getDocuments(): Promise<Document[]>;
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   createDocument(document: InsertDocument): Promise<Document>;
   getDocument(id: string): Promise<Document | undefined>;
   deleteDocument(id: string): Promise<void>;
   
-<<<<<<< HEAD
-=======
   // Personal document operations
   getUserPersonalDocuments(userId: string): Promise<any[]>;
   createPersonalDocument(document: any): Promise<any>;
@@ -122,7 +103,6 @@ export interface IStorage {
   getUserPersonalFolders(userId: string): Promise<any[]>;
   createPersonalFolder(folder: any): Promise<any>;
   
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   // Favorite operations
   getUserFavorites(userId: string): Promise<Favorite[]>;
   createFavorite(favorite: InsertFavorite): Promise<Favorite>;
@@ -138,7 +118,6 @@ export interface IStorage {
   getUserStats(userId: string): Promise<UserStats | null>;
   updateUserStats(userId: string, updates: Partial<UserStats>): Promise<void>;
 
-<<<<<<< HEAD
   // FAQ operations
   getFaq(): Promise<any[]>;
   getFaqByQuestion(question: string): Promise<any | undefined>;
@@ -150,14 +129,12 @@ export interface IStorage {
   getAllUsers(): Promise<User[]>;
   deleteUser(userId: string): Promise<void>;
   getAllDocuments(): Promise<Document[]>;
-=======
   // Admin operations
   getUsers(): Promise<User[]>;
   getAllUsers(): Promise<User[]>;
   deleteUser(userId: string): Promise<void>;
   getAllDocuments(): Promise<Document[]>;
   updateDocument(documentId: string, updates: any): Promise<Document>;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   updateDocumentPermissions(documentId: string, permissions: any): Promise<Document>;
   getAllPrompts(): Promise<any[]>;
   createPrompt(prompt: any): Promise<any>;
@@ -165,8 +142,6 @@ export interface IStorage {
   deletePrompt(promptId: string): Promise<void>;
   getAdminSettings(): Promise<any>;
   updateAdminSettings(settings: any): Promise<any>;
-<<<<<<< HEAD
-=======
   
   // Training and feedback
   createTrainingFeedback(feedback: any): Promise<any>;
@@ -176,7 +151,6 @@ export interface IStorage {
   getDocumentCount(): Promise<number>;
   getActiveUserCount(): Promise<number>;
   getRecentActivity(): Promise<any[]>;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
   // Simplified admin operations for existing data
   getAllChats(): Promise<Chat[]>;
@@ -208,8 +182,6 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-<<<<<<< HEAD
-=======
   async updateUser(id: string, updates: Partial<User>): Promise<User> {
     const [user] = await db
       .update(users)
@@ -222,7 +194,6 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   async upsertUser(userData: UpsertUser): Promise<User> {
     const [user] = await db
       .insert(users)
@@ -297,26 +268,31 @@ export class DatabaseStorage implements IStorage {
     return chat;
   }
 
-<<<<<<< HEAD
-  async updateChatTitle(id: string, title: string): Promise<Chat> {
-    const [chat] = await db
-      .update(chats)
-      .set({ title, updatedAt: new Date() })
-      .where(eq(chats.id, id))
-      .returning();
-    return chat;
-=======
-  async updateChatTitle(chatId: string, title: string): Promise<void> {
-    await db
-      .update(chats)
-      .set({ title, updatedAt: new Date() })
-      .where(eq(chats.id, chatId));
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
-  }
+    async updateChatTitle(id: string, title: string): Promise<Chat> {
+      const [chat] = await db
+        .update(chats)
+        .set({ title, updatedAt: new Date() })
+        .where(eq(chats.id, id))
+        .returning();
+      return chat;
+    }
 
-  async deleteChat(id: string): Promise<void> {
-    await db.delete(chats).where(eq(chats.id, id));
-  }
+    async deleteChat(id: string): Promise<void> {
+      await db.delete(chats).where(eq(chats.id, id));
+    }
+
+    // Message operations
+    async getChatMessages(chatId: string): Promise<Message[]> {
+      const result = await db
+        .select()
+        .from(messages)
+        .where(eq(messages.chatId, chatId))
+        .orderBy(messages.createdAt);
+
+      console.log(`Database: Found ${result.length} messages for chat ${chatId}`);
+      // … rest of method …
+    }
+
 
   // Message operations
   async getChatMessages(chatId: string): Promise<Message[]> {
@@ -383,7 +359,6 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(documents.createdAt));
   }
 
-<<<<<<< HEAD
   async getDocuments(): Promise<Document[]> {
     return await db
       .select()
@@ -391,8 +366,6 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(documents.createdAt));
   }
 
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   async createDocument(documentData: InsertDocument): Promise<Document> {
     const [document] = await db
       .insert(documents)
@@ -415,8 +388,6 @@ export class DatabaseStorage implements IStorage {
       .where(eq(documents.id, id));
   }
 
-<<<<<<< HEAD
-=======
   // Personal document operations
   async getUserPersonalDocuments(userId: string): Promise<any[]> {
     return await db
@@ -464,7 +435,6 @@ export class DatabaseStorage implements IStorage {
     return folder;
   }
 
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   // Favorite operations
   async getUserFavorites(userId: string): Promise<Favorite[]> {
     return await db
@@ -514,10 +484,8 @@ export class DatabaseStorage implements IStorage {
 
   // Prompt customization operations
   async getUserPrompts(userId: string): Promise<UserPrompt[]> {
-<<<<<<< HEAD
     const prompts = await db.select().from(userPrompts).where(eq(userPrompts.userId, userId));
     return prompts;
-=======
     try {
       const prompts = await db.select({
         id: userPrompts.id,
@@ -534,7 +502,6 @@ export class DatabaseStorage implements IStorage {
       console.log("UserPrompts table not yet migrated, returning empty array");
       return [];
     }
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   }
 
   async createUserPrompt(promptData: InsertUserPrompt): Promise<UserPrompt> {
@@ -559,7 +526,6 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserDefaultPrompt(userId: string, category?: string): Promise<UserPrompt | undefined> {
-<<<<<<< HEAD
     const query = db.select().from(userPrompts)
       .where(and(
         eq(userPrompts.userId, userId),
@@ -572,7 +538,6 @@ export class DatabaseStorage implements IStorage {
     
     const [prompt] = await query;
     return prompt;
-=======
     try {
       // Return the first prompt for the user (schema doesn't have isActive or isDefault)
       let query = db.select().from(userPrompts)
@@ -592,7 +557,6 @@ export class DatabaseStorage implements IStorage {
       console.error('Error fetching user default prompt:', error);
       return undefined;
     }
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   }
 
   // Admin operations
@@ -642,8 +606,6 @@ export class DatabaseStorage implements IStorage {
     await db.delete(userPrompts).where(eq(userPrompts.id, promptId));
   }
 
-<<<<<<< HEAD
-=======
   // Missing method implementations
   async getUsers(): Promise<User[]> {
     return await db.select().from(users).orderBy(users.createdAt);
@@ -689,7 +651,6 @@ export class DatabaseStorage implements IStorage {
     ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 20);
   }
 
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   async getAdminSettings(): Promise<any> {
     const [settings] = await db.select().from(adminSettings).where(eq(adminSettings.id, 'default'));
     return settings || {
@@ -723,6 +684,7 @@ export class DatabaseStorage implements IStorage {
         firstName: users.firstName,
         lastName: users.lastName,
         profileImageUrl: users.profileImageUrl,
+        role: users.role,
         totalChats: userStats.totalChats,
         totalMessages: userStats.totalMessages,
         calculationsPerformed: userStats.calculationsPerformed,
@@ -732,12 +694,6 @@ export class DatabaseStorage implements IStorage {
         longestStreak: userStats.longestStreak,
         totalPoints: userStats.totalPoints,
         level: userStats.level,
-<<<<<<< HEAD
-      })
-      .from(users)
-      .leftJoin(userStats, eq(users.id, userStats.userId))
-=======
-        role: users.role
       })
       .from(users)
       .leftJoin(userStats, eq(users.id, userStats.userId))
@@ -747,7 +703,6 @@ export class DatabaseStorage implements IStorage {
           gte(userStats.totalPoints, 1) // Only show users with some activity
         )
       )
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
       .orderBy(desc(userStats.totalPoints))
       .limit(limit);
 
@@ -845,7 +800,6 @@ export class DatabaseStorage implements IStorage {
   async getAllMessages(): Promise<Message[]> {
     return await db.select().from(messages).orderBy(desc(messages.createdAt));
   }
-<<<<<<< HEAD
 
   // FAQ operations implementation
   async getFaq(): Promise<any[]> {
@@ -878,8 +832,6 @@ export class DatabaseStorage implements IStorage {
   async deleteFaq(id: number): Promise<void> {
     await db.delete(faqKnowledgeBase).where(eq(faqKnowledgeBase.id, id));
   }
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 }
 
 export const storage = new DatabaseStorage();

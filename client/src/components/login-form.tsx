@@ -3,11 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-<<<<<<< HEAD
 import { useAuth } from "@/hooks/useAuth";
-=======
 import { useAuth } from "@/hooks/use-auth";
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 import { Eye, EyeOff, User, Users, Shield } from "lucide-react";
 
 export function LoginForm() {
@@ -18,13 +15,11 @@ export function LoginForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-<<<<<<< HEAD
     console.log('Login form submitting with:', { email, password: '***' });
     loginMutation.mutate({ email, password });
   };
 
 
-=======
     loginMutation.mutate({ email, password });
   };
 
@@ -56,7 +51,6 @@ export function LoginForm() {
     setEmail(email);
     setPassword(password);
   };
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
   return (
     <div className="w-full max-w-md mx-auto space-y-6">
@@ -66,31 +60,25 @@ export function LoginForm() {
           <CardDescription>
             Enter your credentials to access your merchant services assistant
           </CardDescription>
-<<<<<<< HEAD
           <div className="bg-blue-50 p-3 rounded-md text-sm text-blue-700">
             <p className="font-medium">Test Credentials:</p>
             <p>Admin: <code className="bg-blue-100 px-1 rounded">admin</code> / <code className="bg-blue-100 px-1 rounded">admin123</code></p>
             <p>Sales: <code className="bg-blue-100 px-1 rounded">cburnell</code> / <code className="bg-blue-100 px-1 rounded">cburnell123</code></p>
           </div>
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-<<<<<<< HEAD
               <Label htmlFor="email">Username</Label>
               <Input
                 id="email"
                 type="text"
                 placeholder="Enter your username (e.g., cburnell, admin)"
-=======
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
                 placeholder="Enter your email"
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -131,9 +119,7 @@ export function LoginForm() {
         </CardContent>
       </Card>
 
-<<<<<<< HEAD
 
-=======
       {/* Demo Credentials */}
       <Card>
         <CardHeader>
@@ -163,7 +149,6 @@ export function LoginForm() {
           })}
         </CardContent>
       </Card>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     </div>
   );
 }

@@ -37,19 +37,12 @@ export const users = pgTable("users", {
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
-<<<<<<< HEAD
-  role: varchar("role").default("sales-agent"), // sales-agent, client-admin, dev-admin
-=======
   role: varchar("role").default("sales-agent"), // sales-agent, agent, manager, client-admin, dev-admin
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   isActive: boolean("is_active").default(true),
   // ISO Hub integration fields
   isoHubId: varchar("iso_hub_id"),
   isoHubToken: text("iso_hub_token"),
-<<<<<<< HEAD
   isoHubTokenEncrypted: jsonb("iso_hub_token_encrypted"), // Encrypted token storage
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -63,10 +56,7 @@ export const vendorIntelligence = pgTable("vendor_intelligence", {
   contentType: varchar("content_type").notNull(), // pricing, feature, press_release, blog_post
   title: varchar("title"),
   content: text("content").notNull(),
-<<<<<<< HEAD
   contentEncrypted: jsonb("content_encrypted"), // Encrypted sensitive content
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   sourceUrl: varchar("source_url"),
   publishedAt: timestamp("published_at"),
   impact: varchar("impact").default("medium"), // low, medium, high
@@ -74,10 +64,7 @@ export const vendorIntelligence = pgTable("vendor_intelligence", {
   actionRequired: boolean("action_required").default(false),
   tags: text("tags").array(),
   aiAnalysis: jsonb("ai_analysis"), // AI-generated insights
-<<<<<<< HEAD
   aiAnalysisEncrypted: jsonb("ai_analysis_encrypted"), // Encrypted AI insights
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -148,19 +135,13 @@ export const adminSettings = pgTable("admin_settings", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-<<<<<<< HEAD
 // API Keys for external tool integration  
-=======
 // API Keys for external tool integration
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 export const apiKeys = pgTable("api_keys", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name").notNull(),
   keyHash: varchar("key_hash").notNull(),
-<<<<<<< HEAD
   keyEncrypted: jsonb("key_encrypted"), // Encrypted API key storage
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   permissions: text("permissions").array().default([]), // ['read', 'write', 'admin']
   isActive: boolean("is_active").default(true),
@@ -196,11 +177,8 @@ export const folders = pgTable("folders", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 255 }).notNull(),
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-<<<<<<< HEAD
   parentId: uuid("parent_id"),
-=======
   parentId: uuid("parent_id").references(() => folders.id, { onDelete: "cascade" }),
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   color: varchar("color", { length: 50 }).default("blue"),
   vectorNamespace: varchar("vector_namespace", { length: 255 }).notNull(), // Pinecone namespace
   folderType: varchar("folder_type", { length: 50 }).default("custom"), // processor, gateway, hardware, sales, custom
@@ -230,8 +208,6 @@ export const messages = pgTable("messages", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-<<<<<<< HEAD
-=======
 // Content Quality Management - Chunks needing human attention
 export const contentQualityFlags = pgTable("content_quality_flags", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -266,7 +242,6 @@ export const contentEnhancementSessions = pgTable("content_enhancement_sessions"
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 // Chat monitoring for analytics and debugging
 export const chatMonitoring = pgTable("chat_monitoring", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -335,11 +310,8 @@ export const personalFolders = pgTable("personal_folders", {
   color: varchar("color", { length: 7 }).default("#3B82F6"), // Hex color code
   icon: varchar("icon", { length: 50 }).default("Folder"), // Lucide icon name
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-<<<<<<< HEAD
   parentId: uuid("parent_id"),
-=======
   parentId: uuid("parent_id").references(() => personalFolders.id, { onDelete: "cascade" }),
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   sortOrder: integer("sort_order").default(0),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -635,8 +607,6 @@ export const faqKnowledgeBase = pgTable("faq_knowledge_base", {
   lastUpdated: timestamp("last_updated").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
   createdBy: varchar("created_by").default("admin"),
-<<<<<<< HEAD
-=======
   googleSheetRowId: varchar("google_sheet_row_id"), // Track which row this came from
   sourceType: varchar("source_type").default("manual"), // "manual" or "google_sheets"
 });
@@ -678,7 +648,6 @@ export const googleSheetsSyncLog = pgTable("google_sheets_sync_log", {
   startedAt: timestamp("started_at").notNull(),
   completedAt: timestamp("completed_at"),
   triggeredBy: varchar("triggered_by").references(() => users.id),
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 });
 
 // Vendor URL Management for automatic training
@@ -830,23 +799,7 @@ export const processorMarkups = pgTable("processor_markups", {
   updatedBy: varchar("updated_by").notNull(),
 });
 
-<<<<<<< HEAD
-=======
 // Security tables for bank-level protection
-export const auditLogs = pgTable('audit_logs', {
-  id: varchar('id').primaryKey().$defaultFn(() => `audit_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`),
-  userId: varchar('user_id').notNull(),
-  action: varchar('action').notNull(),
-  resource: varchar('resource').notNull(),
-  details: text('details'),
-  ipAddress: varchar('ip_address').notNull(),
-  userAgent: text('user_agent'),
-  timestamp: timestamp('timestamp').defaultNow().notNull()
-}, (table) => [
-  index('idx_audit_user').on(table.userId),
-  index('idx_audit_action').on(table.action),
-  index('idx_audit_timestamp').on(table.timestamp)
-]);
 
 export const loginAttempts = pgTable('login_attempts', {
   id: serial('id').primaryKey(),
@@ -920,7 +873,6 @@ export const documentPermissions = pgTable('document_permissions', {
   index('idx_doc_perm_group').on(table.groupId)
 ]);
 
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 // Define relations
 export const vendorsRelations = relations(vendors, ({ many }) => ({
   intelligence: many(vendorIntelligence),
@@ -954,7 +906,6 @@ export const foldersRelations = relations(folders, ({ one, many }) => ({
   documents: many(documents),
 }));
 
-<<<<<<< HEAD
 export const personalFoldersRelations = relations(personalFolders, ({ one, many }) => ({
   user: one(users, { fields: [personalFolders.userId], references: [users.id] }),
   parent: one(personalFolders, { fields: [personalFolders.parentId], references: [personalFolders.id] }),
@@ -967,8 +918,6 @@ export const personalDocumentsRelations = relations(personalDocuments, ({ one })
   folder: one(personalFolders, { fields: [personalDocuments.personalFolderId], references: [personalFolders.id] }),
 }));
 
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 export const chatsRelations = relations(chats, ({ one, many }) => ({
   user: one(users, { fields: [chats.userId], references: [users.id] }),
   folder: one(folders, { fields: [chats.folderId], references: [folders.id] }),
@@ -1264,7 +1213,6 @@ export const insertVendorComparisonSchema = createInsertSchema(vendorComparisons
   createdAt: true,
 });
 
-<<<<<<< HEAD
 // API Usage Tracking for cost calculation
 export const apiUsageLogs = pgTable("api_usage_logs", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -1311,10 +1259,8 @@ export type ApiUsageLog = typeof apiUsageLogs.$inferSelect;
 export type InsertApiUsageLog = typeof apiUsageLogs.$inferInsert;
 export type MonthlyUsageSummary = typeof monthlyUsageSummary.$inferSelect;
 export type InsertMonthlyUsageSummary = typeof monthlyUsageSummary.$inferInsert;
-=======
 export type UserPrompt = typeof userPrompts.$inferSelect;
 export type InsertUserPrompt = typeof userPrompts.$inferInsert;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 // Removed duplicate InsertUser definition
 export type ApiKey = typeof apiKeys.$inferSelect;
 export type InsertApiKey = z.infer<typeof insertApiKeySchema>;
@@ -1683,11 +1629,8 @@ export type UserChatLog = typeof userChatLogs.$inferSelect;
 
 export const vendorDocuments = pgTable("vendor_documents", {
   id: varchar("id").primaryKey().notNull(),
-<<<<<<< HEAD
   vendorId: uuid("vendor_id").notNull().references(() => vendors.id),
-=======
   vendorId: varchar("vendor_id").notNull().references(() => vendors.id),
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   url: varchar("url").notNull(),
   directDownloadUrl: varchar("direct_download_url"), // Direct PDF/file link
   title: varchar("title").notNull(),
@@ -1719,11 +1662,8 @@ export const documentChanges = pgTable("document_changes", {
 // Document approval workflow tables
 export const pendingDocumentApprovals = pgTable("pending_document_approvals", {
   id: varchar("id").primaryKey().notNull(),
-<<<<<<< HEAD
   vendorId: uuid("vendor_id").notNull().references(() => vendors.id),
-=======
   vendorId: varchar("vendor_id").notNull().references(() => vendors.id),
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   documentTitle: varchar("document_title").notNull(),
   documentUrl: varchar("document_url").notNull(),
   documentType: varchar("document_type").notNull(), // 'pdf', 'sales_flyer', 'product_announcement', 'blog_post', 'news', 'promotion'
@@ -1750,11 +1690,8 @@ export const documentApprovalDecisions = pgTable("document_approval_decisions", 
 // News and updates dashboard
 export const vendorNews = pgTable("vendor_news", {
   id: varchar("id").primaryKey().notNull(),
-<<<<<<< HEAD
   vendorId: uuid("vendor_id").notNull().references(() => vendors.id),
-=======
   vendorId: varchar("vendor_id").notNull().references(() => vendors.id),
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   title: varchar("title").notNull(),
   summary: text("summary"),
   content: text("content"),
@@ -1802,7 +1739,6 @@ export type VendorDocument = typeof vendorDocuments.$inferSelect;
 export type InsertVendorDocument = z.infer<typeof insertVendorDocumentSchema>;
 export type DocumentChange = typeof documentChanges.$inferSelect;
 export type InsertDocumentChange = z.infer<typeof insertDocumentChangeSchema>;
-<<<<<<< HEAD
 
 // Security audit logs table
 export const auditLogs = pgTable("audit_logs", {
@@ -1825,5 +1761,3 @@ export const auditLogs = pgTable("audit_logs", {
 
 export const insertAuditLogSchema = createInsertSchema(auditLogs);
 export type InsertAuditLog = z.infer<typeof insertAuditLogSchema>;
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8

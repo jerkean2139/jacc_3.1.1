@@ -11,17 +11,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
-<<<<<<< HEAD
 import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 import { 
   Settings, Database, MessageSquare, Brain, PlayCircle, CheckCircle, XCircle, 
   AlertTriangle, Clock, TrendingUp, Zap, Globe, Search, FileText, Eye, Download,
   Edit, Trash2, Save, Plus, Folder, FolderOpen, Upload, Users, Activity,
-<<<<<<< HEAD
   BarChart3, Timer, ChevronDown, ChevronRight, Target, BookOpen, RefreshCw,
   Calendar, Link, ExternalLink, X, User, Archive, ThumbsUp, Bot, UserX, UserCheck,
   Award, Trophy, Medal, HelpCircle, List, MoreVertical
@@ -38,12 +34,10 @@ import { useGamification } from '@/hooks/useGamification';
 import { useToast } from '@/hooks/use-toast';
 import { MessageContent } from '@/components/message-content';
 import { Link as RouterLink } from 'wouter';
-=======
   BarChart3, Timer, ChevronDown, ChevronRight, Target, BookOpen
 } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { apiRequest } from '@/lib/queryClient';
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
 interface FAQ {
   id: number;
@@ -73,10 +67,7 @@ interface PromptTemplate {
   temperature: number;
   maxTokens: number;
   isActive: boolean;
-<<<<<<< HEAD
   version?: string;
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 }
 
 interface TestScenario {
@@ -102,7 +93,6 @@ interface ChatMonitoringData {
   lastActivity: string;
 }
 
-<<<<<<< HEAD
 interface TestDashboard {
   summary: {
     totalScenarios: number;
@@ -137,8 +127,6 @@ interface PerformanceData {
   };
 }
 
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 export function UnifiedAdminPanel() {
   const [activeSection, setActiveSection] = useState('qa');
   const [searchTerm, setSearchTerm] = useState('');
@@ -148,7 +136,6 @@ export function UnifiedAdminPanel() {
   const [runningTests, setRunningTests] = useState<Set<string>>(new Set());
   const [expandedPrompts, setExpandedPrompts] = useState<string[]>([]);
   const [componentKey] = useState(Date.now()); // Force fresh render
-<<<<<<< HEAD
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [reviewingDocuments, setReviewingDocuments] = useState<any[]>([]);
   
@@ -428,10 +415,8 @@ export function UnifiedAdminPanel() {
       description: "All settings have been reset to default values.",
     });
   };
-=======
 
   const queryClient = useQueryClient();
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
   // Data fetching
   const { data: faqData = [] } = useQuery({
@@ -444,7 +429,6 @@ export function UnifiedAdminPanel() {
     retry: false,
   });
 
-<<<<<<< HEAD
   // Document approval mutations
   const approveDocumentMutation = useMutation({
     mutationFn: async (documentId: string) => {
@@ -544,8 +528,6 @@ export function UnifiedAdminPanel() {
   // Ensure documentsData is always an array
   const safeDocumentsData = Array.isArray(documentsData) ? documentsData : [];
 
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
   const { data: foldersData = [] } = useQuery({
     queryKey: ['/api/folders'],
     retry: false,
@@ -556,11 +538,8 @@ export function UnifiedAdminPanel() {
     retry: false,
   });
 
-<<<<<<< HEAD
   const { data: testingData, isLoading: testingLoading } = useQuery<any>({
-=======
   const { data: testingData, isLoading: testingLoading } = useQuery({
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     queryKey: ['/api/testing/dashboard'],
     retry: false,
   });
@@ -570,7 +549,6 @@ export function UnifiedAdminPanel() {
     retry: false,
   });
 
-<<<<<<< HEAD
   // Ensure chatMonitoringData is always an array
   const safeChatMonitoringData = Array.isArray(chatMonitoringData) ? chatMonitoringData : [];
   
@@ -828,9 +806,7 @@ export function UnifiedAdminPanel() {
 
   const testDashboardData = testingData || {};
   const summary = (testingData as any)?.summary || {
-=======
   const summary = testingData?.summary || {
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     totalScenarios: 0,
     passedScenarios: 0,
     failedScenarios: 0,
@@ -839,7 +815,6 @@ export function UnifiedAdminPanel() {
     averageResponseTime: 0,
   };
 
-<<<<<<< HEAD
   const scenarios: TestScenario[] = (testingData as any)?.scenarios || [];
   const recentResults = (testingData as any)?.recentResults || [];
 
@@ -1021,10 +996,8 @@ export function UnifiedAdminPanel() {
 
 
   // Delete chat mutation (removed duplicate)
-=======
   const scenarios: TestScenario[] = testingData?.scenarios || [];
   const recentResults = testingData?.recentResults || [];
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 
   // Mutations
   const runTestMutation = useMutation({
@@ -1122,7 +1095,6 @@ export function UnifiedAdminPanel() {
     return true;
   }) : [];
 
-<<<<<<< HEAD
   // Handler functions are defined elsewhere in the file
 
   // User Management Table Component
@@ -1331,7 +1303,6 @@ export function UnifiedAdminPanel() {
           <TabsTrigger value="training">Chat & AI Training</TabsTrigger>
           <TabsTrigger value="monitoring">System Monitor</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
-=======
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">
       <div className="mb-6">
@@ -1350,7 +1321,6 @@ export function UnifiedAdminPanel() {
           <TabsTrigger value="training">Training & Feedback</TabsTrigger>
           <TabsTrigger value="testing">Chat Testing</TabsTrigger>
           <TabsTrigger value="monitoring">Live Monitoring</TabsTrigger>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         </TabsList>
 
         {/* Overview Dashboard */}
@@ -1362,15 +1332,12 @@ export function UnifiedAdminPanel() {
                 <MessageSquare className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-<<<<<<< HEAD
                 <div className="text-2xl font-bold">{Array.isArray(faqData) ? faqData.length : 0}</div>
                 <p className="text-xs text-muted-foreground">
                   {Array.isArray(faqData) ? faqData.filter((f: any) => f.isActive).length : 0} active
-=======
                 <div className="text-2xl font-bold">{faqData.length}</div>
                 <p className="text-xs text-muted-foreground">
                   {faqData.filter((f: FAQ) => f.isActive).length} active
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                 </p>
               </CardContent>
             </Card>
@@ -1381,15 +1348,12 @@ export function UnifiedAdminPanel() {
                 <FileText className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-<<<<<<< HEAD
                 <div className="text-2xl font-bold">{Array.isArray(documentsData) ? documentsData.length : 0}</div>
                 <p className="text-xs text-muted-foreground">
                   {Array.isArray(documentsData) ? (documentsData.reduce((sum: number, doc: any) => sum + (doc.size || 0), 0) / 1024 / 1024).toFixed(1) : '0.0'} MB total
-=======
                 <div className="text-2xl font-bold">{documentsData.length}</div>
                 <p className="text-xs text-muted-foreground">
                   {(documentsData.reduce((sum: number, doc: any) => sum + (doc.size || 0), 0) / 1024 / 1024).toFixed(1)} MB total
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                 </p>
               </CardContent>
             </Card>
@@ -1400,15 +1364,12 @@ export function UnifiedAdminPanel() {
                 <Target className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-<<<<<<< HEAD
                 <div className="text-2xl font-bold">{testDashboardData?.summary?.totalScenarios || 0}</div>
                 <p className="text-xs text-muted-foreground">
                   {testDashboardData?.summary?.passed || 0} passed
-=======
                 <div className="text-2xl font-bold">{summary.totalScenarios}</div>
                 <p className="text-xs text-muted-foreground">
                   {summary.passedScenarios} passed
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                 </p>
               </CardContent>
             </Card>
@@ -1419,21 +1380,17 @@ export function UnifiedAdminPanel() {
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-<<<<<<< HEAD
                 <div className="text-2xl font-bold">{Array.isArray(chatMonitoringData) ? chatMonitoringData.length : 0}</div>
                 <p className="text-xs text-muted-foreground">
                   {Array.isArray(chatMonitoringData) ? chatMonitoringData.filter((chat: any) => chat.firstUserMessage).length : 0} with messages
-=======
                 <div className="text-2xl font-bold">{chatMonitoringData.length}</div>
                 <p className="text-xs text-muted-foreground">
                   {chatMonitoringData.filter((chat: any) => chat.firstUserMessage).length} with messages
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                 </p>
               </CardContent>
             </Card>
           </div>
 
-<<<<<<< HEAD
           {/* Leaderboard & Gamification Row */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Enhanced Leaderboard Widget */}
@@ -1556,7 +1513,6 @@ export function UnifiedAdminPanel() {
               <Button 
                 onClick={() => setActiveSection('documents')}
                 className="flex items-center gap-2 h-16 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-=======
           {/* Quick Actions */}
           <Card>
             <CardHeader>
@@ -1574,12 +1530,10 @@ export function UnifiedAdminPanel() {
                 variant="outline"
                 onClick={() => setActiveSection('documents')}
                 className="flex items-center gap-2 h-16"
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
               >
                 <Upload className="h-5 w-5" />
                 Upload Documents
               </Button>
-<<<<<<< HEAD
               
               <Button 
                 onClick={() => setActiveSection('monitoring')}
@@ -1587,7 +1541,6 @@ export function UnifiedAdminPanel() {
               >
                 <BarChart3 className="h-5 w-5" />
                 View Analytics
-=======
               <Button 
                 variant="outline"
                 onClick={() => setActiveSection('qa')}
@@ -1603,7 +1556,6 @@ export function UnifiedAdminPanel() {
               >
                 <Activity className="h-5 w-5" />
                 View Live Chats
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
               </Button>
             </CardContent>
           </Card>
@@ -1655,11 +1607,8 @@ export function UnifiedAdminPanel() {
         {/* Q&A Knowledge Base */}
         <TabsContent value="qa" className="space-y-6">
           <div className="flex items-center justify-between">
-<<<<<<< HEAD
             <h2 className="text-2xl font-bold">Q&A Knowledge Base Management</h2>
-=======
             <h2 className="text-2xl font-bold">Q&A Knowledge Base</h2>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
             <div className="flex gap-2">
               <Input
                 placeholder="Search FAQs..."
@@ -1667,7 +1616,6 @@ export function UnifiedAdminPanel() {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-64"
               />
-<<<<<<< HEAD
             </div>
           </div>
 
@@ -1682,7 +1630,6 @@ export function UnifiedAdminPanel() {
             {/* FAQ Management Tab */}
             <TabsContent value="faq" className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-=======
               <Button>
                 <Plus className="h-4 w-4 mr-2" />
                 Add FAQ
@@ -1691,7 +1638,6 @@ export function UnifiedAdminPanel() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
             {/* Left Side - Q&A Knowledge Base Entry Form */}
             <div className="space-y-4">
               <Card>
@@ -1706,11 +1652,8 @@ export function UnifiedAdminPanel() {
                       <Input 
                         placeholder="What are the current processing rates for restaurants?"
                         className="mt-1"
-<<<<<<< HEAD
                         value={newQuestion}
                         onChange={(e) => setNewQuestion(e.target.value)}
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                       />
                     </div>
 
@@ -1719,22 +1662,16 @@ export function UnifiedAdminPanel() {
                       <Textarea 
                         placeholder="Detailed answer with specific rates, terms, and guidance..."
                         className="mt-1 min-h-[120px]"
-<<<<<<< HEAD
                         value={newAnswer}
                         onChange={(e) => setNewAnswer(e.target.value)}
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                       />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label className="text-sm font-medium">Category</Label>
-<<<<<<< HEAD
                         <Select value={newCategory} onValueChange={setNewCategory}>
-=======
                         <Select defaultValue="merchant_services">
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                           <SelectTrigger className="mt-1">
                             <SelectValue />
                           </SelectTrigger>
@@ -1750,30 +1687,23 @@ export function UnifiedAdminPanel() {
                       </div>
                       <div>
                         <Label className="text-sm font-medium">Priority</Label>
-<<<<<<< HEAD
                         <Select value={newPriority.toString()} onValueChange={(value) => setNewPriority(parseInt(value))}>
-=======
                         <Select defaultValue="low">
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                           <SelectTrigger className="mt-1">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-<<<<<<< HEAD
                             <SelectItem value="3">High</SelectItem>
                             <SelectItem value="2">Medium</SelectItem>
                             <SelectItem value="1">Low</SelectItem>
-=======
                             <SelectItem value="high">High</SelectItem>
                             <SelectItem value="medium">Medium</SelectItem>
                             <SelectItem value="low">Low</SelectItem>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                           </SelectContent>
                         </Select>
                       </div>
                     </div>
 
-<<<<<<< HEAD
                     <Button 
                       className="w-full"
                       onClick={handleCreateFAQ}
@@ -1791,7 +1721,6 @@ export function UnifiedAdminPanel() {
                         </>
                       )}
                     </Button>
-=======
                     <Button className="w-full">
                       <Plus className="w-4 h-4 mr-2" />
                       Add Q&A Entry
@@ -1805,12 +1734,10 @@ export function UnifiedAdminPanel() {
                         {filteredFAQs.length > 0 ? `${filteredFAQs.length} entries found` : 'No knowledge base entries found.'}
                       </p>
                     </div>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                   </div>
                 </CardContent>
               </Card>
 
-<<<<<<< HEAD
               {/* URL Scraping for Knowledge Base */}
               <Card className="border-green-200 bg-green-50 dark:bg-green-950/20">
                 <CardHeader>
@@ -1865,7 +1792,6 @@ export function UnifiedAdminPanel() {
                         </>
                       )}
                     </Button>
-=======
               <Card>
                 <CardHeader>
                   <CardTitle>Categories</CardTitle>
@@ -1886,7 +1812,6 @@ export function UnifiedAdminPanel() {
                         </Button>
                       );
                     })}
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                   </div>
                 </CardContent>
               </Card>
@@ -1925,7 +1850,6 @@ export function UnifiedAdminPanel() {
                                   {faq.isActive ? "Active" : "Inactive"}
                                 </Badge>
                                 <div className="flex gap-1">
-<<<<<<< HEAD
                                   <Button 
                                     size="sm" 
                                     variant="ghost"
@@ -1938,12 +1862,10 @@ export function UnifiedAdminPanel() {
                                     variant="ghost"
                                     onClick={() => handleDeleteFAQ(faq.id)}
                                   >
-=======
                                   <Button size="sm" variant="ghost">
                                     <Edit className="w-3 h-3" />
                                   </Button>
                                   <Button size="sm" variant="ghost">
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                                     <Trash2 className="w-3 h-3 text-red-500" />
                                   </Button>
                                 </div>
@@ -1958,7 +1880,6 @@ export function UnifiedAdminPanel() {
               </Card>
             </div>
           </div>
-<<<<<<< HEAD
             </TabsContent>
 
             {/* Vendor URL Management Tab */}
@@ -3081,7 +3002,6 @@ export function UnifiedAdminPanel() {
                                   });
                                 }}
                               >
-=======
         </TabsContent>
 
         {/* Document Center */}
@@ -3173,12 +3093,10 @@ export function UnifiedAdminPanel() {
                                 <Eye className="w-3 h-3" />
                               </Button>
                               <Button size="sm" variant="ghost">
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                                 <Download className="w-3 h-3" />
                               </Button>
                             </div>
                           </div>
-<<<<<<< HEAD
                         ))}
                       </div>
                     )}
@@ -3307,15 +3225,12 @@ export function UnifiedAdminPanel() {
                             <span>Readability: {(8 + Math.random() * 2).toFixed(1)}/10</span>
                             <span>Technical Accuracy: {(85 + Math.random() * 15).toFixed(0)}%</span>
                           </div>
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                         </div>
                       ))}
                     </div>
                   </ScrollArea>
                 </CardContent>
               </Card>
-<<<<<<< HEAD
             </TabsContent>
 
             {/* OCR Processing Tab */}
@@ -3602,7 +3517,6 @@ export function UnifiedAdminPanel() {
                   <div>
                     <p className="text-sm text-gray-600">Total Chats</p>
                     <p className="text-xl font-bold">{Array.isArray(chatMonitoringData) ? chatMonitoringData.length : 0}</p>
-=======
             </div>
           )}
 
@@ -3710,12 +3624,10 @@ export function UnifiedAdminPanel() {
                     <Button variant="outline" className="w-full">
                       Clear Chat
                     </Button>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                   </div>
                 </div>
               </CardContent>
             </Card>
-<<<<<<< HEAD
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-2">
@@ -3751,7 +3663,6 @@ export function UnifiedAdminPanel() {
                     <p className="text-xl font-bold">
                       {Array.isArray(chatMonitoringData) ? chatMonitoringData.filter((c: any) => c.hasCorrections).length : 0}
                     </p>
-=======
 
             {/* Right Side - Training Feedback */}
             <Card>
@@ -3841,14 +3752,12 @@ export function UnifiedAdminPanel() {
                         <Badge variant="outline">9.1/10</Badge>
                       </div>
                     </div>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-<<<<<<< HEAD
           {/* Split-Screen Chat Review Interface */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6" style={{ height: '700px' }}>
             {/* Chat List Panel with Tabs */}
@@ -4167,7 +4076,6 @@ export function UnifiedAdminPanel() {
                     <p className="text-gray-500">Choose a conversation from the left panel to view the full thread and train AI responses</p>
                   </div>
                 )}
-=======
           {/* Training Analytics */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
@@ -4200,7 +4108,6 @@ export function UnifiedAdminPanel() {
               <CardContent>
                 <div className="text-2xl font-bold">3</div>
                 <p className="text-xs text-muted-foreground">This month</p>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
               </CardContent>
             </Card>
           </div>
@@ -4221,7 +4128,6 @@ export function UnifiedAdminPanel() {
             <div className="lg:col-span-2">
               <Card>
                 <CardHeader>
-<<<<<<< HEAD
                   <CardTitle>System Prompts & AI Configuration</CardTitle>
                   <CardDescription>Configure AI behavior, response patterns, and LLM chain settings</CardDescription>
                 </CardHeader>
@@ -4279,7 +4185,6 @@ export function UnifiedAdminPanel() {
                                 );
                               }}
                             >
-=======
                   <CardTitle>System Prompts & Chains</CardTitle>
                   <CardDescription>Configure AI behavior and response patterns with LLM chains</CardDescription>
                 </CardHeader>
@@ -4301,7 +4206,6 @@ export function UnifiedAdminPanel() {
                               );
                             }}
                           >
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                             <div className="border rounded-lg bg-white dark:bg-gray-900">
                               <CollapsibleTrigger className="w-full p-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800">
                                 <div className="flex items-center justify-between">
@@ -4453,10 +4357,7 @@ export function UnifiedAdminPanel() {
                         </div>
                       )}
                     </div>
-<<<<<<< HEAD
                     </div>
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                   </ScrollArea>
                 </CardContent>
               </Card>
@@ -4712,11 +4613,8 @@ export function UnifiedAdminPanel() {
                 <MessageSquare className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-<<<<<<< HEAD
                 <div className="text-2xl font-bold">{Array.isArray(chatMonitoringData) ? chatMonitoringData.length : 0}</div>
-=======
                 <div className="text-2xl font-bold">{chatMonitoringData.length}</div>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
               </CardContent>
             </Card>
 
@@ -4727,11 +4625,8 @@ export function UnifiedAdminPanel() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-<<<<<<< HEAD
                   {Array.isArray(chatMonitoringData) ? chatMonitoringData.filter((chat: any) => chat.firstUserMessage).length : 0}
-=======
                   {chatMonitoringData.filter((chat: any) => chat.firstUserMessage).length}
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                 </div>
               </CardContent>
             </Card>
@@ -4743,11 +4638,8 @@ export function UnifiedAdminPanel() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-<<<<<<< HEAD
                   {Array.isArray(chatMonitoringData) ? chatMonitoringData.filter((chat: any) => chat.firstAssistantMessage).length : 0}
-=======
                   {chatMonitoringData.filter((chat: any) => chat.firstAssistantMessage).length}
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                 </div>
               </CardContent>
             </Card>
@@ -4759,11 +4651,8 @@ export function UnifiedAdminPanel() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-<<<<<<< HEAD
                   {Array.isArray(chatMonitoringData) && chatMonitoringData.length > 0 
-=======
                   {chatMonitoringData.length > 0 
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                     ? Math.round(chatMonitoringData.reduce((sum: number, chat: any) => sum + chat.totalMessages, 0) / chatMonitoringData.length)
                     : 0
                   }
@@ -4772,7 +4661,6 @@ export function UnifiedAdminPanel() {
             </Card>
           </div>
 
-<<<<<<< HEAD
           {/* System Health Monitor */}
           <div className="mb-8">
             <div className="bg-gradient-to-r from-slate-900 to-slate-800 p-1 rounded-lg mb-4">
@@ -4893,8 +4781,6 @@ export function UnifiedAdminPanel() {
             </Card>
           </div>
 
-=======
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
           <Card>
             <CardHeader>
               <CardTitle>Recent Conversations</CardTitle>
@@ -4902,11 +4788,8 @@ export function UnifiedAdminPanel() {
             <CardContent>
               <ScrollArea className="h-[500px]">
                 <div className="space-y-3">
-<<<<<<< HEAD
                   {Array.isArray(chatMonitoringData) ? chatMonitoringData.map((chat: any) => (
-=======
                   {chatMonitoringData.map((chat: any) => (
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                     <div key={chat.id} className="border rounded-lg p-4 bg-white dark:bg-gray-900">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-2">
@@ -4937,17 +4820,13 @@ export function UnifiedAdminPanel() {
                         </div>
                       )}
                     </div>
-<<<<<<< HEAD
                   )) : null}
-=======
                   ))}
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
                 </div>
               </ScrollArea>
             </CardContent>
           </Card>
         </TabsContent>
-<<<<<<< HEAD
 
         {/* System Monitor */}
         <TabsContent value="monitoring" className="space-y-6">
@@ -5992,17 +5871,12 @@ export function UnifiedAdminPanel() {
         </div>
       )}
       </div>
-=======
       </Tabs>
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
     </div>
   );
 }
 
-<<<<<<< HEAD
 
 
 export default UnifiedAdminPanel;
-=======
 export default UnifiedAdminPanel;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8

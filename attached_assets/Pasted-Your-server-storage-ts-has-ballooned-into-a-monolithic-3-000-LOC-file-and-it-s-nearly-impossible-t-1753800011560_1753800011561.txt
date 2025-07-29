@@ -1,0 +1,167 @@
+Your server/storage.ts has ballooned into a monolithic ~3 000 LOC file, and it’s nearly impossible to keep track of braces, imports, or method signatures without running into merge‑artifact and syntax errors. The fastest way to get back to a clean, maintainable codebase is to split it into focused modules. Here’s a step‑by‑step plan:
+
+1. Define your folder & file structure
+graphql
+Copy
+Edit
+server/
+└─ storage/
+   ├─ index.ts                # exports IStorage and DatabaseStorage facade
+   ├─ interface.ts            # IStorage interface only
+   ├─ user.ts                 # user‑related methods: getUser, createUser, etc.
+   ├─ apiKey.ts               # apiKey methods
+   ├─ chat.ts                 # chat/message methods
+   ├─ folder.ts               # folder methods
+   ├─ document.ts             # document & personalDocument methods
+   ├─ favorite.ts             # favorite methods
+   ├─ admin.ts                # admin‑only methods
+   ├─ stats.ts                # stats, leaderboard, analytics
+   └─ db.ts                   # your cleaned Drizzle‑Neon setup + init
+2. Extract the interface
+server/storage/interface.ts
+
+ts
+Copy
+Edit
+import type {
+  User, UpsertUser, InsertUser,
+  ApiKey, InsertApiKey,
+  Chat, InsertChat, Message, InsertMessage,
+  Folder, InsertFolder,
+  Document, InsertDocument,
+  Favorite, InsertFavorite,
+  UserPrompt, InsertUserPrompt,
+  UserStats, InsertUserStats,
+  UserChatLog, InsertUserChatLog,
+  AdminSetting, InsertAdminSetting,
+} from "@shared/schema";
+
+export interface IStorage {
+  // User
+  getUser(id: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
+  upsertUser(user: UpsertUser): Promise<User>;
+  // API Key
+  createApiKey(key: InsertApiKey): Promise<ApiKey>;
+  // Chat / Message
+  getUserChats(userId: string): Promise<Chat[]>;
+  createChat(chat: InsertChat): Promise<Chat>;
+  getChatMessages(chatId: string): Promise<Message[]>;
+  createMessage(msg: InsertMessage): Promise<Message>;
+  // …and so on…
+}
+3. Clean up db.ts
+server/storage/db.ts
+
+ts
+Copy
+Edit
+import { Pool, neonConfig } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-serverless";
+import ws from "ws";
+import * as schema from "@shared/schema";
+
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL must be set");
+}
+
+neonConfig.webSocketConstructor = ws;
+neonConfig.poolQueryViaFetch = true;
+neonConfig.useSecureWebSocket = true;
+
+export const pool = new Pool({ connectionString: process.env.DATABASE_URL, /* settings… */ });
+export const db = drizzle({ client: pool, schema });
+
+export async function initializeDatabase(): Promise<boolean> {
+  // health‑check logic…
+}
+4. One module per resource
+For example, server/storage/user.ts:
+
+ts
+Copy
+Edit
+import { db } from "./db";
+import { users } from "@shared/schema";
+import { eq } from "drizzle-orm";
+import type { InsertUser, User } from "@shared/schema";
+
+export async function getUser(id: string): Promise<User | undefined> {
+  const [user] = await db.select().from(users).where(eq(users.id, id));
+  return user;
+}
+
+export async function createUser(data: InsertUser): Promise<User> {
+  const [user] = await db.insert(users).values(data).returning();
+  return user;
+}
+
+// …upsertUser, updateUser…
+Repeat for apiKey.ts, chat.ts, folder.ts, etc.—each file only handles its own table and types.
+
+5. Re‑compose the facade
+server/storage/index.ts pulls it all together:
+
+ts
+Copy
+Edit
+import * as userStore from "./user";
+import * as apiKeyStore from "./apiKey";
+import * as chatStore from "./chat";
+// …other modules…
+import type { IStorage } from "./interface";
+
+export class DatabaseStorage implements IStorage {
+  // User
+  getUser = userStore.getUser;
+  createUser = userStore.createUser;
+  upsertUser = userStore.upsertUser;
+  // API Key
+  createApiKey = apiKeyStore.createApiKey;
+  // Chat
+  getUserChats = chatStore.getUserChats;
+  createChat = chatStore.createChat;
+  getChatMessages = chatStore.getChatMessages;
+  createMessage = chatStore.createMessage;
+  // …etc…
+}
+
+// Export a singleton
+export const storage = new DatabaseStorage();
+6. Benefits & next steps
+Smaller files mean your editor will highlight missing braces, mismatched imports, and duplicate exports immediately.
+
+Focused modules are easier to test in isolation and faster for TypeScript to type‑check.
+
+Cleaner merge conflicts—you’ll only ever resolve collisions in one small file at a time.
+
+Action Plan
+Create the server/storage/ folder and the six files above.
+
+Copy relevant methods into their respective files and delete them from the giant storage.ts.
+
+Wire up index.ts to export the DatabaseStorage facade.
+
+Run npm run check and fix any import errors—it’ll be trivial now that each file is small.
+
+Test locally (npm run dev) and then push your clean code.
+
+Let me know when you’ve scaffolded the structure, and I can help you migrate one of the modules step by step!
+
+
+
+
+
+
+
+
+
+Ask ChatGPT
+
+
+
+Tools
+
+
+
+ChatGPT can make mistakes. Check

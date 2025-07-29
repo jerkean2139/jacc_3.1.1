@@ -1,10 +1,7 @@
 import { db } from './db';
 import { userStats, userAchievements, users } from '@shared/schema';
-<<<<<<< HEAD
 import { eq, desc, sql, and, gte } from 'drizzle-orm';
-=======
 import { eq, desc, sql, and, gte, inArray } from 'drizzle-orm';
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 import { emailNotificationService } from './email-notifications';
 
 interface StreakAchievement {
@@ -428,12 +425,10 @@ export class StreakGamificationEngine {
           longestStreak: userStats.longestStreak,
           totalChats: userStats.totalChats,
           totalMessages: userStats.totalMessages,
-<<<<<<< HEAD
           lastActiveDate: userStats.lastActiveDate
         })
         .from(userStats)
         .leftJoin(users, eq(userStats.userId, users.id))
-=======
           lastActiveDate: userStats.lastActiveDate,
           role: users.role
         })
@@ -445,7 +440,6 @@ export class StreakGamificationEngine {
             gte(userStats.totalPoints, 1) // Only show users with some activity
           )
         )
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
         .orderBy(desc(userStats.currentStreak), desc(userStats.totalPoints))
         .limit(limit);
 

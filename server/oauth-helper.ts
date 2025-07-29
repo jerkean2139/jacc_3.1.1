@@ -1,10 +1,7 @@
-<<<<<<< HEAD
 import { google } from 'googleapis';
-=======
 // MEMORY OPTIMIZATION: Disabled googleapis (123MB)
 // import { google } from 'googleapis';
 const google: any = null;
->>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
 import { Express } from 'express';
 
 // Temporary helper to generate OAuth refresh token
