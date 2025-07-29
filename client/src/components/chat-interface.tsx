@@ -206,31 +206,33 @@ const conversationStarters = [
             })}
           </div>
 
-          {/* Add a chat input box on the welcome screen */}
-          <div className="border-t border-slate-200 dark:border-slate-700 p-4 mt-8">
-            <form onSubmit={handleSubmit} className="flex gap-2">
-              <Textarea
-                ref={textareaRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Or type your question here..."
-                className="flex-1 min-h-[44px] max-h-20 resize-none"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSubmit(e);
-                  }
-                }}
-              />
-              <Button
-                type="submit"
-                disabled={!input.trim() || isProcessing}
-                size="icon"
-                className="h-11 w-11"
-              >
-                <Send className="w-4 h-4" />
-              </Button>
-            </form>
+          {/* Add a chat input box on the welcome screen with color-changing border */}
+          <div className="mt-8">
+            <div className="chat-glow-container">
+              <form onSubmit={handleSubmit} className="flex gap-2">
+                <Textarea
+                  ref={textareaRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Or type your question here..."
+                  className="flex-1 min-h-[44px] max-h-20 resize-none border-0 bg-transparent"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSubmit(e);
+                    }
+                  }}
+                />
+                <Button
+                  type="submit"
+                  disabled={!input.trim() || isProcessing}
+                  size="icon"
+                  className="h-11 w-11"
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
