@@ -162,13 +162,16 @@ const conversationStarters = [
     await sendMessage(text);
   };
 
+  // Debug log when no chatId to help troubleshoot
+  console.log('ChatInterface render:', { chatId, showingWelcome: !chatId });
+
   if (!chatId) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-6 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
+      <div className="flex-1 flex flex-col items-center justify-center p-6 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 min-h-full">
         <div className="max-w-4xl w-full space-y-8">
           <div className="text-center space-y-4">
             <div className="flex justify-center">
-              <div className="bg-blue-600 p-4 rounded-full">
+              <div className="bg-blue-600 p-4 rounded-full shadow-lg">
                 <Brain className="w-12 h-12 text-white" />
               </div>
             </div>
@@ -178,6 +181,9 @@ const conversationStarters = [
             <p className="text-lg text-slate-600 dark:text-slate-300">
               Your AI-Powered Merchant Services Assistant
             </p>
+            <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 px-4 py-2 rounded-lg inline-block">
+              <strong>DEBUG:</strong> Welcome screen is displaying (no active chat)
+            </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">

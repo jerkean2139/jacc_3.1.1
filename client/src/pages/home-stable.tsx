@@ -245,6 +245,14 @@ Would you like me to run a competitive analysis and show you better processing o
   // Connect the floating action button to new chat creation
   // useNewChatFAB(handleNewChat); // Commented out during Phase 1 cleanup
 
+  console.log('HomeStable render debug:', { 
+    user: !!user, 
+    activeChatId, 
+    location,
+    chatsCount: Array.isArray(chats) ? chats.length : 0,
+    foldersCount: Array.isArray(folders) ? folders.length : 0 
+  });
+
   return (
     <div className="h-screen bg-slate-50 dark:bg-slate-900 overflow-hidden w-full max-w-full">
       {/* Mobile Header - Always visible on mobile */}
