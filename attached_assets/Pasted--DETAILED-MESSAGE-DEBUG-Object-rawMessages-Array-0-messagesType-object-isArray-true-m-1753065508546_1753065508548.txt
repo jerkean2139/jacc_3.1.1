@@ -1,0 +1,38 @@
+🔍 DETAILED MESSAGE DEBUG: 
+Object {rawMessages: Array(0), messagesType: "object", isArray: true, messagesLength: 0, safeMessagesLength: 0, …}
+Sidebar Debug: 
+Object {chatsCount: 34, hasOnChatDelete: false, onChatDeleteType: undefined}
+Messages Query Status: 
+Object {chatId: "e7bc2b65-b866-44b7-a16e-3d0b68321ff1", queryKey: Array(1), enabled: true, isLoading: true, hasError: false, …}
+Chat Interface Debug: 
+Object {chatId: "e7bc2b65-b866-44b7-a16e-3d0b68321ff1", messagesCount: 0, isLoading: true, hasMessages: false}
+🔍 DETAILED MESSAGE DEBUG: 
+Object {rawMessages: Array(0), messagesType: "object", isArray: true, messagesLength: 0, safeMessagesLength: 0, …}
+Messages Query Status: 
+Object {chatId: "e7bc2b65-b866-44b7-a16e-3d0b68321ff1", queryKey: Array(1), enabled: true, isLoading: false, hasError: false, …}
+Chat Interface Debug: 
+Object {chatId: "e7bc2b65-b866-44b7-a16e-3d0b68321ff1", messagesCount: 0, isLoading: false, hasMessages: false}
+🔍 DETAILED MESSAGE DEBUG: 
+Object {rawMessages: Array(0), messagesType: "object", isArray: true, messagesLength: 0, safeMessagesLength: 0, …}
+Messages Query Status: 
+Object {chatId: "e7bc2b65-b866-44b7-a16e-3d0b68321ff1", queryKey: Array(1), enabled: true, isLoading: false, hasError: false, …}
+Chat Interface Debug: 
+Object {chatId: "e7bc2b65-b866-44b7-a16e-3d0b68321ff1", messagesCount: 0, isLoading: false, hasMessages: false}
+🔍 DETAILED MESSAGE DEBUG: 
+Object {rawMessages: Array(0), messagesType: "object", isArray: true, messagesLength: 0, safeMessagesLength: 0, …}
+URL Debug: 
+Object {location: "/chat/e7bc2b65-b866-44b7-a16e-3d0b68321ff1", activeChatId: "e7bc2b65-b866-44b7-a16e-3d0b68321ff1", hasChat: true}
+Messages Query Status: 
+Object {chatId: "e7bc2b65-b866-44b7-a16e-3d0b68321ff1", queryKey: Array(1), enabled: true, isLoading: false, hasError: false, …}
+Chat Interface Debug: 
+Object {chatId: "e7bc2b65-b866-44b7-a16e-3d0b68321ff1", messagesCount: 0, isLoading: false, hasMessages: false}
+🔍 DETAILED MESSAGE DEBUG: 
+Object {rawMessages: Array(0), messagesType: "object", isArray: true, messagesLength: 0, safeMessagesLength: 0, …}
+Sidebar Debug: 
+Object {chatsCount: 34, hasOnChatDelete: false, onChatDeleteType: undefined}
+Messages Query Status: 
+Object {chatId: "e7bc2b65-b866-44b7-a16e-3d0b68321ff1", queryKey: Array(1), enabled: true, isLoading: false, hasError: false, …}
+Chat Interface Debug: 
+Object {chatId: "e7bc2b65-b866-44b7-a16e-3d0b68321ff1", messagesCount: 0, isLoading: false, hasMessages: false}
+🔍 DETAILED MESSAGE DEBUG: 
+Object {rawMessages: Array(0), messagesType: "object", isArray: true, messagesLength: 0, safeMessagesLength: 0, …}

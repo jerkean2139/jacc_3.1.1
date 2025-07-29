@@ -1,0 +1,48 @@
+MERCHANT PROCESSING AGREEMENT - TEST DOCUMENT
+
+This is a comprehensive test document for validating the JACC document upload, processing, and AI integration workflow.
+
+PROCESSING RATES AND FEES:
+• Credit Card Processing: 2.85% + $0.30 per transaction
+• Debit Card Processing: 1.45% + $0.25 per transaction  
+• American Express: 3.25% + $0.30 per transaction
+• Authorization Fees: $0.10 per authorization request
+
+MONTHLY FEES:
+• Gateway Fee: $29.95 per month
+• Statement Fee: $12.00 per month
+• PCI Compliance Fee: $9.95 per month
+• Account Maintenance: $15.00 per month
+
+INTERCHANGE RATES:
+Interchange rates are set by card networks including Visa, MasterCard, American Express, and Discover. These rates vary based on:
+- Card type (consumer vs commercial)
+- Transaction method (card present vs card not present)
+- Merchant category code (MCC)
+- Processing volume
+
+SETTLEMENT TERMS:
+- Standard settlement: 1-2 business days for qualified transactions
+- High-risk merchants: 3-5 business days settlement period
+- Weekend processing: Transactions processed on Monday
+- Holiday processing: Next business day settlement
+
+CHARGEBACK PROTECTION:
+- Basic chargeback protection included at no additional cost
+- Enhanced chargeback protection available for $25/month
+- Chargeback fees: $25 per chargeback occurrence
+- Representment assistance provided
+
+EQUIPMENT AND TERMINALS:
+- Clover Station: $899 one-time cost
+- Clover Mini: $499 one-time cost  
+- Terminal rental: $35/month for wireless terminals
+- Software updates included at no additional charge
+
+MERCHANT ACCOUNT REQUIREMENTS:
+- Valid business license and registration
+- Bank account for settlement deposits
+- PCI compliance certification
+- Processing history for risk assessment
+
+This document contains comprehensive information about merchant services, payment processing rates, equipment costs, and compliance requirements essential for sales agents working with Tracer Co Card processing solutions.

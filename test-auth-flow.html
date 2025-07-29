@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Authentication Test</title>
+</head>
+<body>
+    <h1>JACC Authentication Test</h1>
+    
+    <div>
+        <h2>Login Test</h2>
+        <button onclick="testLogin()">Test Login with cburnell/cburnell123</button>
+        <div id="login-result"></div>
+    </div>
+    
+    <div>
+        <h2>Check Auth Status</h2>
+        <button onclick="checkAuth()">Check Authentication</button>
+        <div id="auth-result"></div>
+    </div>
+    
+    <script>
+        async function testLogin() {
+            const result = document.getElementById('login-result');
+            result.innerHTML = 'Testing login...';
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: 'cburnell', password: 'cburnell123' }),
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                result.innerHTML = `<pre>Status: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}</pre>`;
+                
+                if (response.ok) {
+                    result.style.color = 'green';
+                    // Wait a moment then check auth
+                    setTimeout(checkAuth, 1000);
+                } else {
+                    result.style.color = 'red';
+                }
+            } catch (error) {
+                result.innerHTML = `Error: ${error.message}`;
+                result.style.color = 'red';
+            }
+        }
+        
+        async function checkAuth() {
+            const result = document.getElementById('auth-result');
+            result.innerHTML = 'Checking authentication...';
+            
+            try {
+                const response = await fetch('/api/user', {
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                result.innerHTML = `<pre>Status: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}</pre>`;
+                
+                if (response.ok) {
+                    result.style.color = 'green';
+                } else {
+                    result.style.color = 'red';
+                }
+            } catch (error) {
+                result.innerHTML = `Error: ${error.message}`;
+                result.style.color = 'red';
+            }
+        }
+    </script>
+</body>
+</html>

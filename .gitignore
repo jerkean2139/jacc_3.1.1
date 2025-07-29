@@ -1,0 +1,107 @@
+# Dependencies
+node_modules/
+<<<<<<< HEAD
+.pnp
+.pnp.js
+
+# Production builds
+dist/
+build/
+
+# Environment variables and credential files
+=======
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+
+# Environment files
+>>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+<<<<<<< HEAD
+*ENV.txt
+*env.txt
+credentials.txt
+secrets.txt
+config.txt
+
+# Runtime files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+
+# Database files
+*.db
+*.sqlite
+
+# Uploads and generated files
+uploads/
+cookies.txt
+admin_cookies.txt
+
+# Editor files
+=======
+
+# IDE files
+>>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8
+.vscode/
+.idea/
+*.swp
+*.swo
+<<<<<<< HEAD
+*~
+
+# OS generated files
+Thumbs.db
+.DS_Store
+
+# Logs
+logs
+*.log
+
+# Temporary files
+tmp/
+temp/
+=======
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large migration files
+*.zip
+jacc-migration.zip
+migration-*.zip
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Temporary folders
+tmp/
+temp/
+
+# Database
+*.sqlite
+*.db
+
+# Uploads
+uploads/
+>>>>>>> 7bde7c2493f5dfadbacbd14e0de16b792f67f2d8

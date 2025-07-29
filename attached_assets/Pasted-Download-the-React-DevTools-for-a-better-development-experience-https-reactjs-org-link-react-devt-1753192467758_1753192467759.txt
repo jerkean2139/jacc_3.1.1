@@ -1,0 +1,25 @@
+Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+clear-popup-flags.ts:26 Cleared 0 popup flags from localStorage
+home-stable.tsx:32 URL Debug: {location: '/chat/a88b9e49-020e-454b-b941-937d611a4ccb', activeChatId: 'a88b9e49-020e-454b-b941-937d611a4ccb', hasChat: true}
+sidebar.tsx:173 Sidebar Debug: {chatsCount: 0, hasOnChatDelete: false, onChatDeleteType: 'undefined'}
+chat-interface.tsx:41 ChatId changed, invalidating messages for: a88b9e49-020e-454b-b941-937d611a4ccb
+chat-interface.tsx:56 Fetching messages for chat: a88b9e49-020e-454b-b941-937d611a4ccb
+chat-interface.tsx:121 Chat Interface Debug: {chatId: 'a88b9e49-020e-454b-b941-937d611a4ccb', messagesCount: 0, isLoading: true, hasError: false, rawMessages: Array(0), …}
+chat-interface.tsx:41 ChatId changed, invalidating messages for: a88b9e49-020e-454b-b941-937d611a4ccb
+chat-interface.tsx:121 Chat Interface Debug: {chatId: 'a88b9e49-020e-454b-b941-937d611a4ccb', messagesCount: 0, isLoading: true, hasError: false, rawMessages: Array(0), …}
+home-stable.tsx:32 URL Debug: {location: '/chat/a88b9e49-020e-454b-b941-937d611a4ccb', activeChatId: 'a88b9e49-020e-454b-b941-937d611a4ccb', hasChat: true}
+sidebar.tsx:173 Sidebar Debug: {chatsCount: 0, hasOnChatDelete: false, onChatDeleteType: 'undefined'}
+chat-interface.tsx:121 Chat Interface Debug: {chatId: 'a88b9e49-020e-454b-b941-937d611a4ccb', messagesCount: 0, isLoading: true, hasError: false, rawMessages: Array(0), …}
+chat-interface.tsx:121 Chat Interface Debug: {chatId: 'a88b9e49-020e-454b-b941-937d611a4ccb', messagesCount: 0, isLoading: true, hasError: false, rawMessages: Array(0), …}
+chat-interface.tsx:121 Chat Interface Debug: {chatId: 'a88b9e49-020e-454b-b941-937d611a4ccb', messagesCount: 0, isLoading: true, hasError: false, rawMessages: Array(0), …}
+chat-interface.tsx:121 Chat Interface Debug: {chatId: 'a88b9e49-020e-454b-b941-937d611a4ccb', messagesCount: 0, isLoading: true, hasError: false, rawMessages: Array(0), …}
+a88b9e49-020e-454b-b941-937d611a4ccb:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+home-stable.tsx:32 URL Debug: {location: '/chat/a88b9e49-020e-454b-b941-937d611a4ccb', activeChatId: 'a88b9e49-020e-454b-b941-937d611a4ccb', hasChat: true}
+sidebar.tsx:173 Sidebar Debug: {chatsCount: 50, hasOnChatDelete: false, onChatDeleteType: 'undefined'}
+chat-interface.tsx:121 Chat Interface Debug: {chatId: 'a88b9e49-020e-454b-b941-937d611a4ccb', messagesCount: 0, isLoading: true, hasError: false, rawMessages: Array(0), …}
+chat-interface.tsx:121 Chat Interface Debug: {chatId: 'a88b9e49-020e-454b-b941-937d611a4ccb', messagesCount: 0, isLoading: true, hasError: false, rawMessages: Array(0), …}
+chat-interface.tsx:67 Fetched messages for chat a88b9e49-020e-454b-b941-937d611a4ccb: {dataType: 'object', isArray: true, dataLength: 2, firstMessage: {…}, lastMessage: {…}}
+chat-interface.tsx:121 Chat Interface Debug: {chatId: 'a88b9e49-020e-454b-b941-937d611a4ccb', messagesCount: 2, isLoading: false, hasError: false, rawMessages: Array(2), …}
+chat-interface.tsx:121 Chat Interface Debug: {chatId: 'a88b9e49-020e-454b-b941-937d611a4ccb', messagesCount: 2, isLoading: false, hasError: false, rawMessages: Array(2), …}
+home-stable.tsx:32 URL Debug: {location: '/chat/a88b9e49-020e-454b-b941-937d611a4ccb', activeChatId: 'a88b9e49-020e-454b-b941-937d611a4ccb', hasChat: true}
+sidebar.tsx:173 Sidebar Debug: {chatsCount: 50, hasOnChatDelete: false, onChatDeleteType: 'undefined'}

@@ -1,0 +1,106 @@
+
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+_app-f10df38f71c1285f.js:38 [LaunchDarkly] LaunchDarkly client initialized
+_app-f10df38f71c1285f.js:38 Adding extension: ReplDB Export and Import Object
+_app-f10df38f71c1285f.js:38 Adding extension: AI Playground Object
+_app-f10df38f71c1285f.js:38 Adding extension: repl.tv Object
+_app-f10df38f71c1285f.js:38 Adding extension: API Request Tester Object
+_app-f10df38f71c1285f.js:38 Adding extension: Icon Generator Object
+gravatar.com/avatar/c289efd3f0ffd1b7b9446f2db3bcde33?d=404:1  Failed to load resource: the server responded with a status of 404 ()Understand this error
+7Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.Understand this error
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'ambient-light-sensor'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'battery'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'execution-while-not-rendered'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'execution-while-out-of-viewport'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'layout-animations'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'legacy-image-formats'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'navigation-override'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'oversized-images'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'publickey-credentials'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'speaker-selection'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'unoptimized-images'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'unsized-media'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'pointer-lock'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+stallwart.build.js:1 stallwart: failed ping 1
+stallwart.build.js:1 stallwart: failed ping 2
+stallwart.build.js:1 stallwart: failed ping 3
+stallwart.build.js:1 stallwart: failed ping 4
+stallwart.build.js:1 stallwart: failed ping 1
+stallwart.build.js:1 stallwart: failed ping 2
+stallwart.build.js:1 stallwart: failed ping 3
+stallwart.build.js:1 stallwart: failed ping 4
+stallwart.build.js:1 stallwart: failed ping 1
+stallwart.build.js:1 stallwart: failed ping 2
+stallwart.build.js:1 stallwart: failed ping 3
+3stallwart.build.js:1 stallwart: failed ping 1
+stallwart.build.js:1 stallwart: failed ping 2
+stallwart.build.js:1 stallwart: failed ping 1
+_app-f10df38f71c1285f.js:38 task queue exceeded allotted deadline by 77ms
+(anonymous) @ _app-f10df38f71c1285f.js:38Understand this warning
+2stallwart.build.js:1 stallwart: failed ping 1
+stallwart.build.js:1 stallwart: failed ping 2
+stallwart.build.js:1 stallwart: failed ping 3
+7stallwart.build.js:1 stallwart: failed ping 1
+stallwart.build.js:1 stallwart: failed ping 2
+stallwart.build.js:1 stallwart: failed ping 3
+stallwart.build.js:1 stallwart: failed ping 1
+stallwart.build.js:1 stallwart: failed ping 2
+stallwart.build.js:1 stallwart: failed ping 1
+stallwart.build.js:1 stallwart: failed ping 2
+2stallwart.build.js:1 stallwart: failed ping 1
+stallwart.build.js:1 stallwart: failed ping 2
+stallwart.build.js:1 stallwart: failed ping 3
+stallwart.build.js:1 stallwart: failed ping 4
+stallwart.build.js:1 stallwart: failed ping 5
+stallwart.build.js:1 stallwart: session stalled
+workspace_iframe.html:32 Unrecognized feature: 'ambient-light-sensor'.Understand this warning
+workspace_iframe.html:32 Unrecognized feature: 'battery'.Understand this warning
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-not-rendered'.Understand this warning
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-out-of-viewport'.Understand this warning
+workspace_iframe.html:32 Unrecognized feature: 'layout-animations'.Understand this warning
+workspace_iframe.html:32 Unrecognized feature: 'legacy-image-formats'.Understand this warning
+workspace_iframe.html:32 Unrecognized feature: 'navigation-override'.Understand this warning
+workspace_iframe.html:32 Unrecognized feature: 'oversized-images'.Understand this warning
+workspace_iframe.html:32 Unrecognized feature: 'publickey-credentials'.Understand this warning
+workspace_iframe.html:32 Unrecognized feature: 'speaker-selection'.Understand this warning
+workspace_iframe.html:32 Unrecognized feature: 'unoptimized-images'.Understand this warning
+workspace_iframe.html:32 Unrecognized feature: 'unsized-media'.Understand this warning
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowfullscreen'.Understand this warning
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowpaymentrequest'.Understand this warning
+Console.js:61 Cleared 0 popup flags from localStorage
+3b290a73-0c8d-4579-a0a1-1f3e8405cfad-00-1tl3p4z761i7u.spock.replit.dev/api/user:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)Understand this error
+3b290a73-0c8d-4579-a0a1-1f3e8405cfad-00-1tl3p4z761i7u.spock.replit.dev/api/user:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)Understand this error
+3b290a73-0c8d-4579-a0a1-1f3e8405cfad-00-1tl3p4z761i7u.spock.replit.dev/api/google-drive/files:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+3b290a73-0c8d-4579-a0a1-1f3e8405cfad-00-1tl3p4z761i7u.spock.replit.dev/api/google-drive/sync:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+3b290a73-0c8d-4579-a0a1-1f3e8405cfad-00-1tl3p4z761i7u.spock.replit.dev/api/google-drive/sync:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+3b290a73-0c8d-4579-a0a1-1f3e8405cfad-00-1tl3p4z761i7u.spock.replit.dev/api/documents/process-placement:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error

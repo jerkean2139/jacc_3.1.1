@@ -1,0 +1,107 @@
+Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+clear-popup-flags.ts:26 Cleared 0 popup flags from localStorage
+home-stable.tsx:32 URL Debug: Object
+sidebar.tsx:173 Sidebar Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+home-stable.tsx:32 URL Debug: Object
+sidebar.tsx:173 Sidebar Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+3b290a73-0c8d-4579-a0a1-1f3e8405cfad-00-1tl3p4z761i7u.spock.replit.dev/:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+home-stable.tsx:32 URL Debug: Object
+sidebar.tsx:173 Sidebar Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+home-stable.tsx:32 URL Debug: Object
+sidebar.tsx:173 Sidebar Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+home-stable.tsx:81 Creating new chat with message: lits the pros and cons of clearent versus tsys for a restaraunt
+chat-interface.tsx:109 Chat Interface Debug: Object
+home-stable.tsx:87 New chat created: Object
+home-stable.tsx:90 Attempting to navigate to: /chat/7f51f1c7-dba3-43f9-832b-b22b8fa7159e
+home-stable.tsx:92 Navigation called, new location should be: /chat/7f51f1c7-dba3-43f9-832b-b22b8fa7159e
+home-stable.tsx:99 Sending message to new chat: 7f51f1c7-dba3-43f9-832b-b22b8fa7159e
+home-stable.tsx:32 URL Debug: Object
+sidebar.tsx:173 Sidebar Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+home-stable.tsx:32 URL Debug: Object
+sidebar.tsx:173 Sidebar Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+chat-interface.tsx:109 Chat Interface Debug: Object
+home-stable.tsx:104 Message sent successfully

@@ -1,0 +1,35 @@
+🔍 DETAILED MESSAGE DEBUG: 
+Object {rawMessages: Array(0), messagesType: "object", isArray: true, messagesLength: 0, safeMessagesLength: 0, …}
+Messages Query Status: 
+Object {chatId: "25925e38-ca78-45f5-9efc-59c788ce38d2", queryKey: Array(1), enabled: true, isLoading: false, hasError: false, …}
+Chat Interface Debug: 
+Object {chatId: "25925e38-ca78-45f5-9efc-59c788ce38d2", messagesCount: 0, isLoading: false, hasMessages: false}
+🔍 DETAILED MESSAGE DEBUG: 
+Object {rawMessages: Array(0), messagesType: "object", isArray: true, messagesLength: 0, safeMessagesLength: 0, …}
+Messages Query Status: 
+Object {chatId: "25925e38-ca78-45f5-9efc-59c788ce38d2", queryKey: Array(1), enabled: true, isLoading: false, hasError: false, …}
+Chat Interface Debug: 
+Object {chatId: "25925e38-ca78-45f5-9efc-59c788ce38d2", messagesCount: 0, isLoading: false, hasMessages: false}
+🔍 DETAILED MESSAGE DEBUG: 
+Object {rawMessages: Array(0), messagesType: "object", isArray: true, messagesLength: 0, safeMessagesLength: 0, …}
+URL Debug: 
+Object {location: "/chat/25925e38-ca78-45f5-9efc-59c788ce38d2", activeChatId: "25925e38-ca78-45f5-9efc-59c788ce38d2", hasChat: true}
+Messages Query Status: 
+Object {chatId: "25925e38-ca78-45f5-9efc-59c788ce38d2", queryKey: Array(1), enabled: true, isLoading: false, hasError: false, …}
+Chat Interface Debug: 
+Object {chatId: "25925e38-ca78-45f5-9efc-59c788ce38d2", messagesCount: 0, isLoading: false, hasMessages: false}
+chatId: "25925e38-ca78-45f5-9efc-59c788ce38d2"
+hasMessages: false
+isLoading: false
+messagesCount: 0
+[[Prototype]]: Object
+🔍 DETAILED MESSAGE DEBUG: 
+Object {rawMessages: Array(0), messagesType: "object", isArray: true, messagesLength: 0, safeMessagesLength: 0, …}
+Sidebar Debug: 
+Object {chatsCount: 30, hasOnChatDelete: false, onChatDeleteType: undefined}
+Messages Query Status: 
+Object {chatId: "25925e38-ca78-45f5-9efc-59c788ce38d2", queryKey: Array(1), enabled: true, isLoading: false, hasError: false, …}
+Chat Interface Debug: 
+Object {chatId: "25925e38-ca78-45f5-9efc-59c788ce38d2", messagesCount: 0, isLoading: false, hasMessages: false}
+🔍 DETAILED MESSAGE DEBUG: 
+Object {rawMessages: Array(0), messagesType: "object", isArray: true, messagesLength: 0, safeMessagesLength: 0, …}

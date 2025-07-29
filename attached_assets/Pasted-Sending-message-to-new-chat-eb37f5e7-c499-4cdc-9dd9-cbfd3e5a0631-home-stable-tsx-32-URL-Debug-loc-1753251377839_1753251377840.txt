@@ -1,0 +1,55 @@
+Sending message to new chat: eb37f5e7-c499-4cdc-9dd9-cbfd3e5a0631
+home-stable.tsx:32 URL Debug: {location: '/chat/eb37f5e7-c499-4cdc-9dd9-cbfd3e5a0631', activeChatId: 'eb37f5e7-c499-4cdc-9dd9-cbfd3e5a0631', hasChat: true}
+sidebar.tsx:174 Sidebar Debug: {chatsCount: 26, hasOnChatDelete: false, onChatDeleteType: 'undefined'}
+2chat-interface.tsx:163 💬 Chat eb37f5e7: 0 messages, loading: true
+requests.js:1  POST https://3b290a73-0c8d-4579-a0a1-1f3e8405cfad-00-1tl3p4z761i7u.spock.replit.dev/api/chat/send 500 (Internal Server Error)
+s.fetch @ requests.js:1
+apiRequest @ queryClient.ts:15
+handleNewChatWithMessage @ home-stable.tsx:100
+await in handleNewChatWithMessage
+onClick @ chat-interface.tsx:345
+callCallback2 @ chunk-WERSD76P.js?v=7c038816:3674
+invokeGuardedCallbackDev @ chunk-WERSD76P.js?v=7c038816:3699
+invokeGuardedCallback @ chunk-WERSD76P.js?v=7c038816:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-WERSD76P.js?v=7c038816:3736
+executeDispatch @ chunk-WERSD76P.js?v=7c038816:7014
+processDispatchQueueItemsInOrder @ chunk-WERSD76P.js?v=7c038816:7034
+processDispatchQueue @ chunk-WERSD76P.js?v=7c038816:7043
+dispatchEventsForPlugins @ chunk-WERSD76P.js?v=7c038816:7051
+(anonymous) @ chunk-WERSD76P.js?v=7c038816:7174
+batchedUpdates$1 @ chunk-WERSD76P.js?v=7c038816:18913
+batchedUpdates @ chunk-WERSD76P.js?v=7c038816:3579
+dispatchEventForPluginEventSystem @ chunk-WERSD76P.js?v=7c038816:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-WERSD76P.js?v=7c038816:5478
+dispatchEvent @ chunk-WERSD76P.js?v=7c038816:5472
+dispatchDiscreteEvent @ chunk-WERSD76P.js?v=7c038816:5449Understand this error
+home-stable.tsx:110 Failed to send message: Error: 500: {"error":"Failed to send message"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:22:3)
+    at async handleNewChatWithMessage (home-stable.tsx:100:9)
+handleNewChatWithMessage @ home-stable.tsx:110
+await in handleNewChatWithMessage
+onClick @ chat-interface.tsx:345
+callCallback2 @ chunk-WERSD76P.js?v=7c038816:3674
+invokeGuardedCallbackDev @ chunk-WERSD76P.js?v=7c038816:3699
+invokeGuardedCallback @ chunk-WERSD76P.js?v=7c038816:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-WERSD76P.js?v=7c038816:3736
+executeDispatch @ chunk-WERSD76P.js?v=7c038816:7014
+processDispatchQueueItemsInOrder @ chunk-WERSD76P.js?v=7c038816:7034
+processDispatchQueue @ chunk-WERSD76P.js?v=7c038816:7043
+dispatchEventsForPlugins @ chunk-WERSD76P.js?v=7c038816:7051
+(anonymous) @ chunk-WERSD76P.js?v=7c038816:7174
+batchedUpdates$1 @ chunk-WERSD76P.js?v=7c038816:18913
+batchedUpdates @ chunk-WERSD76P.js?v=7c038816:3579
+dispatchEventForPluginEventSystem @ chunk-WERSD76P.js?v=7c038816:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-WERSD76P.js?v=7c038816:5478
+dispatchEvent @ chunk-WERSD76P.js?v=7c038816:5472
+dispatchDiscreteEvent @ chunk-WERSD76P.js?v=7c038816:5449Understand this error
+home-stable.tsx:32 URL Debug: {location: '/chat/eb37f5e7-c499-4cdc-9dd9-cbfd3e5a0631', activeChatId: 'eb37f5e7-c499-4cdc-9dd9-cbfd3e5a0631', hasChat: true}
+sidebar.tsx:174 Sidebar Debug: {chatsCount: 26, hasOnChatDelete: false, onChatDeleteType: 'undefined'}
+chat-interface.tsx:67 📊 Messages fetched in 803ms: {count: 0, chatId: 'eb37f5e7'}
+2chat-interface.tsx:163 💬 Chat eb37f5e7: 0 messages, loading: false
+home-stable.tsx:32 URL Debug: {location: '/chat/eb37f5e7-c499-4cdc-9dd9-cbfd3e5a0631', activeChatId: 'eb37f5e7-c499-4cdc-9dd9-cbfd3e5a0631', hasChat: true}
+sidebar.tsx:174 Sidebar Debug: {chatsCount: 27, hasOnChatDelete: false, onChatDeleteType: 'undefined'}
+home-stable.tsx:32 URL Debug: {location: '/chat/eb37f5e7-c499-4cdc-9dd9-cbfd3e5a0631', activeChatId: 'eb37f5e7-c499-4cdc-9dd9-cbfd3e5a0631', hasChat: true}
+sidebar.tsx:174 Sidebar Debug: {chatsCount: 27, hasOnChatDelete: false, onChatDeleteType: 'undefined'}

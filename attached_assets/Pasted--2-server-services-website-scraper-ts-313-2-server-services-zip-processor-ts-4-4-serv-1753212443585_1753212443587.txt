@@ -1,0 +1,46 @@
+ 2  server/services/website-scraper.ts:313
+     2  server/services/zip-processor.ts:4
+     4  server/settings-routes.ts:215
+    11  server/storage.ts:150
+     1  server/streak-gamification.ts:334
+     2  server/supabase-vector.ts:3
+    10  server/unified-learning-system.ts:28
+     1  server/user-feedback-system.ts:319
+     1  server/utils/audit-logger.ts:221
+    10  server/utils/chat-monitoring.ts:1
+     2  server/vector-service-manager.ts:390
+     1  server/vector-store.ts:3
+    15  server/vendor-intelligence.ts:7
+     1  server/vite.ts:39
+❌ TypeScript compilation test failed: Command failed: npm run check
+
+🔍 Testing application build...
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.14 building for production...
+transforming (3) src/main.tsxBrowserslist: browsers data (caniuse-lite) is 9 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2916 modules transformed.
+../dist/public/index.html                                                 1.42 kB │ gzip:   0.65 kB
+../dist/public/assets/index-Cop1AHT4.css                                144.05 kB │ gzip:  22.68 kB
+../dist/public/assets/competitive-intelligence-dashboard-CV2FkcKP.js     52.13 kB │ gzip:  12.63 kB
+../dist/public/assets/index-Cm48fdlo.js                               2,150.72 kB │ gzip: 496.99 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 12.51s
+
+  dist/index.js  427.6kb
+
+⚡ Done in 27ms
+✅ Application build test passed
+
+📊 Deployment readiness check completed
+🔗 Next steps: Contact Replit support if deployment still fails
+~/workspace$ 
+~/workspace$ # Run comprehensive diagnostics

@@ -1,0 +1,3 @@
+/* Global mobile overflow fix */
+* { box-sizing: border-box; }
+@media (max-width: 768px) { body, html, #root { width: 100%; max-width: 100%; overflow-x: hidden !important; } }

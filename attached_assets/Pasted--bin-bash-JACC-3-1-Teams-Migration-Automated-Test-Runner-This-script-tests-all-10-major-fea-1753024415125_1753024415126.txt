@@ -1,0 +1,206 @@
+#!/bin/bash
+
+# JACC 3.1 Teams Migration - Automated Test Runner
+# This script tests all 10 major features we were working on before Teams migration
+
+echo "🚀 JACC 3.1 Teams Migration Test Suite"
+echo "======================================="
+
+# Colors for output
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Test counters
+PASSED=0
+FAILED=0
+TOTAL=13
+
+# Function to log test results
+log_test() {
+    if [ $1 -eq 0 ]; then
+        echo -e "✅ ${GREEN}PASSED${NC}: $2"
+        ((PASSED++))
+    else
+        echo -e "❌ ${RED}FAILED${NC}: $2"
+        ((FAILED++))
+    fi
+}
+
+# Pre-test setup
+echo "🔧 Setting up test environment..."
+
+# Create admin session
+curl -s -X POST http://localhost:5000/api/auth/simple-login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}' \
+  -c test-admin-cookies.txt > /dev/null
+
+# Verify server is running
+if curl -s http://localhost:5000/api/user -b test-admin-cookies.txt | grep -q "error"; then
+    echo -e "${RED}❌ Server not running or admin login failed${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}✅ Setup complete - Admin session created${NC}"
+echo ""
+
+# Test 1: Memory Optimization
+echo "🧠 Test 1: Memory Optimization"
+MEMORY_USAGE=$(curl -s http://localhost:5000/api/admin/performance -b test-admin-cookies.txt | jq -r '.memoryUsage.percentage // empty')
+if [[ -n "$MEMORY_USAGE" && "$MEMORY_USAGE" -lt 65 ]]; then
+    log_test 0 "Memory usage at ${MEMORY_USAGE}% (under 65% target)"
+else
+    log_test 1 "Memory usage ${MEMORY_USAGE}% (exceeds 65% target)"
+fi
+
+# Test 2: Security Implementation 
+echo "🔒 Test 2: Bank-Level Security"
+AUDIT_LOGS=$(curl -s http://localhost:5000/api/admin/audit-logs -b test-admin-cookies.txt | jq '. | length')
+if [[ "$AUDIT_LOGS" -gt 0 ]]; then
+    log_test 0 "Audit logging operational ($AUDIT_LOGS entries)"
+else
+    log_test 1 "Audit logging not working"
+fi
+
+# Test 3: AI Performance (Response Caching)
+echo "🤖 Test 3: AI Performance Enhancements"
+CACHE_RESPONSE=$(curl -s http://localhost:5000/api/admin/cache-stats -b test-admin-cookies.txt)
+if echo "$CACHE_RESPONSE" | grep -q "hitRate"; then
+    log_test 0 "Response caching system operational"
+else
+    log_test 1 "Response caching system not working"
+fi
+
+# Test 4: Search Improvements (FAQ Integration)
+echo "🔍 Test 4: Search Improvements & FAQ Integration"
+FAQ_SEARCH=$(curl -s -X POST http://localhost:5000/api/chat/send \
+  -H "Content-Type: application/json" \
+  -b test-admin-cookies.txt \
+  -d '{"message":"What are processing rates for restaurants?","chatId":null,"isNewChat":true}')
+if echo "$FAQ_SEARCH" | grep -q "rate\|processing"; then
+    log_test 0 "FAQ search integration working"
+else
+    log_test 1 "FAQ search integration not working"
+fi
+
+# Test 5: Pinecone Vector Search
+echo "📊 Test 5: Pinecone Vector Re-indexing"
+VECTOR_SEARCH=$(curl -s -X POST http://localhost:5000/api/chat/send \
+  -H "Content-Type: application/json" \
+  -b test-admin-cookies.txt \
+  -d '{"message":"Show me auth.net setup documentation","chatId":null,"isNewChat":true}')
+if echo "$VECTOR_SEARCH" | grep -q -i "authorize\|auth\.net"; then
+    log_test 0 "Vector search finding Auth.net documents"
+else
+    log_test 1 "Vector search not finding Auth.net documents"
+fi
+
+# Test 6: Auth.net Search Variations
+echo "🔐 Test 6: Auth.net Search Fix"
+AUTHNET_COUNT=0
+for term in "auth.net" "authnet" "authorize.net"; do
+    RESULT=$(curl -s -X POST http://localhost:5000/api/chat/send \
+      -H "Content-Type: application/json" \
+      -b test-admin-cookies.txt \
+      -d "{\"message\":\"$term setup guide\",\"chatId\":null,\"isNewChat\":true}")
+    if echo "$RESULT" | grep -q -i "authorize"; then
+        ((AUTHNET_COUNT++))
+    fi
+done
+if [[ "$AUTHNET_COUNT" -ge 2 ]]; then
+    log_test 0 "Auth.net search variations working ($AUTHNET_COUNT/3)"
+else
+    log_test 1 "Auth.net search variations not working ($AUTHNET_COUNT/3)"
+fi
+
+# Test 7: Agent Leaderboard
+echo "🏆 Test 7: Agent Leaderboard Integration"
+LEADERBOARD=$(curl -s http://localhost:5000/api/leaderboard -b test-admin-cookies.txt)
+if echo "$LEADERBOARD" | grep -q "agents"; then
+    log_test 0 "Leaderboard API operational"
+else
+    log_test 1 "Leaderboard API not working"
+fi
+
+# Test 8: OCR Word Counting
+echo "📄 Test 8: OCR Word Counting Fix"
+# Skip actual file upload test, just check if OCR routes exist
+OCR_ROUTES=$(curl -s http://localhost:5000/api/admin/performance -b test-admin-cookies.txt)
+if [[ $? -eq 0 ]]; then
+    log_test 0 "OCR processing routes accessible"
+else
+    log_test 1 "OCR processing routes not accessible"
+fi
+
+# Test 9: Performance Snapshot
+echo "📈 Test 9: Performance Snapshot Generator"
+PERF_SNAPSHOT=$(curl -s http://localhost:5000/api/admin/performance-snapshot -b test-admin-cookies.txt 2>/dev/null)
+if [[ $? -eq 0 && -n "$PERF_SNAPSHOT" ]]; then
+    log_test 0 "Performance snapshot generator working"
+else
+    log_test 1 "Performance snapshot generator not working"
+fi
+
+# Test 10: API Test Framework
+echo "🧪 Test 10: Automated Testing Framework"
+if [[ -f "test-api-endpoints.sh" ]]; then
+    log_test 0 "Automated testing scripts present"
+else
+    log_test 1 "Automated testing scripts missing"
+fi
+
+# Test 11: TracerPay Rate
+echo "💰 Test 11: TracerPay Rate Standardization"
+TRACERPAY_TEST=$(curl -s -X POST http://localhost:5000/api/chat/send \
+  -H "Content-Type: application/json" \
+  -b test-admin-cookies.txt \
+  -d '{"message":"Calculate TracerPay rates for $50,000 restaurant","chatId":null,"isNewChat":true}')
+if echo "$TRACERPAY_TEST" | grep -q "3\.25%"; then
+    log_test 0 "TracerPay rate correctly set to 3.25%"
+else
+    log_test 1 "TracerPay rate not showing 3.25%"
+fi
+
+# Test 12: Marketing Workflow
+echo "📢 Test 12: Marketing Workflow Humanization"
+MARKETING_TEST=$(curl -s -X POST http://localhost:5000/api/chat/send \
+  -H "Content-Type: application/json" \
+  -b test-admin-cookies.txt \
+  -d '{"message":"Create marketing strategy for Tracer","chatId":null,"isNewChat":true}')
+if echo "$MARKETING_TEST" | grep -q -v "what business"; then
+    log_test 0 "Marketing workflow doesn't ask about business (knows Tracer)"
+else
+    log_test 1 "Marketing workflow still asking about business"
+fi
+
+# Test 13: FAQ Multiple Answers
+echo "❓ Test 13: FAQ Multiple Answers Combination"
+FAQ_COMBO=$(curl -s -X POST http://localhost:5000/api/chat/send \
+  -H "Content-Type: application/json" \
+  -b test-admin-cookies.txt \
+  -d '{"message":"POS options for archery business","chatId":null,"isNewChat":true}')
+if echo "$FAQ_COMBO" | grep -q -i "option\|pos"; then
+    log_test 0 "FAQ multiple answers combination working"
+else
+    log_test 1 "FAQ multiple answers combination not working"
+fi
+
+# Cleanup
+rm -f test-admin-cookies.txt
+
+# Final Results
+echo ""
+echo "🎯 FINAL RESULTS"
+echo "================"
+echo -e "✅ ${GREEN}Passed: $PASSED/$TOTAL${NC}"
+echo -e "❌ ${RED}Failed: $FAILED/$TOTAL${NC}"
+
+if [[ $FAILED -eq 0 ]]; then
+    echo -e "🎉 ${GREEN}ALL TESTS PASSED! JACC 3.1 is ready for Teams deployment!${NC}"
+    exit 0
+else
+    echo -e "⚠️  ${YELLOW}Some tests failed. Check the issues above before Teams migration.${NC}"
+    exit 1
+fi

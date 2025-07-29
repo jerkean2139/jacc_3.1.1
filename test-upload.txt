@@ -1,0 +1,2 @@
+This is a test document for upload verification.
+It contains some sample text to test the mimeType fix.
