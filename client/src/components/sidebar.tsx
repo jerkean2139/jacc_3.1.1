@@ -412,7 +412,7 @@ export default function Sidebar({
         {/* Recent Chats Section */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h4 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+            <h4 className="text-xs font-semibold text-white dark:text-slate-400 uppercase tracking-wide">
               Recent Chats
             </h4>
             <Badge variant="secondary" className="text-xs">
@@ -421,7 +421,7 @@ export default function Sidebar({
           </div>
 
           {displayedChats.length === 0 ? (
-            <div className="text-xs text-slate-400 italic p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+            <div className="text-xs text-white dark:text-slate-400 italic p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
               No recent chats yet. Start a conversation above.
             </div>
           ) : (
@@ -479,8 +479,8 @@ export default function Sidebar({
                   <span className={cn(
                     "text-sm truncate",
                     activeChatId === chat.id 
-                      ? "text-slate-900 dark:text-white font-medium" 
-                      : "text-slate-700 dark:text-slate-300"
+                      ? "text-white dark:text-white font-medium" 
+                      : "text-white dark:text-slate-300"
                   )}>
                     {chat.title && chat.title !== "New Chat" && chat.title !== "Untitled Chat" 
                       ? chat.title 

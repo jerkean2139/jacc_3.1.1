@@ -99,12 +99,9 @@ export default function Home() {
             
             if (sendResponse.ok) {
               console.log("Message sent successfully via conversation starter");
-              console.log("Triggering page reload in 2 seconds...");
-              // Force the page to reload to show messages
-              setTimeout(() => {
-                console.log("Executing page reload now...");
-                window.location.href = window.location.href;
-              }, 2000);
+              // Refresh chats immediately to show the new chat in sidebar
+              await refetchChats();
+              console.log("Chats refreshed after message sent");
             }
           } catch (error) {
             console.error("Failed to send conversation starter message:", error);

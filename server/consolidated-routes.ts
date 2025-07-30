@@ -1341,7 +1341,9 @@ Return only the title, no quotes or extra text.`;
                    normalizedMessage.includes('recommend') ||
                    normalizedMessage.includes('which') ||
                    (normalizedMessage.includes('what') && normalizedMessage.includes('for')) ||
-                   normalizedMessage.includes('restaurant');
+                   normalizedMessage.includes('restaurant') ||
+                   normalizedMessage.includes('restaraunt') ||
+                   normalizedMessage.includes('restaraunts');
         }
         
         if (!isMatch && key === 'calculate processing rates') {
