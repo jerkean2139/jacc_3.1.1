@@ -3,15 +3,29 @@
 ## The Problem
 Your IDE can't find the environment variables that were stored in Replit's Secrets system.
 
-## The Solution (3 Steps)
+## The Solution (4 Steps)
 
-### Step 1: The dotenv package is already installed ✅
-We just added it to your dependencies.
+### Step 1: Install missing dependencies
+```bash
+npm install cross-env tsx esbuild vite typescript drizzle-kit @types/node dotenv
+```
 
-### Step 2: The code changes are already made ✅  
+### Step 2: Add npm scripts to package.json
+Add this "scripts" section to your package.json:
+```json
+"scripts": {
+  "dev": "cross-env NODE_ENV=development tsx server/index.ts",
+  "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+  "start": "NODE_ENV=production node dist/index.js",
+  "check": "tsc", 
+  "db:push": "drizzle-kit push"
+}
+```
+
+### Step 3: The code changes are already made ✅  
 We added the environment loading to your `server/index.ts` file.
 
-### Step 3: You need to create a `.env` file
+### Step 4: You need to create a `.env` file
 Create a file called `.env` in your project root (same folder as package.json) with this content:
 
 ```env
