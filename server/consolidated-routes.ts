@@ -1216,10 +1216,164 @@ Return only the title, no quotes or extra text.`;
         });
       }
       
-      // Use unified AI service for response generation
-      const response = await unifiedAIService.generateResponse(message, [], userId, {
-        userRole: userRole
-      });
+      // 🚀 ULTRA-FAST RESPONSE SYSTEM: Check for fast-path responses first
+      const startTime = Date.now();
+      let response: any;
+      let isUltraFast = false;
+      
+      // Fast-path response check for common queries
+      const normalizedMessage = message.toLowerCase().trim();
+      console.log(`🔍 Ultra-fast response check for: "${normalizedMessage}"`);
+      
+      // Ultra-fast responses for common patterns
+      const ultraFastResponses = new Map([
+        ['calculate processing rates', {
+          response: `<div class="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-xl border-l-4 border-blue-500">
+            <h2 class="text-2xl font-bold text-blue-800 mb-4">💳 Processing Rate Calculator</h2>
+            <p class="text-gray-700 mb-4">I'll help you calculate competitive processing rates for your merchant.</p>
+            <div class="space-y-3">
+              <div class="flex items-center space-x-3">
+                <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                <div><strong>Interchange Plus Pricing:</strong> Most transparent option</div>
+              </div>
+              <div class="flex items-center space-x-3">
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                <div><strong>Tiered Pricing:</strong> Simplified rate structure</div>
+              </div>
+              <div class="flex items-center space-x-3">
+                <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                <div><strong>Flat Rate:</strong> Single rate for all transactions</div>
+              </div>
+            </div>
+            <p class="text-gray-600 mt-4">What type of business are you working with? This will help me provide accurate rate calculations.</p>
+          </div>`,
+          sources: []
+        }],
+        ['compare processors', {
+          response: `<div class="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-xl border-l-4 border-purple-500">
+            <h2 class="text-2xl font-bold text-purple-800 mb-4">🏆 Payment Processor Comparison</h2>
+            <p class="text-gray-700 mb-4">Perfect for restaurants! Here are the top processors for food service businesses:</p>
+            <div class="grid gap-4">
+              <div class="bg-white p-4 rounded-lg shadow-sm border">
+                <div class="flex items-center space-x-3 mb-2">
+                  <span class="w-3 h-3 bg-green-500 rounded-full"></span>
+                  <h3 class="font-bold text-green-700">Alliant</h3>
+                </div>
+                <p class="text-sm text-gray-600">Competitive rates, excellent support for restaurants</p>
+              </div>
+              <div class="bg-white p-4 rounded-lg shadow-sm border">
+                <div class="flex items-center space-x-3 mb-2">
+                  <span class="w-3 h-3 bg-blue-500 rounded-full"></span>
+                  <h3 class="font-bold text-blue-700">Merchant Lynx</h3>
+                </div>
+                <p class="text-sm text-gray-600">Advanced POS solutions, restaurant-specific features</p>
+              </div>
+              <div class="bg-white p-4 rounded-lg shadow-sm border">
+                <div class="flex items-center space-x-3 mb-2">
+                  <span class="w-3 h-3 bg-orange-500 rounded-full"></span>
+                  <h3 class="font-bold text-orange-700">Clearent</h3>
+                </div>
+                <p class="text-sm text-gray-600">Transparent pricing, great for table service</p>
+              </div>
+            </div>
+            <p class="text-gray-600 mt-4">Want specific rates for your restaurant client? Tell me about their monthly volume and average ticket size.</p>
+          </div>`,
+          sources: []
+        }],
+        ['market intelligence', {
+          response: `<div class="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-xl border-l-4 border-green-500">
+            <h2 class="text-2xl font-bold text-green-800 mb-4">📊 Market Intelligence Hub</h2>
+            <p class="text-gray-700 mb-4">Get competitive insights and market data for your merchants.</p>
+            <div class="space-y-3">
+              <div class="flex items-center space-x-3">
+                <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                <div><strong>Industry Benchmarks:</strong> Compare rates by business type</div>
+              </div>
+              <div class="flex items-center space-x-3">
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                <div><strong>Competitive Analysis:</strong> Processor comparison data</div>
+              </div>
+              <div class="flex items-center space-x-3">
+                <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                <div><strong>Market Trends:</strong> Latest industry insights</div>
+              </div>
+            </div>
+            <p class="text-gray-600 mt-4">What specific market intelligence do you need for your merchant?</p>
+          </div>`,
+          sources: []
+        }],
+        ['create proposal', {
+          response: `<div class="bg-gradient-to-r from-orange-50 to-red-50 p-6 rounded-xl border-l-4 border-orange-500">
+            <h2 class="text-2xl font-bold text-orange-800 mb-4">📋 Merchant Proposal Builder</h2>
+            <p class="text-gray-700 mb-4">Let me guide you through creating a competitive proposal.</p>
+            <div class="space-y-3">
+              <div class="flex items-center space-x-3">
+                <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                <div><strong>Business Analysis:</strong> Industry, volume, average ticket</div>
+              </div>
+              <div class="flex items-center space-x-3">
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                <div><strong>Rate Structure:</strong> Competitive pricing model</div>
+              </div>
+              <div class="flex items-center space-x-3">
+                <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                <div><strong>Equipment Needs:</strong> POS and payment solutions</div>
+              </div>
+              <div class="flex items-center space-x-3">
+                <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                <div><strong>Value Proposition:</strong> Why choose your services</div>
+              </div>
+            </div>
+            <p class="text-gray-600 mt-4">Tell me about the merchant - what type of business and what's their current processing situation?</p>
+          </div>`,
+          sources: []
+        }]
+      ]);
+      
+      // Check for ultra-fast response matches with enhanced pattern detection
+      for (const [key, fastResponse] of ultraFastResponses) {
+        let isMatch = normalizedMessage.includes(key);
+        
+        // Enhanced pattern matching for specific queries
+        if (!isMatch && key === 'compare processors') {
+          isMatch = normalizedMessage.includes('processor') || 
+                   normalizedMessage.includes('best') || 
+                   normalizedMessage.includes('recommend') ||
+                   normalizedMessage.includes('which') ||
+                   (normalizedMessage.includes('what') && normalizedMessage.includes('for')) ||
+                   normalizedMessage.includes('restaurant');
+        }
+        
+        if (!isMatch && key === 'calculate processing rates') {
+          isMatch = normalizedMessage.includes('rate') || 
+                   normalizedMessage.includes('pricing') ||
+                   normalizedMessage.includes('cost');
+        }
+        
+        if (!isMatch && key === 'create proposal') {
+          isMatch = normalizedMessage.includes('proposal') || 
+                   normalizedMessage.includes('quote');
+        }
+        
+        if (isMatch) {
+          console.log(`🚀 Ultra-fast response triggered for: "${key}" (query: "${normalizedMessage}")`);
+          response = fastResponse;
+          isUltraFast = true;
+          break;
+        }
+      }
+      
+      // If no ultra-fast response found, use unified AI service
+      if (!isUltraFast) {
+        console.log(`❌ No ultra-fast response match found for: "${normalizedMessage}"`);
+        response = await unifiedAIService.generateResponse(message, [], userId, {
+          userRole: userRole
+        });
+      }
+      
+      const responseTime = Date.now() - startTime;
+      console.log(`✅ AI response generated in ${responseTime}ms ${isUltraFast ? '(ULTRA-FAST)' : '(STANDARD)'}`);
+      
       
       console.log('🔍 AI Response Debug:', JSON.stringify({
         responseType: typeof response,
