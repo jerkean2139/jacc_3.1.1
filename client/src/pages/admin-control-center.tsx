@@ -347,34 +347,39 @@ export default function AdminControlCenter() {
     gcTime: 0, // Don't keep in garbage collection cache
   });
 
+  // Type-safe data handling
+  const safeUsersData = Array.isArray(usersData) ? usersData : [];
+
   // Debug logging for user data
-  console.log('Users Data:', usersData.length, 'total, Filter:', userRoleFilter, 'Search:', userSearchTerm);
+  console.log('Users Data:', safeUsersData.length, 'total, Filter:', userRoleFilter, 'Search:', userSearchTerm);
 
   // Monitor chat selection state
   useEffect(() => {
-    if (selectedChatId && chatMessages?.length > 0) {
+    const safeChatMessages = Array.isArray(chatMessages) ? chatMessages : [];
+    if (selectedChatId && safeChatMessages.length > 0) {
       console.log('Chat loaded successfully:', {
         chatId: selectedChatId,
-        messageCount: chatMessages.length
+        messageCount: safeChatMessages.length
       });
     }
   }, [selectedChatId, chatMessages]);
 
   // Update chat details whenever chatMessages changes
   useEffect(() => {
-    if (selectedChatId && chatMessages) {
+    const safeChatMessages = Array.isArray(chatMessages) ? chatMessages : [];
+    if (selectedChatId && safeChatMessages) {
       console.log('Processing chat messages:', { 
         chatId: selectedChatId, 
-        messageCount: chatMessages.length,
-        messages: chatMessages 
+        messageCount: safeChatMessages.length,
+        messages: safeChatMessages 
       });
       
-      if (chatMessages.length > 0) {
+      if (safeChatMessages.length > 0) {
         // Store all messages for full conversation display
         setSelectedChatDetails({
           userMessage: '', // Not used in new display
           aiResponse: '', // Not used in new display
-          messages: chatMessages
+          messages: safeChatMessages
         });
       } else {
         setSelectedChatDetails({
@@ -716,10 +721,7 @@ export default function AdminControlCenter() {
 
   // User Management Settings mutations
   const updateUserSettingsMutation = useMutation({
-    mutationFn: (settings: any) => apiRequest('/api/admin/settings', {
-      method: 'PUT',
-      body: JSON.stringify(settings),
-    }),
+    mutationFn: (settings: any) => apiRequest('PUT', '/api/admin/settings', settings),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/settings'] });
       toast({
@@ -799,10 +801,7 @@ export default function AdminControlCenter() {
 
   // Content & Documents Settings mutations
   const updateContentSettingsMutation = useMutation({
-    mutationFn: (settings: any) => apiRequest('/api/admin/settings', {
-      method: 'PUT',
-      body: JSON.stringify(settings),
-    }),
+    mutationFn: (settings: any) => apiRequest('PUT', '/api/admin/settings', settings),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/settings'] });
       toast({
@@ -821,10 +820,7 @@ export default function AdminControlCenter() {
 
   // System Performance Settings mutations
   const updateSystemSettingsMutation = useMutation({
-    mutationFn: (settings: any) => apiRequest('/api/admin/settings', {
-      method: 'PUT',
-      body: JSON.stringify(settings),
-    }),
+    mutationFn: (settings: any) => apiRequest('PUT', '/api/admin/settings', settings),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/settings'] });
       toast({
@@ -931,10 +927,7 @@ export default function AdminControlCenter() {
         }
       }
       
-      const response = await apiRequest('/api/admin/faq', {
-        method: 'POST',
-        body: JSON.stringify(newFAQ)
-      });
+      const response = await apiRequest('POST', '/api/admin/faq', newFAQ);
       return response;
     },
     onSuccess: () => {
@@ -1028,14 +1021,11 @@ export default function AdminControlCenter() {
   // Create folder mutation
   const createFolderMutation = useMutation({
     mutationFn: async (folderData: { name: string; color: string }) => {
-      const response = await apiRequest('/api/folders', {
-        method: 'POST',
-        body: JSON.stringify({
-          name: folderData.name,
-          color: folderData.color,
-          folderType: 'custom',
-          vectorNamespace: `folder_${folderData.name.toLowerCase().replace(/\s+/g, '_')}`
-        })
+      const response = await apiRequest('POST', '/api/folders', {
+        name: folderData.name,
+        color: folderData.color,
+        folderType: 'custom',
+        vectorNamespace: `folder_${folderData.name.toLowerCase().replace(/\s+/g, '_')}`
       });
       return response;
     },
@@ -1191,11 +1181,7 @@ export default function AdminControlCenter() {
   // URL tracking mutations
   const updateUrlMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: any }) => {
-      const response = await apiRequest(`/api/admin/vendor-urls/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const response = await apiRequest('PUT', `/api/admin/vendor-urls/${id}`, data);
       return response;
     },
     onSuccess: () => {
@@ -1218,9 +1204,7 @@ export default function AdminControlCenter() {
 
   const forceUpdateMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await apiRequest(`/api/admin/scrape-vendor-url/${id}`, {
-        method: 'POST',
-      });
+      const response = await apiRequest('POST', `/api/admin/scrape-vendor-url/${id}`);
       return response;
     },
     onSuccess: () => {
@@ -1243,9 +1227,7 @@ export default function AdminControlCenter() {
 
   const deleteUrlMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await apiRequest(`/api/admin/vendor-urls/${id}`, {
-        method: 'DELETE',
-      });
+      const response = await apiRequest('DELETE', `/api/admin/vendor-urls/${id}`);
       return response;
     },
     onSuccess: () => {
@@ -5053,9 +5035,7 @@ Use direct response marketing principles and focus on measurable results.`
                         description: "Processing old chat data"
                       });
                       
-                      const response = await apiRequest('/api/admin/chats/archive', {
-                        method: 'POST'
-                      });
+                      const response = await apiRequest('POST', '/api/admin/chats/archive');
                       const data = response;
                       
                       if (data.success) {
