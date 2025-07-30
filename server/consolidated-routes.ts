@@ -185,14 +185,10 @@ function getUltraFastResponse(message: string): string | null {
 
 // Simple admin authentication middleware
 const requireAdmin = (req: any, res: any, next: any) => {
-  const sessionId = req.cookies?.sessionId;
-  
-  // Secure admin authentication only through proper sessions
-  // Removed all hardcoded authentication bypasses for security
-  
   // PRIORITY 1: Check express session first (database-backed, persistent)
   if (req.session?.user) {
     const user = req.session.user;
+    console.log('Admin check - Express session user:', user.username, 'Role:', user.role);
     if (user.role === 'dev-admin' || user.role === 'client-admin' || user.role === 'admin') {
       req.user = user;
       return next();
@@ -200,6 +196,7 @@ const requireAdmin = (req: any, res: any, next: any) => {
   }
   
   // PRIORITY 2: Check sessions Map and restore to express session
+  const sessionId = req.cookies?.sessionId;
   if (sessionId && sessions.has(sessionId)) {
     const userSession = sessions.get(sessionId);
     if (userSession && (userSession.role === 'dev-admin' || userSession.role === 'client-admin' || userSession.role === 'admin')) {

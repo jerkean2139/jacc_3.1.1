@@ -7,6 +7,7 @@ import { Switch, Route } from 'wouter';
 import LoginPage from '@/pages/login';
 import HomeStable from '@/pages/home-stable';
 import DocumentsPage from '@/pages/documents-page';
+import HelpCenter from '@/pages/help-center';
 
 import NotFound from '@/pages/not-found';
 import AdminControlCenter from '@/pages/admin-control-center';
@@ -57,6 +58,7 @@ function AppContent() {
           <Route path="/" component={() => <HomeStable />} />
           <Route path="/chat/:chatId" component={() => <HomeStable />} />
           <Route path="/documents" component={() => <DocumentsPage />} />
+          <Route path="/help" component={() => <HelpCenter />} />
 
           {/* Admin Control Center Routes */}
           {user && (user.role === 'admin' || user.role === 'client-admin' || user.role === 'dev-admin') && (
