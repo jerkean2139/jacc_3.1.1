@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   Tabs,
   TabsContent,
@@ -49,6 +50,7 @@ import {
   Zap,
   ChevronRight,
   Home,
+  Database,
 } from "lucide-react";
 import SystemHealthMonitor from "@/components/system-health-monitor";
 import { Link as RouterLink } from 'wouter';
