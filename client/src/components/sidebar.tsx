@@ -318,7 +318,6 @@ export default function Sidebar({
                user?.role === 'dev-admin' ? 'System Admin' : 
                user?.role === 'admin' ? 'Admin' : 'Sales Agent'}
             </p>
-            <p className="text-sm text-slate-500 dark:text-slate-400">Sales Agent</p>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -714,16 +713,6 @@ export default function Sidebar({
               <TrendingUp className="w-4 h-4 text-slate-700 dark:text-slate-300" />
               <span className="text-sm text-slate-700 dark:text-slate-300">Merchant Insights</span>
             </Link>
-            <div className="relative group">
-              <div className="flex items-center space-x-3 p-2 rounded-lg cursor-not-allowed opacity-60 transition-colors">
-                <TrendingUp className="w-4 h-4 text-gray-400" />
-                <span className="text-sm text-gray-500">Merchant Insights</span>
-                <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full ml-auto">Coming Soon</span>
-              </div>
-              <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
-                Coming Soon
-              </span>
-            </div>
           </div>
         </div>
 
