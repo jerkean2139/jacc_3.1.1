@@ -1,3 +1,7 @@
+      // Environment variables loading (required for external IDEs)
+      import dotenv from 'dotenv';
+      dotenv.config();
+
       import express, { type Request, Response, NextFunction } from "express";
       import { registerConsolidatedRoutes } from "./consolidated-routes";
       import { setupVite, serveStatic, log } from "./vite";
