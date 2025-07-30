@@ -411,18 +411,27 @@ export default function Sidebar({
       <ScrollArea className="flex-1 px-4">
         {/* Recent Chats Section */}
         <div className="mb-6">
-          <h4 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3">
-            Recent Chats
-          </h4>
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+              Recent Chats
+            </h4>
+            <Badge variant="secondary" className="text-xs">
+              {displayedChats.length}
+            </Badge>
+          </div>
 
-          
-          <div className="space-y-1">
-            {displayedChats.map((chat) => (
-              <div
-                key={chat.id}
-                className={cn(
-                  "group flex items-center p-2 rounded-lg transition-colors border",
-                  activeChatId === chat.id 
+          {displayedChats.length === 0 ? (
+            <div className="text-xs text-slate-400 italic p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+              No recent chats yet. Start a conversation above.
+            </div>
+          ) : (
+            <div className="space-y-1">
+              {displayedChats.map((chat) => (
+                <div
+                  key={chat.id}
+                  className={cn(
+                    "group flex items-center p-2 rounded-lg transition-colors border cursor-pointer",
+                    activeChatId === chat.id 
                     ? "bg-slate-100 dark:bg-slate-800 border-blue-200" 
                     : "hover:bg-slate-50 dark:hover:bg-slate-800/50 border-transparent"
                 )}
@@ -541,6 +550,7 @@ export default function Sidebar({
               </Button>
             )}
           </div>
+        )}
         </div>
 
         {/* Chat Organization Folders */}
@@ -662,10 +672,14 @@ export default function Sidebar({
           </h4>
           <div className="space-y-1">
             <div className="relative group">
-              <Link href="/prompt-customization" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                <Brain className="w-4 h-4 text-slate-700 dark:text-slate-300" />
-                <span className="text-sm text-slate-700 dark:text-slate-300">AI Prompts</span>
-              </Link>
+              <div className="flex items-center space-x-3 p-2 rounded-lg cursor-not-allowed opacity-60 transition-colors">
+                <Brain className="w-4 h-4 text-gray-400" />
+                <span className="text-sm text-gray-500">AI Prompts</span>
+                <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full ml-auto">Coming Soon</span>
+              </div>
+              <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                Coming Soon
+              </span>
             </div>
             <Link 
               href="/help" 
