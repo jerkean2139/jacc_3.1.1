@@ -668,20 +668,13 @@ export default function Sidebar({
                 <span className="text-sm text-slate-700 dark:text-slate-300">AI Prompts</span>
               </Link>
             </div>
-            <a 
+            <Link 
               href="/help" 
               className="flex items-center space-x-3 p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg cursor-pointer transition-colors"
             >
               <HelpCircle className="w-4 h-4 text-green-500" />
-              <span className="text-sm text-slate-700 dark:text-slate-300">Help Center</span>
-            </a>
-            <a 
-              href="/guide" 
-              className="flex items-center space-x-3 p-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg cursor-pointer transition-colors"
-            >
-              <FileText className="w-4 h-4 text-blue-500" />
-              <span className="text-sm text-slate-700 dark:text-slate-300">Guide</span>
-            </a>
+              <span className="text-sm text-slate-700 dark:text-slate-300">User Guides & Screenshots</span>
+            </Link>
           </div>
         </div>
 
