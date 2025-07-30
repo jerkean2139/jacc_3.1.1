@@ -73,15 +73,25 @@ export default function UnifiedAdminPanel() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Data queries
-  const { data: faqData = [] } = useQuery({
+  // Data queries with debug logging
+  const { data: faqData = [], isLoading: faqLoading, error: faqError } = useQuery({
     queryKey: ['/api/admin/faq'],
     retry: false,
   });
 
-  const { data: documentsData = [] } = useQuery({
+  const { data: documentsData = [], isLoading: documentsLoading, error: documentsError } = useQuery({
     queryKey: ['/api/admin/documents'],
     retry: false,
+  });
+
+  // Debug logging
+  console.log('Admin panel data debug:', {
+    faqData,
+    faqCount: Array.isArray(faqData) ? faqData.length : 'not array',
+    documentsData,
+    documentsCount: Array.isArray(documentsData) ? documentsData.length : 'not array',
+    faqError,
+    documentsError
   });
 
   const { data: chatMonitoringData = [] } = useQuery({
@@ -131,6 +141,7 @@ export default function UnifiedAdminPanel() {
   };
 
   const safeArrayData = (data: unknown): any[] => {
+    console.log('SafeArrayData debug:', data);
     return Array.isArray(data) ? data : [];
   };
 

@@ -2334,6 +2334,17 @@ File Information:
       res.status(500).json({ error: 'Failed to fetch FAQ knowledge base' });
     }
   });
+
+  // Admin FAQ endpoint (alias for admin panel)
+  app.get('/api/admin/faq', async (req, res) => {
+    try {
+      const faqs = await db.select().from(faqKnowledgeBase).orderBy(desc(faqKnowledgeBase.createdAt));
+      res.json(faqs);
+    } catch (error) {
+      console.error('Error fetching admin FAQ:', error);
+      res.status(500).json({ error: 'Failed to fetch FAQ data' });
+    }
+  });
   
   app.post('/api/faq-knowledge-base', requireAdmin, async (req, res) => {
     try {
@@ -2356,7 +2367,57 @@ File Information:
       res.status(500).json({ error: 'Failed to create FAQ entry' });
     }
   });
+
+  // Admin FAQ creation endpoint (alias for admin panel)
+  app.post('/api/admin/faq', requireAdmin, async (req, res) => {
+    try {
+      const { question, answer, category, priority, tags } = req.body;
+      
+      const result = await db.insert(faqKnowledgeBase).values({
+        id: crypto.randomUUID(),
+        question,
+        answer,
+        category: category || 'general',
+        priority: priority || 'medium',
+        tags: tags || [],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }).returning();
+      
+      res.json(result[0]);
+    } catch (error) {
+      console.error('Error creating admin FAQ entry:', error);
+      res.status(500).json({ error: 'Failed to create FAQ entry' });
+    }
+  });
   
+  // === Admin Documents Routes ===
+  
+  app.get('/api/admin/documents', requireAdmin, async (req, res) => {
+    try {
+      const allDocuments = await db
+        .select({
+          id: documents.id,
+          name: documents.name,
+          originalName: documents.originalName,
+          mimeType: documents.mimeType,
+          size: documents.size,
+          path: documents.path,
+          folderId: documents.folderId,
+          createdAt: documents.createdAt,
+          updatedAt: documents.updatedAt
+        })
+        .from(documents)
+        .orderBy(desc(documents.createdAt));
+      
+      console.log(`Admin documents API returning ${allDocuments.length} documents`);
+      res.json(allDocuments);
+    } catch (error) {
+      console.error('Error fetching admin documents:', error);
+      res.status(500).json({ error: 'Failed to fetch documents' });
+    }
+  });
+
   // === Vendor URL Routes ===
   
   app.get('/api/admin/vendor-urls', async (req, res) => {
