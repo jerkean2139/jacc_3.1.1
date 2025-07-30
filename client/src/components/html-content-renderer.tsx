@@ -23,8 +23,8 @@ function HtmlContentRenderer({ content, className = '' }: HtmlContentRendererPro
       <div className={className}>
         <div 
           dangerouslySetInnerHTML={{ __html: `<p>${formattedContent}</p>` }}
-          className="text-gray-700 dark:text-gray-300 leading-relaxed space-y-3 
-            [&>p]:mb-3 [&>p]:leading-relaxed [&>br]:mb-2"
+          className="text-gray-900 dark:text-white leading-relaxed space-y-3 
+            [&>p]:mb-3 [&>p]:leading-relaxed [&>p]:text-gray-900 [&>p]:dark:text-white [&>br]:mb-2"
         />
       </div>
     );

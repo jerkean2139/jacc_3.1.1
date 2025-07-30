@@ -59,12 +59,12 @@ export function MessageContent({ content, className = '' }: MessageContentProps)
           );
         }
         
-        // Render HTML content safely
+        // Render HTML content safely with proper dark mode text colors
         return (
           <div 
             key={index}
             dangerouslySetInnerHTML={{ __html: part }}
-            className="prose prose-slate dark:prose-invert max-w-none leading-relaxed [&>h1]:text-xl [&>h1]:font-bold [&>h1]:mt-6 [&>h1]:mb-4 [&>h2]:text-lg [&>h2]:font-semibold [&>h2]:mt-6 [&>h2]:mb-4 [&>h3]:text-base [&>h3]:font-medium [&>h3]:mt-4 [&>h3]:mb-3 [&>ul]:list-disc [&>ul]:ml-6 [&>ul]:mb-6 [&>ul]:mt-3 [&>ol]:list-decimal [&>ol]:ml-6 [&>ol]:mb-6 [&>ol]:mt-3 [&>li]:mb-3 [&>li]:leading-relaxed [&>p]:mb-6 [&>p]:leading-relaxed [&>p]:text-base [&>strong]:font-semibold [&>em]:italic [&>br]:mb-4 [&>blockquote]:border-l-4 [&>blockquote]:border-blue-500 [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:my-6"
+            className="prose prose-slate dark:prose-invert max-w-none leading-relaxed text-gray-900 dark:text-white [&>h1]:text-xl [&>h1]:font-bold [&>h1]:mt-6 [&>h1]:mb-4 [&>h1]:text-gray-900 [&>h1]:dark:text-white [&>h2]:text-lg [&>h2]:font-semibold [&>h2]:mt-6 [&>h2]:mb-4 [&>h2]:text-gray-900 [&>h2]:dark:text-white [&>h3]:text-base [&>h3]:font-medium [&>h3]:mt-4 [&>h3]:mb-3 [&>h3]:text-gray-900 [&>h3]:dark:text-white [&>ul]:list-disc [&>ul]:ml-6 [&>ul]:mb-6 [&>ul]:mt-3 [&>ol]:list-decimal [&>ol]:ml-6 [&>ol]:mb-6 [&>ol]:mt-3 [&>li]:mb-3 [&>li]:leading-relaxed [&>li]:text-gray-900 [&>li]:dark:text-white [&>p]:mb-6 [&>p]:leading-relaxed [&>p]:text-base [&>p]:text-gray-900 [&>p]:dark:text-white [&>strong]:font-semibold [&>strong]:text-gray-900 [&>strong]:dark:text-white [&>em]:italic [&>em]:text-gray-900 [&>em]:dark:text-white [&>br]:mb-4 [&>blockquote]:border-l-4 [&>blockquote]:border-blue-500 [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:my-6 [&>blockquote]:text-gray-900 [&>blockquote]:dark:text-white"
           />
         );
       });
