@@ -185,12 +185,17 @@ function getUltraFastResponse(message: string): string | null {
 
 // Simple admin authentication middleware
 const requireAdmin = (req: any, res: any, next: any) => {
+  console.log('🔐 Admin authentication check started');
+  console.log('Express session:', req.session?.user?.role || 'none');
+  console.log('Session ID from cookie:', req.sessionID);
+  
   // PRIORITY 1: Check express session first (database-backed, persistent)
   if (req.session?.user) {
     const user = req.session.user;
     console.log('Admin check - Express session user:', user.username, 'Role:', user.role);
     if (user.role === 'dev-admin' || user.role === 'client-admin' || user.role === 'admin') {
       req.user = user;
+      console.log('✅ Admin authentication successful via express session');
       return next();
     }
   }
@@ -202,12 +207,15 @@ const requireAdmin = (req: any, res: any, next: any) => {
     if (userSession && (userSession.role === 'dev-admin' || userSession.role === 'client-admin' || userSession.role === 'admin')) {
       req.user = userSession;
       // CRITICAL: Restore to express session for deployment persistence
-      req.session.user = userSession;
+      if (req.session) {
+        req.session.user = userSession;
+      }
+      console.log('✅ Admin authentication successful via sessions map');
       return next();
     }
   }
   
-  console.log('Admin authentication failed for sessionId:', sessionId);
+  console.log('❌ Admin authentication failed for sessionId:', sessionId);
   console.log('Express session user:', req.session?.user?.role || 'none');
   console.log('Available sessions:', Array.from(sessions.keys()));
   return res.status(401).json({ message: "Not authenticated" });

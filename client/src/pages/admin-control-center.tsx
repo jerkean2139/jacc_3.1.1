@@ -2234,36 +2234,67 @@ export default function AdminControlCenter() {
       </div>
       
       <Tabs defaultValue="knowledge" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 h-auto p-2">
-          <TabsTrigger value="knowledge" className="text-xs sm:text-sm py-3">
-            <span className="hidden sm:inline">Q&A Knowledge</span>
-            <span className="sm:hidden">Q&A</span>
-          </TabsTrigger>
-          <TabsTrigger value="documents" className="text-xs sm:text-sm py-3">
-            <span className="hidden sm:inline">Document Center</span>
-            <span className="sm:hidden">Docs</span>
-          </TabsTrigger>
-          <TabsTrigger value="content-quality" className="text-xs sm:text-sm py-3">
-            <span className="hidden sm:inline">Content Quality</span>
-            <span className="sm:hidden">Quality</span>
-          </TabsTrigger>
-          <TabsTrigger value="advanced-ocr" className="text-xs sm:text-sm py-3">
-            <span className="hidden sm:inline">Advanced OCR</span>
-            <span className="sm:hidden">OCR</span>
-          </TabsTrigger>
-          <TabsTrigger value="chat-training" className="text-xs sm:text-sm py-3">
-            <span className="hidden sm:inline">Chat & AI Training</span>
-            <span className="sm:hidden">Training</span>
-          </TabsTrigger>
-          <TabsTrigger value="system-monitor" className="text-xs sm:text-sm py-3">
-            <span className="hidden sm:inline">System Monitor</span>
-            <span className="sm:hidden">Monitor</span>
-          </TabsTrigger>
-          <TabsTrigger value="settings" className="text-xs sm:text-sm py-3">
-            <span className="hidden sm:inline">Settings</span>
-            <span className="sm:hidden">Config</span>
-          </TabsTrigger>
-        </TabsList>
+        {/* Navigation styled to match main sidebar */}
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg">
+          <TabsList className="w-full bg-transparent border-none p-4 h-auto justify-start flex-wrap gap-2">
+            <TabsTrigger 
+              value="knowledge" 
+              className="py-2 px-4 text-sm font-medium text-slate-700 dark:text-slate-300 bg-transparent data-[state=active]:bg-slate-100 dark:data-[state=active]:bg-slate-800 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white rounded-lg border hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+            >
+              <BookOpen className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Q&A Knowledge</span>
+              <span className="sm:hidden">Q&A</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="documents" 
+              className="py-2 px-4 text-sm font-medium text-slate-700 dark:text-slate-300 bg-transparent data-[state=active]:bg-slate-100 dark:data-[state=active]:bg-slate-800 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white rounded-lg border hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+            >
+              <Files className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Document Center</span>
+              <span className="sm:hidden">Docs</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="content-quality" 
+              className="py-2 px-4 text-sm font-medium text-slate-700 dark:text-slate-300 bg-transparent data-[state=active]:bg-slate-100 dark:data-[state=active]:bg-slate-800 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white rounded-lg border hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+            >
+              <Target className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Content Quality</span>
+              <span className="sm:hidden">Quality</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="advanced-ocr" 
+              className="py-2 px-4 text-sm font-medium text-slate-700 dark:text-slate-300 bg-transparent data-[state=active]:bg-slate-100 dark:data-[state=active]:bg-slate-800 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white rounded-lg border hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+            >
+              <Scan className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Advanced OCR</span>
+              <span className="sm:hidden">OCR</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="chat-training" 
+              className="py-2 px-4 text-sm font-medium text-slate-700 dark:text-slate-300 bg-transparent data-[state=active]:bg-slate-100 dark:data-[state=active]:bg-slate-800 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white rounded-lg border hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+            >
+              <Brain className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Chat & AI Training</span>
+              <span className="sm:hidden">Training</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="system-monitor" 
+              className="py-2 px-4 text-sm font-medium text-slate-700 dark:text-slate-300 bg-transparent data-[state=active]:bg-slate-100 dark:data-[state=active]:bg-slate-800 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white rounded-lg border hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+            >
+              <Activity className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">System Monitor</span>
+              <span className="sm:hidden">Monitor</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="settings" 
+              className="py-2 px-4 text-sm font-medium text-slate-700 dark:text-slate-300 bg-transparent data-[state=active]:bg-slate-100 dark:data-[state=active]:bg-slate-800 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white rounded-lg border hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+            >
+              <Settings className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Settings</span>
+              <span className="sm:hidden">Config</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="knowledge" className="space-y-6 p-4 sm:p-6">
           <div className="flex items-center justify-between">
