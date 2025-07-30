@@ -47,7 +47,11 @@ import {
   Target,
   Upload,
   Zap,
+  ChevronRight,
+  Home,
 } from "lucide-react";
+import SystemHealthMonitor from "@/components/system-health-monitor";
+import { Link as RouterLink } from 'wouter';
 
 interface FAQ {
   id: string;
@@ -130,11 +134,19 @@ export default function UnifiedAdminPanel() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">JACC Admin Control Center</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
-          Complete system management, monitoring, and configuration hub
-        </p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">JACC Admin Control Center</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">
+            Complete system management, monitoring, and configuration hub
+          </p>
+        </div>
+        <RouterLink href="/">
+          <Button variant="outline" className="flex items-center gap-2">
+            <Home className="h-4 w-4" />
+            Back to Chat
+          </Button>
+        </RouterLink>
       </div>
 
       <Tabs value={activeSection} onValueChange={setActiveSection} className="space-y-6">
@@ -469,23 +481,15 @@ export default function UnifiedAdminPanel() {
         {/* Live Monitoring */}
         <TabsContent value="monitoring" className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Live Monitoring</h2>
+            <h2 className="text-2xl font-bold">F35 System Health Monitor</h2>
+            <div className="flex items-center gap-2 bg-gradient-to-r from-slate-900 to-slate-800 text-white px-4 py-2 rounded-lg">
+              <Activity className="h-4 w-4" />
+              <span className="text-sm font-medium">REAL-TIME MONITORING</span>
+            </div>
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>System Performance</CardTitle>
-              <CardDescription>Real-time monitoring and analytics</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600 dark:text-gray-400">
-                  Live monitoring dashboard will be displayed here
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          {/* F35 System Health Monitor Integration */}
+          <SystemHealthMonitor />
         </TabsContent>
       </Tabs>
     </div>

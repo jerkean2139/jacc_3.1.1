@@ -10,7 +10,7 @@ import DocumentsPage from '@/pages/documents-page';
 import HelpCenter from '@/pages/help-center';
 
 import NotFound from '@/pages/not-found';
-import AdminControlCenter from '@/pages/admin-control-center';
+import UnifiedAdminPanel from '@/pages/unified-admin-panel';
 // import { DragDropProvider } from '@/components/drag-drop-provider'; // Removed during Phase 2 cleanup
 // import { GamificationProvider } from '@/components/gamification-provider'; // Removed during Phase 2 cleanup
 import PWAStatus from '@/components/pwa-status';
@@ -63,8 +63,8 @@ function AppContent() {
           {/* Admin Control Center Routes */}
           {user && (user.role === 'admin' || user.role === 'client-admin' || user.role === 'dev-admin') && (
             <>
-              <Route path="/admin" component={AdminControlCenter} />
-              <Route path="/admin-control-center" component={AdminControlCenter} />
+              <Route path="/admin" component={UnifiedAdminPanel} />
+              <Route path="/admin-control-center" component={UnifiedAdminPanel} />
             </>
           )}
         </>
