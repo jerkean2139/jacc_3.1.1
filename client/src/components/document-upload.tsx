@@ -53,6 +53,8 @@ export default function DocumentUpload({ folderId, onUploadComplete }: DocumentU
   const [fileNames, setFileNames] = useState<Record<string, string>>({});
   const [duplicateWarnings, setDuplicateWarnings] = useState<string[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [showPlacementDialog, setShowPlacementDialog] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
   const isAuthenticated = true; // Admin-only component, no auth check needed
 
   // Fetch existing documents and folders
