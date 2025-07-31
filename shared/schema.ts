@@ -275,6 +275,9 @@ export const documents = pgTable("documents", {
   isPublic: boolean("is_public").default(true), // Visible to all users
   adminOnly: boolean("admin_only").default(false), // Only admins can view
   managerOnly: boolean("manager_only").default(false), // Admins and managers can view
+  // AI training and processing settings
+  trainingData: boolean("training_data").default(false), // Use for AI training
+  autoVectorize: boolean("auto_vectorize").default(false), // Auto-vectorize for search
   // Tagging system for enhanced organization
   tags: text("tags").array().default([]), // Array of tag strings
   category: varchar("category", { length: 100 }), // Primary category

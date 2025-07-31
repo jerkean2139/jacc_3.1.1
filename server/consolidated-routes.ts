@@ -1679,18 +1679,24 @@ File Information:
       const processedDocuments = [];
       
       for (const file of filesToProcess) {
-        // Create document record in database - match exact schema
+        // Create document record in database - match exact schema with all permission fields
         const document = {
-          name: file.originalName, // Required field
-          originalName: file.originalName, // Required field
+          name: file.originalName || file.filename, // Required field
+          originalName: file.originalName || file.filename, // Required field
           mimeType: file.mimetype || 'application/octet-stream', // Required field
           size: file.size, // Required field
           path: file.path, // Required field - this was the main issue
           userId: 'admin-user', // Use existing admin user ID
           folderId: folderId || null,
+          
+          // Permission fields - properly mapped from frontend
           adminOnly: permissions?.adminOnly || false,
-          isPublic: !permissions?.adminOnly || true,
-          managerOnly: false,
+          isPublic: permissions?.viewAll || false,
+          managerOnly: permissions?.managerAccess || false,
+          trainingData: permissions?.trainingData || false,
+          autoVectorize: permissions?.autoVectorize || false,
+          
+          // Additional required fields
           isFavorite: false,
           tags: [],
           category: null,
@@ -1700,8 +1706,17 @@ File Information:
           nameHash: null
         };
 
-        await storage.createDocument(document);
-        processedDocuments.push(document);
+        console.log('📋 Creating document with all permissions:', {
+          name: document.name,
+          adminOnly: document.adminOnly,
+          isPublic: document.isPublic,
+          managerOnly: document.managerOnly,
+          trainingData: document.trainingData,
+          autoVectorize: document.autoVectorize
+        });
+
+        const createdDoc = await storage.createDocument(document);
+        processedDocuments.push(createdDoc);
       }
 
       res.json({
