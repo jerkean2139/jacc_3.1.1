@@ -1687,7 +1687,7 @@ File Information:
           size: file.size, // Required field
           path: file.path, // Required field - this was the main issue
           userId: 'admin-user', // Use existing admin user ID
-          folderId: (folderId === null || folderId === 'root' || folderId === '') ? null : folderId,
+          folderId: (folderId === null || folderId === 'root' || folderId === '' || folderId === '__root__') ? null : folderId,
           
           // Permission fields - properly mapped from frontend
           adminOnly: permissions?.adminOnly || false,

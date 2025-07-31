@@ -164,8 +164,8 @@ export default function DocumentPlacementDialog({
     }
 
     setIsProcessing(true);
-    // Convert empty string (root) to null for backend
-    const targetFolderId = selectedFolderId === "" ? null : selectedFolderId;
+    // Convert __root__ placeholder to null for backend
+    const targetFolderId = selectedFolderId === "__root__" ? null : selectedFolderId;
     
     processDocumentsMutation.mutate({
       documentIds: uploadedFiles.map(file => file.id),
@@ -245,7 +245,7 @@ export default function DocumentPlacementDialog({
                       <SelectValue placeholder="Choose a folder..." />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">
+                      <SelectItem value="__root__">
                         <div className="flex items-center gap-2">
                           <Folder className="h-4 w-4 text-gray-500" />
                           Root Directory
