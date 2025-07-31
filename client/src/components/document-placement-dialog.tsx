@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -17,7 +18,9 @@ import {
   Database,
   FileText,
   CheckCircle,
-  Settings
+  Settings,
+  Plus,
+  FolderPlus
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import type { Folder as FolderType } from "@shared/schema";
@@ -50,6 +53,8 @@ export default function DocumentPlacementDialog({
   onComplete 
 }: DocumentPlacementDialogProps) {
   const [selectedFolderId, setSelectedFolderId] = useState<string>("");
+  const [showCreateFolder, setShowCreateFolder] = useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
   const [permissions, setPermissions] = useState<DocumentPermissions>({
     viewAll: true,
     adminOnly: false,
@@ -65,6 +70,35 @@ export default function DocumentPlacementDialog({
   // Fetch folders
   const { data: folders = [] } = useQuery<FolderType[]>({
     queryKey: ["/api/folders"],
+  });
+
+  // Create folder mutation
+  const createFolderMutation = useMutation({
+    mutationFn: async (folderName: string) => {
+      const response = await apiRequest('POST', '/api/folders', {
+        name: folderName,
+        folderType: 'custom',
+        priority: 0
+      });
+      return response;
+    },
+    onSuccess: (newFolder) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/folders"] });
+      setSelectedFolderId(newFolder.id);
+      setNewFolderName('');
+      setShowCreateFolder(false);
+      toast({
+        title: "Folder created",
+        description: `New folder "${newFolder.name}" has been created and selected.`,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Failed to create folder",
+        description: error.message || "Could not create the new folder.",
+        variant: "destructive",
+      });
+    },
   });
 
   // Process documents mutation
@@ -194,24 +228,86 @@ export default function DocumentPlacementDialog({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                <Label>Select destination folder</Label>
-                <Select value={selectedFolderId} onValueChange={setSelectedFolderId}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Choose a folder..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="root">Root Directory</SelectItem>
-                    {folders.map((folder) => (
-                      <SelectItem key={folder.id} value={folder.id}>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Select destination folder</Label>
+                  <Select value={selectedFolderId} onValueChange={setSelectedFolderId}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choose a folder..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="root">
                         <div className="flex items-center gap-2">
-                          <Folder className="h-4 w-4" />
-                          {folder.name}
+                          <Folder className="h-4 w-4 text-gray-500" />
+                          Root Directory
                         </div>
                       </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                      {folders.map((folder) => (
+                        <SelectItem key={folder.id} value={folder.id}>
+                          <div className="flex items-center gap-2">
+                            <Folder className="h-4 w-4 text-blue-500" />
+                            <span>{folder.name}</span>
+                            <Badge variant="outline" className="text-xs ml-2">
+                              {folder.documentCount || 0} docs
+                            </Badge>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Create New Folder Section */}
+                <div className="border-t pt-3">
+                  {!showCreateFolder ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowCreateFolder(true)}
+                      className="w-full"
+                    >
+                      <FolderPlus className="h-4 w-4 mr-2" />
+                      Create New Folder
+                    </Button>
+                  ) : (
+                    <div className="space-y-3">
+                      <Label>Create new folder</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="Enter folder name..."
+                          value={newFolderName}
+                          onChange={(e) => setNewFolderName(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && newFolderName.trim()) {
+                              createFolderMutation.mutate(newFolderName.trim());
+                            }
+                            if (e.key === 'Escape') {
+                              setShowCreateFolder(false);
+                              setNewFolderName('');
+                            }
+                          }}
+                        />
+                        <Button
+                          size="sm"
+                          onClick={() => createFolderMutation.mutate(newFolderName.trim())}
+                          disabled={!newFolderName.trim() || createFolderMutation.isPending}
+                        >
+                          {createFolderMutation.isPending ? 'Creating...' : 'Create'}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setShowCreateFolder(false);
+                            setNewFolderName('');
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
