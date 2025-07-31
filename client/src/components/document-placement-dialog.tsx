@@ -132,7 +132,8 @@ export default function DocumentPlacementDialog({
     });
   };
 
-  const getFileIcon = (mimeType: string) => {
+  const getFileIcon = (mimeType: string | undefined) => {
+    if (!mimeType) return <FileText className="h-4 w-4 text-gray-500" />;
     if (mimeType.includes('pdf')) return <FileText className="h-4 w-4 text-red-500" />;
     if (mimeType.includes('word')) return <FileText className="h-4 w-4 text-blue-500" />;
     if (mimeType.includes('excel') || mimeType.includes('sheet')) return <FileText className="h-4 w-4 text-green-500" />;
