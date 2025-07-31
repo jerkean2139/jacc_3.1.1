@@ -73,14 +73,38 @@ export default function UnifiedAdminPanel() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Data queries with debug logging
+  // Data queries with debug logging and explicit fetch
   const { data: faqData = [], isLoading: faqLoading, error: faqError } = useQuery({
     queryKey: ['/api/admin/faq'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/faq', {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    },
     retry: false,
   });
 
   const { data: documentsData = [], isLoading: documentsLoading, error: documentsError } = useQuery({
     queryKey: ['/api/admin/documents'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/documents', {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    },
     retry: false,
   });
 

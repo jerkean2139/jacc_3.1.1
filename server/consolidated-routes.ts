@@ -2336,9 +2336,10 @@ File Information:
   });
 
   // Admin FAQ endpoint (alias for admin panel)
-  app.get('/api/admin/faq', async (req, res) => {
+  app.get('/api/admin/faq', requireAdmin, async (req, res) => {
     try {
       const faqs = await db.select().from(faqKnowledgeBase).orderBy(desc(faqKnowledgeBase.createdAt));
+      console.log(`Admin FAQ endpoint returning ${faqs.length} entries`);
       res.json(faqs);
     } catch (error) {
       console.error('Error fetching admin FAQ:', error);
@@ -2395,6 +2396,7 @@ File Information:
   
   app.get('/api/admin/documents', requireAdmin, async (req, res) => {
     try {
+      console.log('Admin documents endpoint called, fetching from database...');
       const allDocuments = await db
         .select({
           id: documents.id,
