@@ -75,14 +75,19 @@ export default function DocumentPlacementDialog({
   // Create folder mutation
   const createFolderMutation = useMutation({
     mutationFn: async (folderName: string) => {
+      console.log('🔨 Creating folder with name:', folderName);
       const response = await apiRequest('POST', '/api/folders', {
         name: folderName,
         folderType: 'custom',
-        priority: 0
+        priority: 0,
+        vectorNamespace: `folder_${folderName.toLowerCase().replace(/\s+/g, '_')}`
       });
-      return response;
+      const result = await response.json();
+      console.log('✅ Folder creation response:', result);
+      return result;
     },
     onSuccess: (newFolder) => {
+      console.log('✅ Folder created successfully:', newFolder);
       queryClient.invalidateQueries({ queryKey: ["/api/folders"] });
       setSelectedFolderId(newFolder.id);
       setNewFolderName('');
@@ -93,6 +98,7 @@ export default function DocumentPlacementDialog({
       });
     },
     onError: (error: any) => {
+      console.error('❌ Folder creation failed:', error);
       toast({
         title: "Failed to create folder",
         description: error.message || "Could not create the new folder.",
@@ -158,9 +164,12 @@ export default function DocumentPlacementDialog({
     }
 
     setIsProcessing(true);
+    // Convert empty string (root) to null for backend
+    const targetFolderId = selectedFolderId === "" ? null : selectedFolderId;
+    
     processDocumentsMutation.mutate({
       documentIds: uploadedFiles.map(file => file.id),
-      folderId: selectedFolderId,
+      folderId: targetFolderId,
       permissions,
       tempFiles: uploadedFiles,
     });
@@ -236,7 +245,7 @@ export default function DocumentPlacementDialog({
                       <SelectValue placeholder="Choose a folder..." />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="root">
+                      <SelectItem value="">
                         <div className="flex items-center gap-2">
                           <Folder className="h-4 w-4 text-gray-500" />
                           Root Directory
