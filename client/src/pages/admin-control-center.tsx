@@ -109,15 +109,17 @@ export default function AdminControlCenter() {
   const [documentSearchTerm, setDocumentSearchTerm] = useState('');
   const [documentFilter, setDocumentFilter] = useState('all');
   
-  // Chat Review Center States
+  // Chat Review Center states - CRITICAL FOR MULTIPLE EDIT POINTS
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   const [selectedChatDetails, setSelectedChatDetails] = useState<any>(null);
   const [chatReviewTab, setChatReviewTab] = useState<string>("active");
-  const [chatDisplayLimit, setChatDisplayLimit] = useState(5); // Show 5 chats initially
-  
-  // For editing individual message responses in chat review
+  const [correctionText, setCorrectionText] = useState('');
+  const [isSubmittingCorrection, setIsSubmittingCorrection] = useState(false);
+  const [correctionMode, setCorrectionMode] = useState(false);
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
-  const [editedResponses, setEditedResponses] = useState<Record<string, string>>({});
+  const [editedContent, setEditedContent] = useState<string>('');
+  const [conversationMessages, setConversationMessages] = useState<any[]>([]);
+  const [chatDisplayLimit, setChatDisplayLimit] = useState(5); // Show 5 chats initially
   
 
   // URL tracking state  
@@ -186,11 +188,9 @@ export default function AdminControlCenter() {
   const [showCreateFolder, setShowCreateFolder] = useState(false);
   const [showEditFAQ, setShowEditFAQ] = useState(false);
   const [scheduledUrls, setScheduledUrls] = useState<string[]>([]);
-  const [correctionText, setCorrectionText] = useState("");
   
   // Navigation sidebar state
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isSubmittingCorrection, setIsSubmittingCorrection] = useState(false);
 
   // State for URL tracking management - removed duplicates
 
@@ -219,6 +219,11 @@ export default function AdminControlCenter() {
     databaseLoadThreshold: 70
   });
   
+  // Slider states for AI & Search settings  
+  const [temperature, setTemperature] = useState([0.7]);
+  const [maxTokens, setMaxTokens] = useState([2048]);
+  const [searchSensitivity, setSearchSensitivity] = useState([0.8]);
+
   // Iframe integration states
   const [ssoToken, setSsoToken] = useState('test-sso-token-12345');
   const [isGeneratingToken, setIsGeneratingToken] = useState(false);
@@ -263,8 +268,10 @@ export default function AdminControlCenter() {
     retry: false,
   });
 
-  const { data: userChats, isLoading: chatsLoading } = useQuery({
+  // Fetch user chats for review - CRITICAL: DO NOT CHANGE THIS QUERY FORMAT
+  const { data: userChats = [], isLoading: chatsLoading } = useQuery({
     queryKey: ['/api/admin/chat-reviews'],
+    retry: false,
   });
 
   // Archive statistics query
@@ -289,9 +296,15 @@ export default function AdminControlCenter() {
     retry: false,
   });
 
-  const { data: chatMessages, isLoading: messagesLoading } = useQuery({
+  // Enhanced conversation messages query for full thread display - CRITICAL: DO NOT CHANGE
+  const { data: chatMessages = [], isLoading: messagesLoading } = useQuery({
     queryKey: [`/api/chats/${selectedChatId}/messages`],
     enabled: !!selectedChatId,
+    select: (data: any) => {
+      if (!data || !Array.isArray(data)) return [];
+      return data;
+    },
+    retry: false,
   });
 
   // Fetch vendor URLs for tracking
@@ -365,7 +378,7 @@ export default function AdminControlCenter() {
     }
   }, [selectedChatId, chatMessages]);
 
-  // Update chat details whenever chatMessages changes
+  // Update chat details whenever chatMessages changes + store for multiple edit points
   useEffect(() => {
     const safeChatMessages = Array.isArray(chatMessages) ? chatMessages : [];
     if (selectedChatId && safeChatMessages) {
@@ -376,21 +389,50 @@ export default function AdminControlCenter() {
       });
       
       if (safeChatMessages.length > 0) {
-        // Store all messages for full conversation display
+        // Store all messages for full conversation display with edit capabilities
         setSelectedChatDetails({
           userMessage: '', // Not used in new display
           aiResponse: '', // Not used in new display
           messages: safeChatMessages
         });
+        setConversationMessages(safeChatMessages); // For multiple edit points
       } else {
         setSelectedChatDetails({
           userMessage: '',
           aiResponse: '',
           messages: []
         });
+        setConversationMessages([]);
       }
     }
   }, [chatMessages, selectedChatId]);
+
+  // Save individual message edits mutation
+  const saveMessageEditMutation = useMutation({
+    mutationFn: async (data: { messageId: string; content: string; chatId: string }) => {
+      const response = await apiRequest('POST', `/api/admin/chat-reviews/${data.chatId}/edit-message`, {
+        messageId: data.messageId,
+        content: data.content
+      });
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/chats/${selectedChatId}/messages`] });
+      setEditingMessageId(null);
+      setEditedContent('');
+      toast({
+        title: "Message Updated",
+        description: "AI response has been updated successfully"
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Update Failed", 
+        description: "Failed to update message",
+        variant: "destructive"
+      });
+    }
+  });
 
 
 
@@ -5826,6 +5868,3 @@ Use direct response marketing principles and focus on measurable results.`
     </div>
   );
 }
-                        <div className="border-b mb-6"></div>
-                      
-                      {/* Integration Options */}
