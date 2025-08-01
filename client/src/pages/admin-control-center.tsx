@@ -269,9 +269,21 @@ export default function AdminControlCenter() {
   });
 
   // Fetch user chats for review - CRITICAL: DO NOT CHANGE THIS QUERY FORMAT
-  const { data: userChats = [], isLoading: chatsLoading } = useQuery({
+  const { data: userChats = [], isLoading: chatsLoading, error: chatsError } = useQuery({
     queryKey: ['/api/admin/chat-reviews'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/chat-reviews', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      return response.json();
+    },
     retry: false,
+    meta: {
+      errorMessage: 'Failed to fetch chat reviews'
+    }
   });
 
   // Archive statistics query
@@ -373,8 +385,28 @@ export default function AdminControlCenter() {
     isArray: Array.isArray(userChats),
     length: Array.isArray(userChats) ? userChats.length : 'not array',
     loading: chatsLoading,
+    error: chatsError?.message || 'no error',
+    errorObject: chatsError,
     sampleData: Array.isArray(userChats) && userChats.length > 0 ? userChats[0] : 'no data'
   });
+  
+  // Test direct API call if data is missing
+  React.useEffect(() => {
+    if (!chatsLoading && Array.isArray(userChats) && userChats.length === 0 && !chatsError) {
+      console.log('No chat data loaded, testing direct API call...');
+      fetch('/api/admin/chat-reviews', { credentials: 'include' })
+        .then(res => {
+          console.log('Direct API call status:', res.status);
+          return res.json();
+        })
+        .then(data => {
+          console.log('Direct API call response:', data);
+        })
+        .catch(error => {
+          console.error('Direct API call error:', error);
+        });
+    }
+  }, [userChats, chatsLoading, chatsError]);
 
   // Monitor chat selection state
   useEffect(() => {
