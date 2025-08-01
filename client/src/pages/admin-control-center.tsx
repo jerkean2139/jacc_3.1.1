@@ -180,6 +180,7 @@ export default function AdminControlCenter() {
   const [isScrapingForKnowledge, setIsScrapingForKnowledge] = useState(false);
   const [enableWeeklyUpdates, setEnableWeeklyUpdates] = useState(false);
   const [settingsTab, setSettingsTab] = useState("ai-search");
+  const [settingsCategory, setSettingsCategory] = useState('iframe-integration');
   
   // Dialog states for glassomorphic settings
   const [showCreateFolder, setShowCreateFolder] = useState(false);
@@ -2999,47 +3000,54 @@ export default function AdminControlCenter() {
                     <CardHeader>
                       <CardTitle className="text-lg">Settings Categories</CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-2">
-                      <Button 
-                        variant={settingsTab === "iframe-integration" ? "default" : "outline"}
-                        className="w-full justify-start"
-                        onClick={() => setSettingsTab("iframe-integration")}
-                      >
-                        <Globe className="w-4 h-4 mr-2" />
-                        Iframe Integration
-                      </Button>
-                      <Button 
-                        variant={settingsTab === "ai-search" ? "default" : "outline"}
-                        className="w-full justify-start"
-                        onClick={() => setSettingsTab("ai-search")}
-                      >
-                        <Brain className="w-4 h-4 mr-2" />
-                        AI & Search
-                      </Button>
-                      <Button 
-                        variant={settingsTab === "user-mgmt" ? "default" : "outline"}
-                        className="w-full justify-start"
-                        onClick={() => setSettingsTab("user-mgmt")}
-                      >
-                        <Users className="w-4 h-4 mr-2" />
-                        User Management
-                      </Button>
-                      <Button 
-                        variant={settingsTab === "content-docs" ? "default" : "outline"}
-                        className="w-full justify-start"
-                        onClick={() => setSettingsTab("content-docs")}
-                      >
-                        <FileText className="w-4 h-4 mr-2" />
-                        Content & Documents
-                      </Button>
-                      <Button 
-                        variant={settingsTab === "performance" ? "default" : "outline"}
-                        className="w-full justify-start"
-                        onClick={() => setSettingsTab("performance")}
-                      >
-                        <Activity className="w-4 h-4 mr-2" />
-                        System Performance
-                      </Button>
+                    <CardContent className="p-0">
+                      <nav className="space-y-1">
+                        <button
+                          onClick={() => setSettingsCategory('iframe-integration')}
+                          className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 ${
+                            settingsCategory === 'iframe-integration' ? 'bg-gray-100 dark:bg-gray-800 border-r-2 border-blue-500' : ''
+                          }`}
+                        >
+                          <Globe className="h-4 w-4" />
+                          <span className="text-sm">Iframe Integration</span>
+                        </button>
+                        <button
+                          onClick={() => setSettingsCategory('ai-search')}
+                          className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 ${
+                            settingsCategory === 'ai-search' ? 'bg-gray-100 dark:bg-gray-800 border-r-2 border-blue-500' : ''
+                          }`}
+                        >
+                          <Brain className="h-4 w-4" />
+                          <span className="text-sm">AI & Search</span>
+                        </button>
+                        <button
+                          onClick={() => setSettingsCategory('user-management')}
+                          className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 ${
+                            settingsCategory === 'user-management' ? 'bg-gray-100 dark:bg-gray-800 border-r-2 border-blue-500' : ''
+                          }`}
+                        >
+                          <Users className="h-4 w-4" />
+                          <span className="text-sm">User Management</span>
+                        </button>
+                        <button
+                          onClick={() => setSettingsCategory('content-documents')}
+                          className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 ${
+                            settingsCategory === 'content-documents' ? 'bg-gray-100 dark:bg-gray-800 border-r-2 border-blue-500' : ''
+                          }`}
+                        >
+                          <FileText className="h-4 w-4" />
+                          <span className="text-sm">Content & Documents</span>
+                        </button>
+                        <button
+                          onClick={() => setSettingsCategory('api-usage')}
+                          className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 ${
+                            settingsCategory === 'api-usage' ? 'bg-gray-100 dark:bg-gray-800 border-r-2 border-blue-500' : ''
+                          }`}
+                        >
+                          <BarChart3 className="h-4 w-4" />
+                          <span className="text-sm">API Usage & Costs</span>
+                        </button>
+                      </nav>
                     </CardContent>
                   </Card>
                 </div>
@@ -3047,7 +3055,7 @@ export default function AdminControlCenter() {
                 {/* Settings Panel */}
                 <div className="lg:col-span-3">
                   {/* Settings content will be rendered here based on settingsTab state */}
-                  {settingsTab === "iframe-integration" && (
+                  {settingsCategory === "iframe-integration" && (
                     <div className="space-y-6">
                       <div className="flex items-center gap-3 mb-6">
                         <ExternalLink className="w-6 h-6 text-indigo-600" />
@@ -3564,7 +3572,7 @@ document.getElementById('jacc-sidebar-close').onclick = function() {
                     </div>
                   )}
                   
-                  {settingsTab === "ai-search" && (
+                  {settingsCategory === "ai-search" && (
                     <div className="space-y-6">
                       <div className="flex items-center gap-3 mb-6">
                         <Brain className="w-6 h-6 text-blue-600" />
@@ -4205,7 +4213,7 @@ Use direct response marketing principles and focus on measurable results.`
                     </div>
                   )}
                   
-                  {settingsTab === "user-mgmt" && (
+                  {settingsCategory === "user-management" && (
                     <div className="space-y-6">
                       <div className="flex items-center gap-3 mb-6">
                         <Users className="w-6 h-6 text-purple-600" />
@@ -4391,7 +4399,7 @@ Use direct response marketing principles and focus on measurable results.`
                     </div>
                   )}
                   
-                  {settingsTab === "content-docs" && (
+                  {settingsCategory === "content-documents" && (
                     <div className="space-y-6">
                       <div className="flex items-center gap-3 mb-6">
                         <FileText className="w-6 h-6 text-green-600" />
@@ -4563,13 +4571,13 @@ Use direct response marketing principles and focus on measurable results.`
                     </div>
                   )}
                   
-                  {settingsTab === "performance" && (
+                  {settingsCategory === "api-usage" && (
                     <div className="space-y-6">
                       <div className="flex items-center gap-3 mb-6">
-                        <Activity className="w-6 h-6 text-orange-600" />
+                        <BarChart3 className="w-6 h-6 text-orange-600" />
                         <div>
-                          <h3 className="text-xl font-semibold">System Performance</h3>
-                          <p className="text-gray-600">Monitor and configure system performance</p>
+                          <h3 className="text-xl font-semibold">API Usage & Costs</h3>
+                          <p className="text-gray-600">Monitor API usage, costs, and system performance</p>
                         </div>
                       </div>
 
