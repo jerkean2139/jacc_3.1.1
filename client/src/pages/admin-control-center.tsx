@@ -118,6 +118,7 @@ export default function AdminControlCenter() {
   const [correctionMode, setCorrectionMode] = useState(false);
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [editedContent, setEditedContent] = useState<string>('');
+  const [editedResponses, setEditedResponses] = useState<Record<string, string>>({});
   const [conversationMessages, setConversationMessages] = useState<any[]>([]);
   const [chatDisplayLimit, setChatDisplayLimit] = useState(5); // Show 5 chats initially
   
