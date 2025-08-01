@@ -80,7 +80,6 @@ function SavedDocumentsSection() {
           {savedDocuments.length}
         </Badge>
       </div>
-      
       {savedDocuments.length === 0 ? (
         <div className="text-xs text-slate-400 italic p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
           No saved documents yet. Export AI responses to save them here.
@@ -363,7 +362,6 @@ export default function Sidebar({
           </DropdownMenu>
         </div>
       </div>
-
       {/* New Chat Button */}
       <div className="p-4 space-y-2">
         <Button
@@ -406,7 +404,6 @@ export default function Sidebar({
         </Button>
 
       </div>
-
       {/* Scrollable Content */}
       <ScrollArea className="flex-1 px-4">
         {/* Recent Chats Section */}
@@ -421,7 +418,7 @@ export default function Sidebar({
           </div>
 
           {displayedChats.length === 0 ? (
-            <div className="text-xs text-white dark:text-slate-400 italic p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+            <div className="text-xs dark:text-slate-400 italic p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg text-[#23252f]">
               No recent chats yet. Start a conversation above.
             </div>
           ) : (
@@ -748,7 +745,6 @@ export default function Sidebar({
 
 
       </ScrollArea>
-
       {/* Footer */}
       <div className="p-4 border-t border-slate-200 dark:border-slate-700">
         <div className="flex items-center justify-between">
