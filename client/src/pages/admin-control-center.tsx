@@ -259,8 +259,17 @@ export default function AdminControlCenter() {
     retry: false,
   });
 
-  const { data: documentsData = [] } = useQuery({
+  const { data: documentsData = [], isLoading: documentsLoading, error: documentsError } = useQuery({
     queryKey: ['/api/admin/documents'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/documents', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      return response.json();
+    },
     retry: false,
   });
 
@@ -399,6 +408,16 @@ export default function AdminControlCenter() {
     error: chatsError?.message || 'no error',
     errorObject: chatsError,
     sampleData: Array.isArray(userChats) && userChats.length > 0 ? userChats[0] : 'no data'
+  });
+
+  // Debug logging for documents data
+  console.log('Documents Data:', {
+    documents: documentsData,
+    isArray: Array.isArray(documentsData),
+    length: Array.isArray(documentsData) ? documentsData.length : 'not array',
+    loading: documentsLoading,
+    error: documentsError?.message || 'no error',
+    sampleData: Array.isArray(documentsData) && documentsData.length > 0 ? documentsData[0] : 'no documents'
   });
   
   // Test direct API call if data is missing
@@ -1969,12 +1988,12 @@ export default function AdminControlCenter() {
                       <RefreshCw className="h-6 w-6 animate-spin" />
                       <span className="ml-2">Loading conversation...</span>
                     </div>
-                  ) : selectedChatDetails && selectedChatDetails.messages ? (
+                  ) : chatMessages && chatMessages.length > 0 ? (
                     <div className="space-y-4 h-full flex flex-col" style={{ overscrollBehavior: 'contain' }}>
                       {/* Full Conversation Thread */}
                       <ScrollArea className="flex-1" style={{ overscrollBehavior: 'contain' }}>
                         <div className="space-y-4 pr-4">
-                          {selectedChatDetails.messages.map((message: any, index: number) => {
+                          {chatMessages.map((message: any, index: number) => {
                             const isUser = message.role === 'user' || message.sender === 'user' || message.type === 'user';
                             const isAssistant = message.role === 'assistant' || message.sender === 'assistant' || message.type === 'assistant';
                             const content = message.content || message.message || '';
