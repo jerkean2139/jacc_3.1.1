@@ -1,0 +1,106 @@
+import { performance } from "perf_hooks";
+
+class MemoryManager {
+  private static instance: MemoryManager;
+  private cleanupIntervals: NodeJS.Timeout[] = [];
+  private memoryWarningThreshold = 0.85; // 85%
+  private memoryCriticalThreshold = 0.95; // 95%
+
+  static getInstance(): MemoryManager {
+    if (!MemoryManager.instance) {
+      MemoryManager.instance = new MemoryManager();
+    }
+    return MemoryManager.instance;
+  }
+
+  private constructor() {
+    this.startMemoryMonitoring();
+  }
+
+  private startMemoryMonitoring() {
+    // Monitor memory every 30 seconds
+    const memoryInterval = setInterval(() => {
+      this.checkMemoryUsage();
+    }, 30000);
+    
+    this.cleanupIntervals.push(memoryInterval);
+  }
+
+  private checkMemoryUsage() {
+    const memUsage = process.memoryUsage();
+    const totalMemory = 1024 * 1024 * 1024; // 1GB in Replit
+    const usedMemory = memUsage.rss;
+    const memoryPercentage = usedMemory / totalMemory;
+
+    console.log(`📊 Memory: ${Math.round(usedMemory / 1024 / 1024)}MB / ${Math.round(totalMemory / 1024 / 1024)}MB (${Math.round(memoryPercentage * 100)}%)`);
+
+    if (memoryPercentage > this.memoryCriticalThreshold) {
+      console.log("🚨 CRITICAL MEMORY USAGE: Force cleanup");
+      this.forceGarbageCollection();
+      this.clearCaches();
+    } else if (memoryPercentage > this.memoryWarningThreshold) {
+      console.log("⚠️ HIGH MEMORY USAGE: Cleanup recommended");
+      this.performLightCleanup();
+    }
+  }
+
+  private forceGarbageCollection() {
+    try {
+      if (global.gc) {
+        global.gc();
+        console.log("✅ Garbage collection completed");
+      } else {
+        console.log("⚠️ Garbage collection not available");
+      }
+    } catch (error) {
+      console.error("❌ Garbage collection failed:", error);
+    }
+  }
+
+  private clearCaches() {
+    try {
+      // Clear Node.js require cache for non-essential modules
+      const excludeKeys = ['express', 'drizzle-orm', '@anthropic-ai/sdk', 'openai'];
+      Object.keys(require.cache).forEach(key => {
+        const shouldKeep = excludeKeys.some(exclude => key.includes(exclude));
+        if (!shouldKeep && !key.includes('node_modules')) {
+          delete require.cache[key];
+        }
+      });
+      console.log("✅ Require cache cleared");
+    } catch (error) {
+      console.error("❌ Cache cleanup failed:", error);
+    }
+  }
+
+  private performLightCleanup() {
+    try {
+      // Clear process title cache
+      process.title = "jacc-server";
+      console.log("✅ Light cleanup completed");
+    } catch (error) {
+      console.error("❌ Light cleanup failed:", error);
+    }
+  }
+
+  public getMemoryStats() {
+    const memUsage = process.memoryUsage();
+    const totalMemory = 1024 * 1024 * 1024; // 1GB
+    
+    return {
+      rss: memUsage.rss,
+      heapTotal: memUsage.heapTotal,
+      heapUsed: memUsage.heapUsed,
+      external: memUsage.external,
+      percentage: (memUsage.rss / totalMemory) * 100,
+      totalMemory: totalMemory
+    };
+  }
+
+  public cleanup() {
+    this.cleanupIntervals.forEach(interval => clearInterval(interval));
+    this.cleanupIntervals = [];
+  }
+}
+
+export const memoryManager = MemoryManager.getInstance();

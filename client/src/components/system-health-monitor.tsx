@@ -104,12 +104,12 @@ const SystemHealthMonitor: React.FC = () => {
       // Core Infrastructure
       {
         name: 'Database',
-        status: (performanceData?.database?.status === 'online' || performanceData?.database?.status === 'active') ? 'online' : 'offline',
-        responseTime: performanceData?.database?.responseTime || 0,
+        status: (healthData?.systems?.database?.status === 'online' || performanceData?.systemStatus === 'operational') ? 'online' : 'offline',
+        responseTime: healthData?.systems?.database?.responseTime || performanceData?.databaseResponseTime || 0,
         lastCheck: new Date().toISOString(),
         details: {
           connections: performanceData?.database?.connections || 0,
-          queryTime: performanceData?.database?.responseTime || 0
+          queryTime: healthData?.systems?.database?.responseTime || performanceData?.databaseResponseTime || 0
         },
         icon: <Database className="h-5 w-5" />,
         category: 'core'
@@ -153,26 +153,24 @@ const SystemHealthMonitor: React.FC = () => {
       },
       {
         name: 'Claude AI',
-        status: (performanceData?.aiServices?.claudeStatus === 'operational' || performanceData?.aiServices?.status === 'active') ? 
-               (performanceData?.performance?.averageResponseTime > 2000 ? 'degraded' : 'online') : 'degraded',
+        status: (healthData?.systems?.aiServices?.claude === 'operational' || performanceData?.aiServiceStatus === 'connected') ? 'online' : 'offline',
         responseTime: performanceData?.performance?.averageResponseTime || 1200,
         lastCheck: new Date().toISOString(),
         details: { 
           model: 'claude-sonnet-4-20250514',
-          status: performanceData?.aiServices?.claudeStatus || 'operational'
+          status: healthData?.systems?.aiServices?.claude || 'operational'
         },
         icon: <Brain className="h-5 w-5" />,
         category: 'ai'
       },
       {
         name: 'OpenAI GPT',
-        status: (performanceData?.aiServices?.gptStatus === 'operational' || performanceData?.aiServices?.status === 'active') ? 
-               (performanceData?.performance?.averageResponseTime > 1800 ? 'degraded' : 'online') : 'degraded',
+        status: (healthData?.systems?.aiServices?.openai === 'operational' || performanceData?.aiServiceStatus === 'connected') ? 'online' : 'offline',
         responseTime: Math.min(performanceData?.performance?.averageResponseTime || 1200, 1600),
         lastCheck: new Date().toISOString(),
         details: { 
           model: 'gpt-4o',
-          status: performanceData?.aiServices?.gptStatus || 'operational'
+          status: healthData?.systems?.aiServices?.openai || 'operational'
         },
         icon: <Zap className="h-5 w-5" />,
         category: 'ai'
