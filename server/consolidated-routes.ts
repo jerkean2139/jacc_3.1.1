@@ -100,9 +100,19 @@ const upload = multer({
 // Session management for simple auth
 export const sessions = new Map<string, { userId: string; username: string; role: string; email?: string }>();
 
+// Import fast response cache
+import { fastResponseCache } from './services/fast-response-cache';
+
 // Ultra-fast response system for instant replies (59ms response time)
 function getUltraFastResponse(message: string): string | null {
   const lowerMessage = message.toLowerCase();
+  
+  // Check fast response cache first
+  const cachedResponse = fastResponseCache.get(lowerMessage);
+  if (cachedResponse) {
+    console.log(`🚀 Ultra-fast cache hit for: "${message}" (${cachedResponse.responseTime}ms)`);
+    return cachedResponse.message;
+  }
   
   // Common proposal questions
   if (lowerMessage.includes('proposal') || lowerMessage.includes('create a proposal')) {
@@ -1069,12 +1079,87 @@ export async function registerConsolidatedRoutes(app: Express): Promise<Server> 
         actualChatId = newChat[0].id;
       }
       
-      // Ultra-fast response system for common queries (59ms response time)
-      const ultraFastResponse = getUltraFastResponse(message.toLowerCase());
+      // Ultra-fast response system for common queries (<100ms response time)
+      const startTime = Date.now();
       let aiResponse;
+      const lowerMessage = message.toLowerCase().trim();
+      
+      // Check for ultra-fast responses first (beats database cache)
+      let ultraFastResponse = null;
+      if (lowerMessage.includes('calculate') && (lowerMessage.includes('rate') || lowerMessage.includes('processing'))) {
+        ultraFastResponse = `<h2>🧮 Processing Rate Calculator</h2>
+<p>I'll help you calculate competitive processing rates for your merchant.</p>
+<ul>
+<li><strong>Interchange Plus:</strong> Most transparent - typically 0.15% + $0.05 above interchange</li>
+<li><strong>Tiered Rates:</strong> Qualified/Mid-Qualified/Non-Qualified structure</li>
+<li><strong>Flat Rate:</strong> Single rate like 2.9% + $0.30 per transaction</li>
+</ul>
+<p><strong>Quick Examples:</strong></p>
+<ul>
+<li>Restaurant: 2.65% + 10¢ average</li>
+<li>Retail: 2.45% + 10¢ average</li>
+<li>E-commerce: 2.9% + 30¢ average</li>
+</ul>
+<p>What type of business and monthly volume are you working with?</p>`;
+      } else if (lowerMessage.includes('compare') && lowerMessage.includes('processor')) {
+        ultraFastResponse = `<h2>⚖️ Payment Processor Comparison</h2>
+<p>Here are our top processor partners with their key strengths:</p>
+<ul>
+<li><strong>Alliant:</strong> 2.4%+10¢ average rates, excellent customer support</li>
+<li><strong>Merchant Lynx:</strong> Advanced POS systems, great for retail</li>
+<li><strong>Clearent:</strong> Transparent interchange-plus pricing</li>
+<li><strong>MiCamp:</strong> Specialized solutions for specific industries</li>
+<li><strong>Authorize.Net:</strong> Robust online payment processing</li>
+</ul>
+<p>What's most important for this merchant - lowest rates, technology, or industry expertise?</p>`;
+      } else if (lowerMessage.includes('proposal') || lowerMessage.includes('create')) {
+        ultraFastResponse = `<h2>📄 Competitive Proposal Builder</h2>
+<p>Let me guide you through creating a winning proposal:</p>
+<ul>
+<li><strong>Business Analysis:</strong> Industry type, processing volume, average ticket</li>
+<li><strong>Rate Structure:</strong> Competitive pricing that beats their current rates</li>
+<li><strong>Equipment Package:</strong> POS terminals, card readers, software</li>
+<li><strong>Value Adds:</strong> Customer support, reporting tools, integrations</li>
+</ul>
+<p>Tell me about this merchant - what industry and what are their current rates?</p>`;
+      } else if (lowerMessage.includes('tracerpay') || lowerMessage.includes('tracer')) {
+        ultraFastResponse = `<h2>💳 TracerPay Competitive Rates</h2>
+<p>TracerPay offers highly competitive merchant services:</p>
+<ul>
+<li><strong>Qualified Transactions:</strong> 2.25% + 10¢</li>
+<li><strong>Mid-Qualified:</strong> 2.75% + 10¢</li>
+<li><strong>Non-Qualified:</strong> 3.25% + 10¢</li>
+<li><strong>Debit Cards:</strong> 1.65% + 25¢</li>
+</ul>
+<p><strong>Value-Added Services:</strong></p>
+<ul>
+<li>Free terminal placement with qualifying accounts</li>
+<li>24/7 customer support</li>
+<li>Next-day funding available</li>
+<li>Transparent pricing with no hidden fees</li>
+</ul>
+<p>Would you like specific rates for a particular industry or processing volume?</p>`;
+      } else if (lowerMessage.includes('clearent') && lowerMessage.includes('approv')) {
+        ultraFastResponse = `<h2>⏱️ Clearent Approval Timeline</h2>
+<p>Clearent approval process is designed for speed:</p>
+<ul>
+<li><strong>Standard Applications:</strong> 1-3 business days</li>
+<li><strong>Complete Applications:</strong> Often same-day approval</li>
+<li><strong>High-Risk Industries:</strong> 3-7 business days</li>
+<li><strong>Incomplete Applications:</strong> May require additional documentation</li>
+</ul>
+<p><strong>Factors Affecting Speed:</strong></p>
+<ul>
+<li>Business type and risk level</li>
+<li>Credit score and processing history</li>
+<li>Completeness of application</li>
+<li>Bank statements and financial documents</li>
+</ul>
+<p>What type of business is this merchant in? I can provide more specific timeline estimates.</p>`;
+      }
       
       if (ultraFastResponse) {
-        console.log('🔍 Executing ultra-fast response for user', userId);
+        console.log(`🚀 Ultra-fast response delivered in ${Date.now() - startTime}ms`);
         aiResponse = { response: ultraFastResponse };
       } else {
         // Process the message with AI (optimized for speed)

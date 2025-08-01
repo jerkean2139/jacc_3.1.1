@@ -242,9 +242,9 @@ const conversationStarters = [
                   type="submit"
                   disabled={!input.trim() || isProcessing}
                   size="icon"
-                  className="h-11 w-11"
+                  className="h-11 w-11 bg-blue-600 hover:bg-blue-700 text-white border-0 flex-shrink-0"
                 >
-                  <Send className="w-4 h-4" />
+                  <Send className="w-4 h-4 text-white" />
                 </Button>
               </form>
             </div>
@@ -307,9 +307,9 @@ const conversationStarters = [
             type="submit"
             disabled={!input.trim() || isProcessing}
             size="icon"
-            className="h-11 w-11"
+            className="h-11 w-11 bg-blue-600 hover:bg-blue-700 text-white border-0 flex-shrink-0"
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-4 h-4 text-white" />
           </Button>
         </form>
       </div>
