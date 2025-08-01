@@ -1916,9 +1916,9 @@ export default function AdminControlCenter() {
         </div>
 
         {/* Split-Screen Chat Review Interface */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 overflow-x-hidden max-w-full" style={{ height: '700px' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 overflow-hidden max-w-full" style={{ height: '700px' }}>
           {/* Chat List Panel with Tabs */}
-          <Card className="flex flex-col">
+          <Card className="flex flex-col min-h-0 overflow-hidden">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2">
                 <MessageSquare className="h-5 w-5" />
@@ -1946,16 +1946,16 @@ export default function AdminControlCenter() {
               </Tabs>
             </div>
 
-            <CardContent className="flex-1 overflow-hidden px-3 sm:px-6 pt-0">
+            <CardContent className="flex-1 overflow-hidden px-2 sm:px-4 pt-0">
               {chatsLoading ? (
                 <div className="flex items-center justify-center py-8">
                   <RefreshCw className="h-6 w-6 animate-spin" />
                   <span className="ml-2">Loading chat reviews...</span>
                 </div>
               ) : (
-                <div className="h-full overflow-x-hidden">
+                <div className="h-full overflow-hidden">
                   <ScrollArea className="h-full">
-                    <div className="space-y-3 pr-2 sm:pr-4">
+                    <div className="space-y-3 pr-1 sm:pr-2">
                       {Array.isArray(userChats) && userChats.length > 0 ? (
                         userChats
                           .filter((chat: any) => {
@@ -1969,16 +1969,18 @@ export default function AdminControlCenter() {
                             <div 
                               key={chat.chatId}
                               className={`
-                                p-3 border rounded-lg transition-all duration-200 hover:shadow-md overflow-hidden
+                                p-2 sm:p-3 border rounded-lg transition-all duration-200 hover:shadow-md overflow-hidden
                                 ${selectedChatId === chat.chatId 
                                   ? 'border-blue-500 bg-blue-50 shadow-sm' 
                                   : 'border-gray-200 hover:border-gray-300'
                                 }
                               `}
                             >
-                              <div className="flex items-center justify-between mb-2">
-                                <h4 className="font-medium truncate text-sm">{chat.chatTitle || chat.title || 'Untitled Chat'}</h4>
-                                <Badge variant={chat.reviewStatus === 'approved' ? 'default' : 'secondary'} className="text-xs">
+                              <div className="flex items-start justify-between mb-2 gap-2">
+                                <h4 className="font-medium text-sm leading-tight flex-1 min-w-0">
+                                  <span className="line-clamp-2">{chat.chatTitle || chat.title || 'Untitled Chat'}</span>
+                                </h4>
+                                <Badge variant={chat.reviewStatus === 'approved' ? 'default' : 'secondary'} className="text-xs flex-shrink-0">
                                   {chat.reviewStatus === 'approved' ? (
                                     <ThumbsUp className="h-3 w-3 mr-1" />
                                   ) : chat.reviewStatus === 'archived' ? (
@@ -1986,18 +1988,18 @@ export default function AdminControlCenter() {
                                   ) : (
                                     <Clock className="h-3 w-3 mr-1" />
                                   )}
-                                  {chat.reviewStatus || 'pending'}
+                                  <span className="hidden sm:inline">{chat.reviewStatus || 'pending'}</span>
                                 </Badge>
                               </div>
                               
-                              <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 mb-2">
-                                <div>
-                                  <p><span className="font-medium">{chat.messageCount || 0}</span> msgs</p>
-                                  <p className="truncate">{chat.userName || 'Unknown'}</p>
+                              <div className="flex justify-between items-center text-xs text-gray-600 mb-2">
+                                <div className="flex items-center gap-3">
+                                  <span><span className="font-medium">{chat.messageCount || 0}</span> msgs</span>
+                                  <span className="truncate max-w-[100px]">{chat.userName || 'Unknown'}</span>
                                 </div>
-                                <div className="text-right">
+                                <div className="text-right flex-shrink-0">
                                   <p>{new Date(chat.createdAt).toLocaleDateString()}</p>
-                                  <p className="text-xs">{new Date(chat.createdAt).toLocaleTimeString()}</p>
+                                  <p className="text-[10px] hidden sm:block">{new Date(chat.createdAt).toLocaleTimeString()}</p>
                                 </div>
                               </div>
                               
@@ -2006,8 +2008,8 @@ export default function AdminControlCenter() {
                                 type="button"
                                 className={`w-full py-2 px-2 text-xs font-medium rounded-md flex items-center justify-center gap-1 transition-all ${
                                   selectedChatId === chat.chatId 
-                                    ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm' 
-                                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300 hover:border-gray-400'
+                                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
                                 }`}
                                 onClick={() => {
                                   console.log('Button clicked! Chat ID:', chat.chatId);
@@ -2029,7 +2031,7 @@ export default function AdminControlCenter() {
                                 }}
                               >
                                 <Eye className="h-3 w-3 flex-shrink-0" />
-                                <span>View</span>
+                                <span className="hidden sm:inline">View</span>
                               </button>
                             </div>
                           ))
@@ -2069,7 +2071,7 @@ export default function AdminControlCenter() {
           </Card>
 
           {/* Chat Review & Training Panel */}
-          <Card className="flex flex-col" data-chat-panel>
+          <Card className="flex flex-col min-h-0 overflow-hidden" data-chat-panel>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Brain className="h-5 w-5" />
@@ -2324,7 +2326,7 @@ export default function AdminControlCenter() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 relative">
+    <div className="container mx-auto px-2 sm:px-4 lg:px-6 py-4 relative overflow-x-hidden max-w-full">
       {/* Navigation Sidebar Overlay */}
       {isSidebarOpen && (
         <div 
