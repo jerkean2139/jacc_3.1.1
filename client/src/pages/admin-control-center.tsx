@@ -310,8 +310,18 @@ export default function AdminControlCenter() {
   });
 
   // Enhanced conversation messages query for full thread display - CRITICAL: DO NOT CHANGE
-  const { data: chatMessages = [], isLoading: messagesLoading } = useQuery({
+  const { data: chatMessages = [], isLoading: messagesLoading, error: messagesError } = useQuery({
     queryKey: [`/api/chats/${selectedChatId}/messages`],
+    queryFn: async () => {
+      if (!selectedChatId) return [];
+      const response = await fetch(`/api/chats/${selectedChatId}/messages`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      return response.json();
+    },
     enabled: !!selectedChatId,
     select: (data: any) => {
       if (!data || !Array.isArray(data)) return [];
@@ -408,6 +418,19 @@ export default function AdminControlCenter() {
         });
     }
   }, [userChats, chatsLoading, chatsError]);
+  
+  // Debug chat messages loading
+  React.useEffect(() => {
+    if (selectedChatId) {
+      console.log('Chat selected - Loading messages:', {
+        selectedChatId,
+        messagesLoading,
+        messagesError: messagesError?.message,
+        messageCount: chatMessages.length,
+        messages: chatMessages
+      });
+    }
+  }, [selectedChatId, messagesLoading, messagesError, chatMessages]);
 
   // Monitor chat selection state
   useEffect(() => {
