@@ -35,6 +35,10 @@ export default function HomeStable() {
   // Fetch chats and folders
   const { data: chats = [], refetch: refetchChats } = useQuery({
     queryKey: ["/api/chats"],
+    staleTime: 0, // Always fetch fresh data
+    gcTime: 30000, // Keep in cache for 30 seconds
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
 
   const { data: folders = [] } = useQuery({
@@ -92,29 +96,23 @@ export default function HomeStable() {
       navigate(`/chat/${newChat.id}`);
       console.log("Navigation called, new location should be:", `/chat/${newChat.id}`);
       
-      // Refresh chats immediately
-      queryClient.invalidateQueries({ queryKey: ["/api/chats"] });
-      
-      // Send the message immediately without timeout
+      // Send the message using the unified chat API
       try {
         console.log("Sending message to new chat:", newChat.id);
-        await apiRequest("POST", `/api/chat/send`, {
+        await apiRequest("POST", "/api/chat/send", {
           chatId: newChat.id,
           message: message
         });
         console.log("Message sent successfully");
         
-        // Properly invalidate queries and update state without page reload
-        queryClient.invalidateQueries({ queryKey: [`/api/chats/${newChat.id}/messages`] });
-        queryClient.invalidateQueries({ queryKey: ["/api/chats"] });
-        await apiRequest("POST", `/api/chats/${newChat.id}/messages`, {
-          content: message,
-          role: "user"
-        });
-        console.log("Message sent successfully");
+        // Force refresh chats and messages
+        await queryClient.invalidateQueries({ queryKey: ["/api/chats"] });
+        await queryClient.invalidateQueries({ queryKey: [`/api/chats/${newChat.id}/messages`] });
         
-        // Refresh messages for the new chat using correct array format
-        queryClient.invalidateQueries({ queryKey: ['/api/chats', newChat.id, 'messages'] });
+        // Force refetch to ensure immediate update
+        setTimeout(() => {
+          refetchChats();
+        }, 100);
       } catch (messageError) {
         console.error("Failed to send message:", messageError);
         toast({
@@ -252,6 +250,13 @@ Would you like me to run a competitive analysis and show you better processing o
     chatsCount: Array.isArray(chats) ? chats.length : 0,
     foldersCount: Array.isArray(folders) ? folders.length : 0 
   });
+
+  // Force refresh chats when component mounts or location changes
+  useEffect(() => {
+    if (user) {
+      refetchChats();
+    }
+  }, [location, user, refetchChats]);
 
   return (
     <div className="h-screen bg-slate-50 dark:bg-slate-900 overflow-hidden w-full max-w-full">

@@ -135,8 +135,13 @@ const conversationStarters = [
             role: 'user'
           })
         });
-        refetch();
+        
+        // Force refresh messages and update chat list
+        await refetch();
         onChatUpdate();
+        
+        // Force refresh parent chat list
+        queryClient.invalidateQueries({ queryKey: ["/api/chats"] });
       }
     } catch (error) {
       toast({

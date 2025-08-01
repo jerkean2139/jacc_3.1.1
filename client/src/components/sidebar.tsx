@@ -364,13 +364,24 @@ export default function Sidebar({
       </div>
       {/* New Chat Button */}
       <div className="p-4 space-y-2">
-        <Button
-          onClick={onNewChat}
-          className="w-full navy-primary text-white hover:opacity-90 font-medium"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          New Chat
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={onNewChat}
+            className="flex-1 navy-primary text-white hover:opacity-90 font-medium"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            New Chat
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => window.location.reload()}
+            className="flex-shrink-0"
+            title="Refresh chats"
+          >
+            <RotateCcw className="w-4 h-4" />
+          </Button>
+        </div>
         
         <div className="relative group">
           <Button
