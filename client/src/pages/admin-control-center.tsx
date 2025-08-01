@@ -366,6 +366,15 @@ export default function AdminControlCenter() {
 
   // Debug logging for user data
   console.log('Users Data:', safeUsersData.length, 'total, Filter:', userRoleFilter, 'Search:', userSearchTerm);
+  
+  // Debug logging for chat reviews data
+  console.log('Chat Reviews Data:', {
+    userChats: userChats,
+    isArray: Array.isArray(userChats),
+    length: Array.isArray(userChats) ? userChats.length : 'not array',
+    loading: chatsLoading,
+    sampleData: Array.isArray(userChats) && userChats.length > 0 ? userChats[0] : 'no data'
+  });
 
   // Monitor chat selection state
   useEffect(() => {
