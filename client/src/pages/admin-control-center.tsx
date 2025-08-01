@@ -234,8 +234,9 @@ export default function AdminControlCenter() {
     setIsGeneratingToken(true);
     try {
       const response = await apiRequest('POST', '/api/admin/generate-sso-token');
-      if (response.success) {
-        setSsoToken(response.token);
+      const data = await response.json();
+      if (data.success) {
+        setSsoToken(data.token);
         toast({
           title: "Token Generated",
           description: "New SSO token generated successfully. It expires in 24 hours."
@@ -268,13 +269,24 @@ export default function AdminControlCenter() {
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-      return response.json();
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
     },
     retry: false,
   });
 
   const { data: foldersData = [] } = useQuery({
     queryKey: ['/api/folders'],
+    queryFn: async () => {
+      const response = await fetch('/api/folders', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
+    },
     retry: false,
   });
 
@@ -297,24 +309,65 @@ export default function AdminControlCenter() {
   });
 
   // Archive statistics query
-  const { data: archiveStats } = useQuery({
+  const { data: archiveStats = {} } = useQuery({
     queryKey: ['/api/admin/chats/archive-stats'],
-    refetchInterval: 30000 // Refresh every 30 seconds
+    queryFn: async () => {
+      const response = await fetch('/api/admin/chats/archive-stats', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data || {};
+    },
+    refetchInterval: 30000, // Refresh every 30 seconds
+    retry: false,
   });
 
   // AI Configuration queries
-  const { data: aiModelsData } = useQuery({
+  const { data: aiModelsData = {} } = useQuery({
     queryKey: ['/api/admin/ai-models'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/ai-models', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data || {};
+    },
     retry: false,
   });
 
-  const { data: searchParamsData } = useQuery({
+  const { data: searchParamsData = {} } = useQuery({
     queryKey: ['/api/admin/search-params'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/search-params', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data || {};
+    },
     retry: false,
   });
 
-  const { data: aiConfigData } = useQuery({
+  const { data: aiConfigData = {} } = useQuery({
     queryKey: ['/api/admin/ai-config'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/ai-config', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data || {};
+    },
     retry: false,
   });
 
@@ -342,30 +395,80 @@ export default function AdminControlCenter() {
   // Fetch vendor URLs for tracking
   const { data: vendorUrls = [], refetch: refetchVendorUrls } = useQuery({
     queryKey: ['/api/admin/vendor-urls'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/vendor-urls', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
+    },
     retry: false,
   });
 
   // Google Sheets config query
-  const { data: googleSheetsConfigData } = useQuery({
+  const { data: googleSheetsConfigData = {} } = useQuery({
     queryKey: ['/api/admin/google-sheets/config'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/google-sheets/config', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data || {};
+    },
     retry: false,
   });
 
   // Google Sheets sync history query
   const { data: syncHistoryData = [] } = useQuery({
     queryKey: ['/api/admin/google-sheets/sync-history'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/google-sheets/sync-history', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
+    },
     retry: false,
   });
 
   // Fetch FAQ categories
   const { data: faqCategories = [] } = useQuery({
     queryKey: ['/api/admin/faq-categories'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/faq-categories', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
+    },
     retry: false,
   });
 
   // Fetch performance data for system monitoring
-  const { data: performanceData } = useQuery({
+  const { data: performanceData = {} } = useQuery({
     queryKey: ['/api/admin/performance'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/performance', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data || {};
+    },
     retry: false,
   });
 
@@ -1120,9 +1223,7 @@ export default function AdminControlCenter() {
   // Delete FAQ mutation - Fixed API call
   const deleteFAQMutation = useMutation({
     mutationFn: async (id: number) => {
-      return apiRequest(`/api/admin/faq/${id}`, {
-        method: 'DELETE'
-      });
+      return apiRequest('DELETE', `/api/admin/faq/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/faq'] });
@@ -1156,7 +1257,8 @@ export default function AdminControlCenter() {
       });
       return response;
     },
-    onSuccess: (data) => {
+    onSuccess: async (response) => {
+      const data = await response.json();
       queryClient.invalidateQueries({ queryKey: ['/api/folders'] });
       setUploadSelectedFolder(data.id);
       setIsCreateFolderDialogOpen(false);
@@ -2697,7 +2799,6 @@ export default function AdminControlCenter() {
                                   <Switch 
                                     checked={urlData.isActive} 
                                     onCheckedChange={() => handleToggleUrlTracking(urlData)}
-                                    size="sm"
                                   />
                                   <Badge variant={urlData.isActive ? "default" : "secondary"}>
                                     {urlData.isActive ? "Active" : "Disabled"}
@@ -5201,7 +5302,7 @@ Use direct response marketing principles and focus on measurable results.`
                       });
                       
                       const response = await apiRequest('POST', '/api/admin/chats/archive');
-                      const data = response;
+                      const data = await response.json();
                       
                       if (data.success) {
                         toast({
@@ -5244,7 +5345,7 @@ Use direct response marketing principles and focus on measurable results.`
                 <div>
                   <div className="flex justify-between mb-2">
                     <span className="text-sm font-medium">Documents</span>
-                    <span className="text-sm text-gray-600">{documentsData?.length || 0} / 5,000</span>
+                    <span className="text-sm text-gray-600">{Array.isArray(documentsData) ? documentsData.length : 0} / 5,000</span>
                   </div>
                   <Progress value={(documentsData?.length || 0) / 5000 * 100} className="h-2" />
                 </div>
