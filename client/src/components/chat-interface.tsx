@@ -172,61 +172,63 @@ const conversationStarters = [
 
   if (!chatId) {
     return (
-      <div className="flex-1 flex flex-col p-4 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 overflow-y-auto">
-        <div className="max-w-4xl w-full mx-auto space-y-4 sm:space-y-6 py-6 sm:py-8">
-          <div className="text-center space-y-3 sm:space-y-4">
-            <div className="flex justify-center">
-              <img 
-                src="/jacc-logo.jpg" 
-                alt="JACC Logo" 
-                className="w-16 sm:w-20 h-16 sm:h-20 rounded-full shadow-lg object-cover"
-              />
+      <div className="flex-1 flex flex-col p-3 sm:p-4 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 overflow-y-auto">
+        <div className="max-w-4xl w-full mx-auto flex flex-col h-full">
+          <div className="flex-1 space-y-3 sm:space-y-6">
+            <div className="text-center space-y-3 sm:space-y-4">
+              <div className="flex justify-center">
+                <img 
+                  src="/jacc-logo.jpg" 
+                  alt="JACC Logo" 
+                  className="w-16 sm:w-20 h-16 sm:h-20 rounded-full shadow-lg object-cover"
+                />
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+                Welcome to JACC
+              </h1>
+              <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300">
+                Your AI-Powered Merchant Services Assistant
+              </p>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
-              Welcome to JACC
-            </h1>
-            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300">
-              Your AI-Powered Merchant Services Assistant
-            </p>
+
+            <div className="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
+              {conversationStarters.map((starter) => {
+                const IconComponent = starter.icon;
+                return (
+                  <button
+                    key={starter.id}
+                    onClick={() => handleConversationStarter(starter.text)}
+                    className="p-3 sm:p-6 rounded-lg sm:rounded-xl border-2 hover:shadow-lg transition-all duration-300 text-left group bg-white dark:bg-slate-800 hover:scale-105 w-full"
+                    style={{
+                      borderColor: starter.id === 'rates' ? '#2563eb' : 
+                                  starter.id === 'compare' ? '#16a34a' : 
+                                  starter.id === 'proposal' ? '#ea580c' : 
+                                  '#7c3aed',
+                      borderWidth: '2px'
+                    }}
+                    disabled={isProcessing}
+                  >
+                    <div className="flex items-start space-x-3 sm:space-x-4">
+                      <IconComponent 
+                        className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0" 
+                        style={{
+                          color: starter.id === 'rates' ? '#2563eb' : 
+                                 starter.id === 'compare' ? '#16a34a' : 
+                                 starter.id === 'proposal' ? '#ea580c' : 
+                                 '#7c3aed'
+                        }}
+                      />
+                      <span className="text-sm sm:text-base font-medium leading-tight sm:leading-relaxed text-slate-900 dark:text-white">
+                        {starter.text}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          <div className="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
-            {conversationStarters.map((starter) => {
-              const IconComponent = starter.icon;
-              return (
-                <button
-                  key={starter.id}
-                  onClick={() => handleConversationStarter(starter.text)}
-                  className="p-3 sm:p-6 rounded-lg sm:rounded-xl border-2 hover:shadow-lg transition-all duration-300 text-left group bg-white dark:bg-slate-800 hover:scale-105 w-full"
-                  style={{
-                    borderColor: starter.id === 'rates' ? '#2563eb' : 
-                                starter.id === 'compare' ? '#16a34a' : 
-                                starter.id === 'proposal' ? '#ea580c' : 
-                                '#7c3aed',
-                    borderWidth: '2px'
-                  }}
-                  disabled={isProcessing}
-                >
-                  <div className="flex items-start space-x-3 sm:space-x-4">
-                    <IconComponent 
-                      className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0" 
-                      style={{
-                        color: starter.id === 'rates' ? '#2563eb' : 
-                               starter.id === 'compare' ? '#16a34a' : 
-                               starter.id === 'proposal' ? '#ea580c' : 
-                               '#7c3aed'
-                      }}
-                    />
-                    <span className="text-sm sm:text-base font-medium leading-tight sm:leading-relaxed text-slate-900 dark:text-white">
-                      {starter.text}
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="mt-6 sm:mt-8">
+          <div className="mt-4 sm:mt-6 flex-shrink-0">
             <div className="chat-glow-container">
               <form onSubmit={handleSubmit} className="flex gap-2">
                 <Textarea
