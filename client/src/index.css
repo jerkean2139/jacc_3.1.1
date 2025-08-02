@@ -75,10 +75,17 @@
   }
   
   /* Mobile chat input optimizations */
+  .chat-glow-container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
   .chat-glow-container form {
     flex-wrap: nowrap !important;
-    gap: 0.25rem !important;
-    align-items: flex-start !important;
+    gap: 0.5rem !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
   
   /* Ensure buttons don't get cut off on mobile */
@@ -88,27 +95,11 @@
     white-space: nowrap !important;
   }
   
-  /* Fix text truncation on mobile */
-  @media (max-width: 640px) {
-    .chat-glow-container form {
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center !important;
-      width: 100% !important;
-      overflow: visible !important;
-    }
-    
-    .chat-glow-container textarea {
-      min-width: 0 !important;
-      flex: 1 !important;
-      overflow: hidden !important;
-      word-wrap: break-word !important;
-    }
-    
-    .chat-glow-container button {
-      margin-left: 0.5rem !important;
-      flex-shrink: 0 !important;
-    }
+  .chat-glow-container textarea {
+    min-width: 0 !important;
+    flex: 1 !important;
+    word-wrap: break-word !important;
+    width: auto !important;
   }
 }
 

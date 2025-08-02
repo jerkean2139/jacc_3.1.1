@@ -210,7 +210,7 @@ const conversationStarters = [
                   >
                     <div className="flex items-start space-x-3 sm:space-x-4">
                       <IconComponent 
-                        className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0" 
+                        className="w-8 h-8 sm:w-8 sm:h-8 flex-shrink-0" 
                         style={{
                           color: starter.id === 'rates' ? '#2563eb' : 
                                  starter.id === 'compare' ? '#16a34a' : 
@@ -230,13 +230,13 @@ const conversationStarters = [
 
           <div className="mt-4 sm:mt-6 flex-shrink-0">
             <div className="chat-glow-container">
-              <form onSubmit={handleSubmit} className="flex gap-2">
+              <form onSubmit={handleSubmit} className="flex gap-2 w-full">
                 <Textarea
                   ref={textareaRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Or type your question here..."
-                  className="flex-1 min-h-[44px] max-h-20 resize-none border-0 bg-transparent text-sm sm:text-base"
+                  className="flex-1 min-h-[44px] max-h-20 resize-none border-0 bg-transparent text-sm sm:text-base min-w-0"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
