@@ -166,13 +166,16 @@
 }
 
 .chat-glow-container {
-  border: 2px solid transparent;
+  border: 2px solid var(--navy-600);
   border-radius: 9999px;
-  animation: glowingBorder 3s ease-in-out infinite;
   padding: 2px;
-  background: linear-gradient(45deg, var(--navy-600), var(--green-400), var(--navy-600));
-  background-size: 300% 300%;
-  animation: glowingBorder 3s ease-in-out infinite, gradientShift 4s ease-in-out infinite;
+  background: white;
+  animation: glowingBorder 3s ease-in-out infinite;
+  position: relative;
+}
+
+.dark .chat-glow-container {
+  background: rgb(30 41 59); /* slate-800 */
 }
 
 @keyframes gradientShift {

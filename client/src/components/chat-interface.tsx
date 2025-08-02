@@ -236,7 +236,7 @@ const conversationStarters = [
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Or type your question here..."
-                  className="flex-1 min-h-[44px] max-h-20 resize-none border-0 bg-transparent text-sm sm:text-base min-w-0"
+                  className="flex-1 min-h-[44px] max-h-20 resize-none border-0 bg-white dark:bg-slate-800 text-sm sm:text-base min-w-0 rounded-full px-4 py-3"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
