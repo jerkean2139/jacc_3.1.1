@@ -191,8 +191,7 @@ const conversationStarters = [
           </div>
 
           <div className="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
-            {conversationStarters.map((starter, index) => {
-              console.log(`Rendering starter ${index + 1}:`, starter.text);
+            {conversationStarters.map((starter) => {
               const IconComponent = starter.icon;
               return (
                 <button
@@ -227,7 +226,7 @@ const conversationStarters = [
             })}
           </div>
 
-          <div className="mt-8">
+          <div className="mt-6 sm:mt-8">
             <div className="chat-glow-container">
               <form onSubmit={handleSubmit} className="flex gap-2">
                 <Textarea
@@ -235,7 +234,7 @@ const conversationStarters = [
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Or type your question here..."
-                  className="flex-1 min-h-[44px] max-h-20 resize-none border-0 bg-transparent"
+                  className="flex-1 min-h-[44px] max-h-20 resize-none border-0 bg-transparent text-sm sm:text-base"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
