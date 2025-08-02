@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Mic, MicOff, Calculator, TrendingUp, BarChart3, Brain } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useParallax, useScrollAnimation } from "@/hooks/useParallax";
 import { MessageContent } from "./message-content";
 // Types for messages
 interface MessageWithActions {
@@ -40,6 +41,12 @@ export default function ChatInterface({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  
+  // Parallax effects for mobile
+  const logoRef = useParallax({ speed: 0.3, direction: 'up' });
+  const titleRef = useParallax({ speed: 0.2, direction: 'up' });
+  const conversationStartersRef = useParallax({ speed: 0.1, direction: 'up' });
+  const scrollProgress = useScrollAnimation();
 
 
 
@@ -172,39 +179,71 @@ const conversationStarters = [
 
   if (!chatId) {
     return (
-      <div className="flex-1 flex flex-col p-3 sm:p-4 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 overflow-y-auto pb-20 sm:pb-4 mobile-full-height">
+      <div 
+        className="flex-1 flex flex-col p-3 sm:p-4 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 overflow-y-auto pb-24 sm:pb-4 mobile-full-height parallax-container"
+        style={{
+          backgroundPosition: `center ${scrollProgress * 0.5}px`,
+          transition: 'background-position 0.1s ease-out'
+        }}
+      >
+        {/* Scroll Progress Indicator */}
+        <div 
+          className="fixed top-0 left-0 h-1 bg-gradient-to-r from-blue-600 to-green-400 z-50 transition-all duration-150 ease-out sm:hidden"
+          style={{ width: `${scrollProgress}%` }}
+        />
+        
         <div className="max-w-4xl w-full mx-auto mobile-container sm:flex sm:flex-col sm:min-h-full">
           <div className="flex-1 space-y-3 sm:space-y-6">
             <div className="text-center space-y-3 sm:space-y-4">
-              <div className="flex justify-center">
+              <div ref={logoRef} className="flex justify-center parallax-layer">
                 <img 
                   src="/jacc-logo.jpg" 
                   alt="JACC Logo" 
                   className="w-16 sm:w-20 h-16 sm:h-20 rounded-full shadow-lg object-cover"
+                  style={{ 
+                    transform: `translateY(${scrollProgress * 0.1}px)`,
+                    transition: 'transform 0.1s ease-out'
+                  }}
                 />
               </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
-                Welcome to JACC
-              </h1>
-              <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300">
-                Your AI-Powered Merchant Services Assistant
-              </p>
+              <div ref={titleRef} className="parallax-layer">
+                <h1 
+                  className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white"
+                  style={{ 
+                    transform: `translateY(${scrollProgress * 0.05}px)`,
+                    transition: 'transform 0.1s ease-out'
+                  }}
+                >
+                  Welcome to JACC
+                </h1>
+                <p 
+                  className="text-base sm:text-lg text-slate-600 dark:text-slate-300"
+                  style={{ 
+                    transform: `translateY(${scrollProgress * 0.03}px)`,
+                    transition: 'transform 0.1s ease-out'
+                  }}
+                >
+                  Your AI-Powered Merchant Services Assistant
+                </p>
+              </div>
             </div>
 
-            <div className="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
-              {conversationStarters.map((starter) => {
+            <div ref={conversationStartersRef} className="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0 parallax-layer">
+              {conversationStarters.map((starter, index) => {
                 const IconComponent = starter.icon;
                 return (
                   <button
                     key={starter.id}
                     onClick={() => handleConversationStarter(starter.text)}
-                    className="p-3 sm:p-6 rounded-lg sm:rounded-xl border-2 hover:shadow-lg transition-all duration-300 text-left group bg-white dark:bg-slate-800 hover:scale-105 w-full"
+                    className="p-3 sm:p-6 rounded-lg sm:rounded-xl border-2 hover:shadow-lg transition-all duration-300 text-left group bg-white dark:bg-slate-800 hover:scale-105 w-full parallax-layer"
                     style={{
                       borderColor: starter.id === 'rates' ? '#2563eb' : 
                                   starter.id === 'compare' ? '#16a34a' : 
                                   starter.id === 'proposal' ? '#ea580c' : 
                                   '#7c3aed',
-                      borderWidth: '2px'
+                      borderWidth: '2px',
+                      transform: `translateY(${scrollProgress * (0.02 + index * 0.01)}px)`,
+                      transition: 'transform 0.1s ease-out, all 0.3s ease'
                     }}
                     disabled={isProcessing}
                   >
@@ -228,8 +267,14 @@ const conversationStarters = [
             </div>
           </div>
 
-          <div className="mt-4 sm:mt-6 flex-shrink-0 mb-4 sm:mb-0">
-            <div className="chat-glow-container">
+          <div 
+            className="mt-4 sm:mt-6 flex-shrink-0 mb-6 sm:mb-0"
+            style={{ 
+              transform: `translateY(${scrollProgress * -0.02}px)`,
+              transition: 'transform 0.1s ease-out'
+            }}
+          >
+            <div className="chat-glow-container parallax-layer">
               <form onSubmit={handleSubmit} className="flex gap-1 w-full">
                 <Textarea
                   ref={textareaRef}

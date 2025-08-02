@@ -129,8 +129,32 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: calc(100vh - 80px); /* Subtract bottom nav height */
-      min-height: calc(100dvh - 80px);
+      min-height: calc(100vh - 120px); /* Subtract bottom nav height + extra padding */
+      min-height: calc(100dvh - 120px);
+      padding-bottom: 1rem;
+    }
+
+    /* Parallax scroll effects for mobile */
+    .parallax-container {
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+
+    .parallax-layer {
+      will-change: transform;
+      transition: transform 0.1s ease-out;
+    }
+
+    .parallax-bg {
+      transform: translateZ(-1px) scale(2);
+    }
+
+    .parallax-mid {
+      transform: translateZ(-0.5px) scale(1.5);
+    }
+
+    .parallax-front {
+      transform: translateZ(0);
     }
   }
 }
