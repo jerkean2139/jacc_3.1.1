@@ -254,9 +254,21 @@ Would you like me to run a competitive analysis and show you better processing o
   // Force refresh chats when component mounts or location changes
   useEffect(() => {
     if (user) {
+      console.log('Location changed, refetching chats:', location);
       refetchChats();
     }
   }, [location, user, refetchChats]);
+
+  // Auto-refresh chats every 15 seconds for recent updates
+  useEffect(() => {
+    if (user) {
+      const interval = setInterval(() => {
+        console.log('Auto-refreshing chats for recent updates...');
+        refetchChats();
+      }, 15000);
+      return () => clearInterval(interval);
+    }
+  }, [user, refetchChats]);
 
   return (
     <div className="h-screen bg-slate-50 dark:bg-slate-900 overflow-hidden w-full max-w-full">

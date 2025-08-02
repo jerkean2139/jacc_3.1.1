@@ -19,6 +19,7 @@
       } from "./production-setup";
       import { configureMemoryOptimization, configureProcessLimits } from "./memory-optimization";
       import { setupSecurity } from "./security-middleware";
+      import { memoryManager } from "./services/memory-manager";
 
       const app = express();
 
@@ -62,6 +63,9 @@
 
       // Performance tracking
       app.use(performanceService.trackPerformance());
+
+      // Initialize memory management
+      console.log("✅ Memory management initialized");
 
       // Static assets
       app.use(

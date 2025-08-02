@@ -237,7 +237,11 @@ export default function Sidebar({
 
   const recentChats = chats
     .filter(chat => chat.isActive)
-    .sort((a, b) => new Date(b.updatedAt!).getTime() - new Date(a.updatedAt!).getTime());
+    .sort((a, b) => {
+      const aTime = new Date(a.updatedAt || a.createdAt).getTime();
+      const bTime = new Date(b.updatedAt || b.createdAt).getTime();
+      return bTime - aTime;
+    });
 
   const displayedChats = showAllChats ? recentChats : recentChats.slice(0, 7);
   const displayedFolders = showAllFolders ? folders : folders.slice(0, 7);
