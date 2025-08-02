@@ -190,7 +190,7 @@ const conversationStarters = [
             </p>
           </div>
 
-          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
+          <div className="flex flex-col gap-4 sm:grid sm:grid-cols-2">
             {conversationStarters.map((starter) => {
               const IconComponent = starter.icon;
               return (
