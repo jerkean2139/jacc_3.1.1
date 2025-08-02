@@ -112,10 +112,25 @@
     padding-bottom: 80px; /* Space for bottom nav */
   }
 
-  /* Better mobile padding */
+  /* Better mobile padding and viewport usage */
   @media (max-width: 640px) {
     body {
       padding-bottom: env(safe-area-inset-bottom);
+    }
+    
+    /* Full height mobile layout */
+    .mobile-full-height {
+      min-height: 100vh;
+      min-height: 100dvh; /* Dynamic viewport height for better mobile support */
+    }
+    
+    /* Mobile container improvements */
+    .mobile-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: calc(100vh - 80px); /* Subtract bottom nav height */
+      min-height: calc(100dvh - 80px);
     }
   }
 }

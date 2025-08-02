@@ -49,33 +49,35 @@ function AppContent() {
   }
 
   return (
-    <Switch>
-      {!user ? (
-        <>
-          <Route path="/login" component={() => <LoginPage />} />
-          <Route path="/" component={() => <LoginPage />} />
-        </>
-      ) : (
-        <>
-          <Route path="/" component={() => <HomeStable />} />
-          <Route path="/chat/:chatId" component={() => <HomeStable />} />
-          <Route path="/documents" component={() => <DocumentsPage />} />
-          <Route path="/help" component={() => <HelpCenter />} />
+    <>
+      <Switch>
+        {!user ? (
+          <>
+            <Route path="/login" component={() => <LoginPage />} />
+            <Route path="/" component={() => <LoginPage />} />
+          </>
+        ) : (
+          <>
+            <Route path="/" component={() => <HomeStable />} />
+            <Route path="/chat/:chatId" component={() => <HomeStable />} />
+            <Route path="/documents" component={() => <DocumentsPage />} />
+            <Route path="/help" component={() => <HelpCenter />} />
 
-          {/* Admin Control Center Routes */}
-          {user && (user.role === 'admin' || user.role === 'client-admin' || user.role === 'dev-admin') && (
-            <>
-              <Route path="/admin" component={UnifiedAdminPanel} />
-              <Route path="/admin-control-center" component={AdminControlCenter} />
-            </>
-          )}
-          
-          {/* Bottom Navigation for Mobile */}
-          <BottomNav />
-        </>
-      )}
-      <Route component={() => <NotFound />} />
-    </Switch>
+            {/* Admin Control Center Routes */}
+            {user && (user.role === 'admin' || user.role === 'client-admin' || user.role === 'dev-admin') && (
+              <>
+                <Route path="/admin" component={UnifiedAdminPanel} />
+                <Route path="/admin-control-center" component={AdminControlCenter} />
+              </>
+            )}
+          </>
+        )}
+        <Route component={() => <NotFound />} />
+      </Switch>
+      
+      {/* Bottom Navigation for Mobile - Always visible when user is logged in */}
+      {user && <BottomNav />}
+    </>
   );
 }
 

@@ -38,14 +38,14 @@ export function BottomNav() {
           const IconComponent = item.icon;
           return (
             <Link key={item.path} href={item.path}>
-              <a className={`flex flex-col items-center py-2 px-4 rounded-xl transition-all duration-200 ${
+              <div className={`flex flex-col items-center py-2 px-4 rounded-xl transition-all duration-200 cursor-pointer ${
                 item.active 
                   ? 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/30 scale-105' 
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800/50'
               }`}>
                 <IconComponent className="w-6 h-6" />
                 <span className="text-xs mt-1 font-medium">{item.label}</span>
-              </a>
+              </div>
             </Link>
           );
         })}
