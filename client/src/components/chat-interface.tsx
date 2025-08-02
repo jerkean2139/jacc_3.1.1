@@ -337,30 +337,33 @@ const conversationStarters = [
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-slate-200 dark:border-slate-700 p-4">
-        <form onSubmit={handleSubmit} className="flex gap-2">
-          <Textarea
-            ref={textareaRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
-            className="flex-1 min-h-[44px] max-h-32 resize-none"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSubmit(e);
-              }
-            }}
-          />
-          <Button
-            type="submit"
-            disabled={!input.trim() || isProcessing}
-            size="icon"
-            className="h-11 w-11 bg-blue-600 hover:bg-blue-700 text-white border-0 flex-shrink-0"
-          >
-            <Send className="w-4 h-4 text-white" />
-          </Button>
-        </form>
+      <div className="border-t border-slate-200 dark:border-slate-700 p-4 pb-safe bg-white dark:bg-slate-900">
+        <div className="chat-glow-container">
+          <form onSubmit={handleSubmit} className="flex gap-2">
+            <Textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type your message..."
+              className="flex-1 min-h-[44px] max-h-32 resize-none border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm sm:text-base rounded-lg px-4 py-3"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }
+              }}
+            />
+            <Button
+              type="submit"
+              disabled={!input.trim() || isProcessing}
+              size="icon"
+              className="h-11 w-11 bg-blue-600 hover:bg-blue-700 text-white border-0 flex-shrink-0"
+              style={{ minWidth: '2.75rem', maxWidth: '2.75rem' }}
+            >
+              <Send className="w-4 h-4 text-white" />
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   );
