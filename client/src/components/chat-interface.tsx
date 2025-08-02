@@ -337,7 +337,7 @@ const conversationStarters = [
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-slate-200 dark:border-slate-700 p-4 bg-white dark:bg-slate-900 sticky bottom-0 z-10" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
+      <div className="border-t border-slate-200 dark:border-slate-700 p-4 bg-white dark:bg-slate-900 fixed bottom-20 left-0 right-0 z-10" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
         <div className="chat-glow-container">
           <form onSubmit={handleSubmit} className="flex gap-2">
             <Textarea
