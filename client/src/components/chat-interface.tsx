@@ -180,7 +180,7 @@ const conversationStarters = [
   if (!chatId) {
     return (
       <div 
-        className="flex-1 flex flex-col p-3 sm:p-4 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 overflow-y-auto pb-24 sm:pb-4 mobile-full-height parallax-container"
+        className="flex-1 flex flex-col p-3 sm:p-4 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 overflow-y-auto pb-32 sm:pb-4 mobile-full-height parallax-container"
         style={{
           backgroundPosition: `center ${scrollProgress * 0.5}px`,
           transition: 'background-position 0.1s ease-out'
@@ -267,14 +267,8 @@ const conversationStarters = [
             </div>
           </div>
 
-          <div 
-            className="mt-4 sm:mt-6 flex-shrink-0 mb-6 sm:mb-0"
-            style={{ 
-              transform: `translateY(${scrollProgress * -0.02}px)`,
-              transition: 'transform 0.1s ease-out'
-            }}
-          >
-            <div className="chat-glow-container parallax-layer">
+          <div className="mt-4 sm:mt-6 flex-shrink-0 mb-20 sm:mb-0">
+            <div className="chat-glow-container">
               <form onSubmit={handleSubmit} className="flex gap-1 w-full">
                 <Textarea
                   ref={textareaRef}
