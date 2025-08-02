@@ -11,6 +11,7 @@ import { authenticateApiKey, requireApiPermission, generateApiKey, hashApiKey } 
 import { insertUserSchema, insertApiKeySchema, insertMessageSchema, insertChatSchema, insertFolderSchema, insertDocumentSchema, insertAdminSettingsSchema } from "@shared/schema";
 import { generateChatResponse, analyzeDocument, generateTitle } from "./services/openai";
 import { unifiedAIService } from "./services/unified-ai-service";
+import { fastAIService } from "./fast-ai-service";
 import { googleDriveService } from "./services/google-drive";
 import { pineconeVectorService } from "./services/pinecone-vector";
 // import { duplicateDetectionService } from "./services/duplicate-detector";
@@ -971,18 +972,49 @@ export async function registerConsolidatedRoutes(app: Express): Promise<Server> 
         return res.status(404).json({ error: 'Chat not found' });
       }
       
-      // Ultra-fast response system for common queries (59ms response time)
-      const ultraFastResponse = getUltraFastResponse(content.toLowerCase());
+      // Get existing messages to check conversation flow
+      const existingMessages = await storage.getChatMessages(chatId);
+      const messageCount = existingMessages.length;
+      
+      // Conversation starter logic: require 3+ Q&A exchanges before delivering custom solution
+      const isConversationStarter = content.toLowerCase().includes('create') || 
+                                   content.toLowerCase().includes('proposal') ||
+                                   content.toLowerCase().includes('help me');
+      
       let aiResponse;
       
-      if (ultraFastResponse) {
+      // Ultra-fast response system for common queries (59ms response time)
+      const ultraFastResponse = getUltraFastResponse(content.toLowerCase());
+      
+      if (ultraFastResponse && !isConversationStarter) {
         console.log('🔍 Executing ultra-fast response for user', userId);
         aiResponse = { response: ultraFastResponse };
+      } else if (isConversationStarter && messageCount < 6) {
+        // Conversation starter: engage with questions before delivering solution
+        console.log('🚀 FastAI: Using conversation starter logic, exchanges:', Math.floor(messageCount/2));
+        const conversationPrompt = `You are an expert business consultant. The user wants help with: "${content}". 
+        
+        Instead of immediately providing a complete solution, engage them in a discovery conversation. Ask 1-2 specific, relevant questions to understand their needs better. 
+        
+        Current exchange: ${Math.floor(messageCount/2)} of 3 required.
+        
+        ${messageCount < 6 ? 'Ask discovery questions to gather more details before providing the custom solution.' : 'Now provide the comprehensive custom solution based on their responses.'}
+        
+        Keep responses concise and engaging. Format with HTML for better readability.`;
+        
+        aiResponse = await fastAIService.generateFastResponse(
+          [{ role: 'user', content }],
+          conversationPrompt
+        );
       } else {
-        // Process the message with AI (optimized for speed)
-        aiResponse = await unifiedAIService.generateResponse(content, [], userId, { 
-          useWebSearch: false // Disable web search for faster responses 
-        });
+        // Use FastAI for regular responses (much faster than unified service)
+        console.log('🚀 FastAI: Generating fast response');
+        const fastPrompt = `You are JACC, an AI assistant for merchant services sales agents. Provide helpful, concise responses. Format with HTML for readability.`;
+        
+        aiResponse = await fastAIService.generateFastResponse(
+          [{ role: 'user', content }],
+          fastPrompt
+        );
       }
       
       // Save user message first, then AI response to maintain proper chronological order
@@ -997,9 +1029,11 @@ export async function registerConsolidatedRoutes(app: Express): Promise<Server> 
         createdAt: new Date()
       }).returning();
       
-      // Extract AI response content
+      // Extract AI response content (FastAI returns string directly)
       let responseContent = '';
-      if (aiResponse && typeof aiResponse === 'object') {
+      if (typeof aiResponse === 'string') {
+        responseContent = aiResponse;
+      } else if (aiResponse && typeof aiResponse === 'object') {
         if ((aiResponse as any).response) {
           responseContent = (aiResponse as any).response;
         } else if ((aiResponse as any).content) {
@@ -1007,8 +1041,6 @@ export async function registerConsolidatedRoutes(app: Express): Promise<Server> 
         } else if ((aiResponse as any).message) {
           responseContent = (aiResponse as any).message;
         }
-      } else if (typeof aiResponse === 'string') {
-        responseContent = aiResponse;
       } else {
         responseContent = 'I apologize, but I encountered an issue processing your request. Please try again.';
       }
