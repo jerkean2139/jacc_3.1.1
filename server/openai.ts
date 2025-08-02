@@ -3,7 +3,7 @@
 let OpenAI: any = null;
 let openai: any = null;
 
-import { aiFallbackService } from "./ai-fallback-service";
+import { fastAIService } from "./fast-ai-service";
 
 // User has specifically requested using GPT-4.1 mini model, updated from previous gpt-4.1-mini configuration
 // const openai = new OpenAI({ 
@@ -67,24 +67,14 @@ RESPONSE STYLE:
 User context: ${context?.userRole || 'Merchant Services Sales Agent'}
 Available documents: ${context?.documents?.map(d => d.name).join(', ') || 'Extensive merchant services documentation'}`;
 
-    // Use AI fallback service for enhanced reliability
-    const fallbackResult = await aiFallbackService.generateResponseWithFallback(
-      messages,
-      systemPrompt,
-      {
-        maxTokens: 500,
-        temperature: 0.3
-      }
-    );
-
-    let content = fallbackResult.content;
+    // Use ultra-fast AI service for immediate responses
+    console.log('🎯 Using Claude Sonnet 4 as primary AI model');
+    const startTime = Date.now();
     
-    // Log fallback usage for monitoring
-    if (fallbackResult.hadFallback) {
-      console.log(`⚠️ AI Fallback Used: ${fallbackResult.usedModel.toUpperCase()} after primary model failed`);
-    } else {
-      console.log(`✅ AI Response Generated: ${fallbackResult.usedModel.toUpperCase()}`);
-    }
+    const content = await fastAIService.generateFastResponse(messages, systemPrompt);
+    
+    const duration = Date.now() - startTime;
+    console.log(`✅ AI response generated in ${duration}ms`);
     
     // Skip Hormozi formatting - allow conversational workflows to handle marketing requests
     console.log('🎨 Skipping Hormozi formatting to allow conversational workflow for marketing requests');
