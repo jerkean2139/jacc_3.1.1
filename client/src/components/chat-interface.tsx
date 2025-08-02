@@ -172,8 +172,8 @@ const conversationStarters = [
 
   if (!chatId) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-6 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 min-h-full">
-        <div className="max-w-4xl w-full space-y-8">
+      <div className="flex-1 overflow-auto p-6 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
+        <div className="max-w-4xl mx-auto space-y-8 py-8">
           <div className="text-center space-y-4">
             <div className="flex justify-center">
               <img 
