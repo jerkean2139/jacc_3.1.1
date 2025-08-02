@@ -193,7 +193,7 @@ const conversationStarters = [
         />
         
         <div className="max-w-4xl w-full mx-auto mobile-container sm:flex sm:flex-col sm:min-h-full">
-          <div className="flex-1 space-y-3 sm:space-y-6">
+          <div className="flex-1 space-y-3 sm:space-y-6 mt-8 sm:mt-12">
             <div className="text-center space-y-3 sm:space-y-4">
               <div ref={logoRef} className="flex justify-center parallax-layer">
                 <img 
