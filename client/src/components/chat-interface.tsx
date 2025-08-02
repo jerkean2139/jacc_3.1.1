@@ -173,7 +173,7 @@ const conversationStarters = [
   if (!chatId) {
     return (
       <div className="flex-1 overflow-auto p-6 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
-        <div className="max-w-4xl mx-auto space-y-8 py-8">
+        <div className="max-w-4xl mx-auto space-y-6 py-4">
           <div className="text-center space-y-4">
             <div className="flex justify-center">
               <img 
@@ -190,14 +190,14 @@ const conversationStarters = [
             </p>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
             {conversationStarters.map((starter) => {
               const IconComponent = starter.icon;
               return (
                 <button
                   key={starter.id}
                   onClick={() => handleConversationStarter(starter.text)}
-                  className="p-6 rounded-xl border-2 hover:shadow-lg transition-all duration-300 text-left group bg-white dark:bg-slate-800 hover:scale-105"
+                  className="p-4 sm:p-6 rounded-xl border-2 hover:shadow-lg transition-all duration-300 text-left group bg-white dark:bg-slate-800 hover:scale-105 w-full"
                   style={{
                     borderColor: starter.id === '1' ? 'hsl(var(--navy-600))' : 
                                 starter.id === '2' ? 'hsl(var(--green-400))' : 
