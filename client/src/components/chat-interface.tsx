@@ -230,7 +230,7 @@ const conversationStarters = [
 
           <div className="mt-4 sm:mt-6 flex-shrink-0">
             <div className="chat-glow-container">
-              <form onSubmit={handleSubmit} className="flex gap-2 w-full">
+              <form onSubmit={handleSubmit} className="flex gap-1 w-full">
                 <Textarea
                   ref={textareaRef}
                   value={input}
@@ -248,7 +248,8 @@ const conversationStarters = [
                   type="submit"
                   disabled={!input.trim() || isProcessing}
                   size="icon"
-                  className="h-11 w-11 bg-blue-600 hover:bg-blue-700 text-white border-0 flex-shrink-0"
+                  className="h-11 w-11 sm:h-11 sm:w-11 bg-blue-600 hover:bg-blue-700 text-white border-0 flex-shrink-0"
+                  style={{ minWidth: '2.75rem', maxWidth: '2.75rem' }}
                 >
                   <Send className="w-4 h-4 text-white" />
                 </Button>
