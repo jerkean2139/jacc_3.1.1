@@ -172,70 +172,62 @@ const conversationStarters = [
 
   if (!chatId) {
     return (
-      <div className="flex-1 overflow-auto p-6 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
-        <div className="max-w-4xl mx-auto space-y-6 py-4">
-          <div className="text-center space-y-4">
-            <div className="flex justify-center">
-              <img 
-                src="/jacc-logo.jpg" 
-                alt="JACC Logo" 
-                className="w-20 h-20 rounded-full shadow-lg object-cover"
-              />
+      <div className="flex-1 flex flex-col bg-white dark:bg-slate-900">
+        {/* Clean header section */}
+        <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6 py-8 text-center">
+          <div className="flex justify-center mb-4">
+            <img 
+              src="/jacc-logo.jpg" 
+              alt="JACC Logo" 
+              className="w-16 h-16 rounded-full border-2 border-white/20 object-cover"
+            />
+          </div>
+          <h1 className="text-2xl font-bold mb-2">Welcome to JACC</h1>
+          <p className="text-blue-100 text-sm">Your AI-Powered Merchant Services Assistant</p>
+        </div>
+
+        {/* Content area with proper scrolling */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-4 space-y-4">
+            <div className="text-center mb-6">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">How can I help you today?</h2>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Choose a topic or type your question below</p>
             </div>
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
-              Welcome to JACC
-            </h1>
-            <p className="text-lg text-slate-600 dark:text-slate-300">
-              Your AI-Powered Merchant Services Assistant
-            </p>
-          </div>
 
-          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
-            {conversationStarters.map((starter) => {
-              const IconComponent = starter.icon;
-              return (
-                <button
-                  key={starter.id}
-                  onClick={() => handleConversationStarter(starter.text)}
-                  className="p-4 sm:p-6 rounded-xl border-2 hover:shadow-lg transition-all duration-300 text-left group bg-white dark:bg-slate-800 hover:scale-105 w-full"
-                  style={{
-                    borderColor: starter.id === '1' ? 'hsl(var(--navy-600))' : 
-                                starter.id === '2' ? 'hsl(var(--green-400))' : 
-                                starter.id === '3' ? 'hsl(var(--navy-600))' : 
-                                'hsl(var(--green-400))',
-                    borderWidth: '2px'
-                  }}
-                  disabled={isProcessing}
-                >
-                  <div className="flex items-start space-x-4">
-                    <IconComponent 
-                      className="w-8 h-8 flex-shrink-0" 
-                      style={{
-                        color: starter.id === '1' ? 'hsl(var(--navy-600))' : 
-                               starter.id === '2' ? 'hsl(var(--green-400))' : 
-                               starter.id === '3' ? 'hsl(var(--navy-600))' : 
-                               'hsl(var(--green-400))'
-                      }}
-                    />
-                    <span className="text-base font-medium leading-relaxed text-slate-900 dark:text-white">
-                      {starter.text}
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+            <div className="space-y-3">
+              {conversationStarters.map((starter) => {
+                const IconComponent = starter.icon;
+                return (
+                  <button
+                    key={starter.id}
+                    onClick={() => handleConversationStarter(starter.text)}
+                    className="w-full p-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-left hover:bg-slate-50 dark:hover:bg-slate-750 transition-colors duration-200 active:bg-slate-100 dark:active:bg-slate-700"
+                    disabled={isProcessing}
+                  >
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                        <IconComponent className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-slate-900 dark:text-white leading-tight">
+                          {starter.text}
+                        </p>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
 
-          {/* Add a chat input box on the welcome screen with color-changing border */}
-          <div className="mt-8">
-            <div className="chat-glow-container">
+            {/* Clean input section */}
+            <div className="mt-6">
               <form onSubmit={handleSubmit} className="flex gap-2">
                 <Textarea
                   ref={textareaRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Or type your question here..."
-                  className="flex-1 min-h-[44px] max-h-20 resize-none border-0 bg-transparent"
+                  placeholder="Type your question here..."
+                  className="flex-1 min-h-[48px] max-h-32 resize-none border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
@@ -246,10 +238,9 @@ const conversationStarters = [
                 <Button
                   type="submit"
                   disabled={!input.trim() || isProcessing}
-                  size="icon"
-                  className="h-11 w-11 bg-blue-600 hover:bg-blue-700 text-white border-0 flex-shrink-0"
+                  className="h-12 w-12 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex-shrink-0"
                 >
-                  <Send className="w-4 h-4 text-white" />
+                  <Send className="w-4 h-4" />
                 </Button>
               </form>
             </div>
