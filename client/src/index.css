@@ -1431,3 +1431,20 @@ select.glass-input option {
     color: #e2e8f0;
   }
 }
+
+/* Force white text for user messages */
+.bg-blue-600 *,
+.bg-blue-600 p,
+.bg-blue-600 div,
+.bg-blue-600 span,
+.bg-blue-600 h1,
+.bg-blue-600 h2,
+.bg-blue-600 h3,
+.bg-blue-600 h4,
+.bg-blue-600 h5,
+.bg-blue-600 h6,
+.bg-blue-600 li,
+.bg-blue-600 strong,
+.bg-blue-600 em {
+  color: white !important;
+}

@@ -325,7 +325,10 @@ const conversationStarters = [
                     : 'bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white'
                 }`}
               >
-                <MessageContent content={message.content} />
+                <MessageContent 
+                  content={message.content} 
+                  className={message.role === 'user' ? 'text-white [&>*]:text-white [&>p]:text-white [&>div]:text-white' : ''}
+                />
               </div>
             </div>
           ))
