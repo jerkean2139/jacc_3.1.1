@@ -105,6 +105,19 @@
     width: auto !important;
     max-width: calc(100% - 3.5rem) !important;
   }
+
+  /* Mobile spacing adjustments */
+  .mobile-layout {
+    min-height: 100vh;
+    padding-bottom: 80px; /* Space for bottom nav */
+  }
+
+  /* Better mobile padding */
+  @media (max-width: 640px) {
+    body {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
 }
 
 /* Navy and Green color variables */

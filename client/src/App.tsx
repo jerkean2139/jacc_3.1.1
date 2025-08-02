@@ -15,6 +15,7 @@ import AdminControlCenter from '@/pages/admin-control-center';
 // import { DragDropProvider } from '@/components/drag-drop-provider'; // Removed during Phase 2 cleanup
 // import { GamificationProvider } from '@/components/gamification-provider'; // Removed during Phase 2 cleanup
 import PWAStatus from '@/components/pwa-status';
+import { BottomNav } from '@/components/bottom-nav';
 
 const queryClient = new QueryClient();
 
@@ -68,6 +69,9 @@ function AppContent() {
               <Route path="/admin-control-center" component={AdminControlCenter} />
             </>
           )}
+          
+          {/* Bottom Navigation for Mobile */}
+          <BottomNav />
         </>
       )}
       <Route component={() => <NotFound />} />

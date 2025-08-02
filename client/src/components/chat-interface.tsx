@@ -172,8 +172,8 @@ const conversationStarters = [
 
   if (!chatId) {
     return (
-      <div className="flex-1 flex flex-col p-3 sm:p-4 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 overflow-y-auto">
-        <div className="max-w-4xl w-full mx-auto flex flex-col h-full">
+      <div className="flex-1 flex flex-col p-3 sm:p-4 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 overflow-y-auto pb-20 sm:pb-4">
+        <div className="max-w-4xl w-full mx-auto flex flex-col min-h-full">
           <div className="flex-1 space-y-3 sm:space-y-6">
             <div className="text-center space-y-3 sm:space-y-4">
               <div className="flex justify-center">
@@ -228,7 +228,7 @@ const conversationStarters = [
             </div>
           </div>
 
-          <div className="mt-4 sm:mt-6 flex-shrink-0">
+          <div className="mt-4 sm:mt-6 flex-shrink-0 mb-4 sm:mb-0">
             <div className="chat-glow-container">
               <form onSubmit={handleSubmit} className="flex gap-1 w-full">
                 <Textarea
