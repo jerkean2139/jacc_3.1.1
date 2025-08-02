@@ -177,7 +177,6 @@ export const folders = pgTable("folders", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 255 }).notNull(),
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  parentId: uuid("parent_id"),
   parentId: uuid("parent_id").references(() => folders.id, { onDelete: "cascade" }),
   color: varchar("color", { length: 50 }).default("blue"),
   vectorNamespace: varchar("vector_namespace", { length: 255 }).notNull(), // Pinecone namespace
@@ -313,7 +312,6 @@ export const personalFolders = pgTable("personal_folders", {
   color: varchar("color", { length: 7 }).default("#3B82F6"), // Hex color code
   icon: varchar("icon", { length: 50 }).default("Folder"), // Lucide icon name
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  parentId: uuid("parent_id"),
   parentId: uuid("parent_id").references(() => personalFolders.id, { onDelete: "cascade" }),
   sortOrder: integer("sort_order").default(0),
   createdAt: timestamp("created_at").defaultNow(),
@@ -1633,7 +1631,6 @@ export type UserChatLog = typeof userChatLogs.$inferSelect;
 export const vendorDocuments = pgTable("vendor_documents", {
   id: varchar("id").primaryKey().notNull(),
   vendorId: uuid("vendor_id").notNull().references(() => vendors.id),
-  vendorId: varchar("vendor_id").notNull().references(() => vendors.id),
   url: varchar("url").notNull(),
   directDownloadUrl: varchar("direct_download_url"), // Direct PDF/file link
   title: varchar("title").notNull(),
@@ -1666,7 +1663,6 @@ export const documentChanges = pgTable("document_changes", {
 export const pendingDocumentApprovals = pgTable("pending_document_approvals", {
   id: varchar("id").primaryKey().notNull(),
   vendorId: uuid("vendor_id").notNull().references(() => vendors.id),
-  vendorId: varchar("vendor_id").notNull().references(() => vendors.id),
   documentTitle: varchar("document_title").notNull(),
   documentUrl: varchar("document_url").notNull(),
   documentType: varchar("document_type").notNull(), // 'pdf', 'sales_flyer', 'product_announcement', 'blog_post', 'news', 'promotion'
@@ -1694,7 +1690,6 @@ export const documentApprovalDecisions = pgTable("document_approval_decisions", 
 export const vendorNews = pgTable("vendor_news", {
   id: varchar("id").primaryKey().notNull(),
   vendorId: uuid("vendor_id").notNull().references(() => vendors.id),
-  vendorId: varchar("vendor_id").notNull().references(() => vendors.id),
   title: varchar("title").notNull(),
   summary: text("summary"),
   content: text("content"),
