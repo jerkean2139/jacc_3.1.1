@@ -172,8 +172,8 @@ const conversationStarters = [
 
   if (!chatId) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-4 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 overflow-auto">
-        <div className="max-w-4xl w-full space-y-6">
+      <div className="flex-1 flex flex-col p-4 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 overflow-y-auto">
+        <div className="max-w-4xl w-full mx-auto space-y-6 py-8">
           <div className="text-center space-y-4">
             <div className="flex justify-center">
               <img 
@@ -191,7 +191,8 @@ const conversationStarters = [
           </div>
 
           <div className="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
-            {conversationStarters.map((starter) => {
+            {conversationStarters.map((starter, index) => {
+              console.log(`Rendering starter ${index + 1}:`, starter.text);
               const IconComponent = starter.icon;
               return (
                 <button
