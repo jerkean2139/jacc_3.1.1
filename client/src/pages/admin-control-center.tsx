@@ -1767,14 +1767,14 @@ export default function AdminControlCenter() {
 
   // Sync data across widgets when data changes
   React.useEffect(() => {
-    if (chatData) {
-      syncChatData(chatData);
+    if (userChats) {
+      syncChatData(userChats);
       updateWidget('chat-review-center', { 
-        data: { activeChats: chatData.length },
+        data: { activeChats: userChats.length },
         status: 'active' 
       });
     }
-  }, [chatData, syncChatData, updateWidget]);
+  }, [userChats, syncChatData, updateWidget]);
 
   React.useEffect(() => {
     if (faqData) {
