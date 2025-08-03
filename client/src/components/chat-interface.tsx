@@ -133,7 +133,7 @@ const conversationStarters = [
       if (!chatId && onNewChatWithMessage) {
         await onNewChatWithMessage(messageText);
       } else if (chatId) {
-        await fetch(`/api/chats/${chatId}/messages`, {
+        const response = await fetch(`/api/chats/${chatId}/messages`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -143,12 +143,30 @@ const conversationStarters = [
           })
         });
         
-        // Force refresh messages and update chat list
-        await refetch();
-        onChatUpdate();
+        if (!response.ok) {
+          throw new Error(`Failed to send message: ${response.status}`);
+        }
         
-        // Force refresh parent chat list
+        // Immediately invalidate cache and refetch
+        queryClient.invalidateQueries({ queryKey: [`/api/chats/${chatId}/messages`] });
         queryClient.invalidateQueries({ queryKey: ["/api/chats"] });
+        
+        // Force immediate refresh and quick polling for AI response
+        setTimeout(async () => {
+          await refetch();
+          onChatUpdate();
+          
+          // Quick polling for AI response (every 250ms for 2 seconds)
+          let pollAttempts = 0;
+          const quickPoll = setInterval(async () => {
+            if (pollAttempts >= 8) {
+              clearInterval(quickPoll);
+              return;
+            }
+            await refetch();
+            pollAttempts++;
+          }, 250);
+        }, 100);
       }
     } catch (error) {
       toast({

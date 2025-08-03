@@ -1207,9 +1207,19 @@ export async function registerConsolidatedRoutes(app: Express): Promise<Server> 
         aiResponse = { response: ultraFastResponse };
       } else {
         // Process the message with AI (optimized for speed)
-        aiResponse = await unifiedAIService.generateResponse(message, [], userId, { 
-          useWebSearch: false // Disable web search for faster responses 
-        });
+        const fastPrompt = `You are JACC, an AI assistant for merchant services sales agents. Provide helpful, concise responses.
+
+        IMPORTANT: Always format your response with HTML markup including:
+        - Use <h2> for main headings
+        - Use <p> for paragraphs  
+        - Use <ul> and <li> for lists
+        - Use <strong> for emphasis
+        - Keep responses professional and visually appealing with proper HTML structure.`;
+        
+        aiResponse = await fastAIService.generateFastResponse(
+          [{ role: 'user', content: message }],
+          fastPrompt
+        );
       }
       
       // Save user message first, then AI response to maintain proper chronological order
@@ -1497,9 +1507,19 @@ Return only the title, no quotes or extra text.`;
       // If no ultra-fast response found, use unified AI service
       if (!isUltraFast) {
         console.log(`❌ No ultra-fast response match found for: "${normalizedMessage}"`);
-        response = await unifiedAIService.generateResponse(message, [], userId, {
-          userRole: userRole
-        });
+        const fastPrompt = `You are JACC, an AI assistant for merchant services sales agents. Provide helpful, concise responses.
+
+        IMPORTANT: Always format your response with HTML markup including:
+        - Use <h2> for main headings
+        - Use <p> for paragraphs  
+        - Use <ul> and <li> for lists
+        - Use <strong> for emphasis
+        - Keep responses professional and visually appealing with proper HTML structure.`;
+        
+        response = await fastAIService.generateFastResponse(
+          [{ role: 'user', content: message }],
+          fastPrompt
+        );
       }
       
       const responseTime = Date.now() - startTime;
