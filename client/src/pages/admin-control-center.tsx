@@ -1724,7 +1724,7 @@ export default function AdminControlCenter() {
       name: 'Chat Review & Training Center',
       type: 'chat',
       status: 'active',
-      data: { activeChats: chatData?.length || 0 },
+      data: { activeChats: userChats?.length || 0 },
       lastUpdate: Date.now()
     });
 
