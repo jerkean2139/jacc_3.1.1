@@ -37,6 +37,8 @@ export default function ChatInterface({
   const [isRecording, setIsRecording] = useState(false);
   const [recognition, setRecognition] = useState<any>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isThinking, setIsThinking] = useState(false);
+  const [optimisticMessages, setOptimisticMessages] = useState<any[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
@@ -117,22 +119,37 @@ const conversationStarters = [
   }
 ];
 
-  // Auto-scroll to bottom when messages change
+  // Auto-scroll to bottom when messages or thinking state change
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]);
+  }, [messages, optimisticMessages, isThinking]);
 
-  // Handle sending messages
+  // Handle sending messages with optimistic updates
   const sendMessage = async (messageText: string) => {
     if (!messageText.trim()) return;
     
     setIsProcessing(true);
+    
+    // Add optimistic user message immediately
+    const optimisticUserMessage = {
+      id: `temp-${Date.now()}`,
+      role: 'user',
+      content: messageText,
+      createdAt: new Date().toISOString(),
+      isOptimistic: true
+    };
+    
+    setOptimisticMessages(prev => [...prev, optimisticUserMessage]);
+    
     try {
       if (!chatId && onNewChatWithMessage) {
         await onNewChatWithMessage(messageText);
       } else if (chatId) {
+        // Show AI thinking state
+        setIsThinking(true);
+        
         const response = await fetch(`/api/chats/${chatId}/messages`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -147,28 +164,47 @@ const conversationStarters = [
           throw new Error(`Failed to send message: ${response.status}`);
         }
         
+        // Clear optimistic messages since real ones will come from server
+        setOptimisticMessages([]);
+        
         // Immediately invalidate cache and refetch
         queryClient.invalidateQueries({ queryKey: [`/api/chats/${chatId}/messages`] });
         queryClient.invalidateQueries({ queryKey: ["/api/chats"] });
         
-        // Force immediate refresh and quick polling for AI response
-        setTimeout(async () => {
-          await refetch();
-          onChatUpdate();
+        // Intelligent polling that checks for AI response
+        let pollAttempts = 0;
+        const maxPolls = 20; // 10 seconds max
+        const initialMessageCount = messages.length;
+        
+        const smartPoll = setInterval(async () => {
+          if (pollAttempts >= maxPolls) {
+            clearInterval(smartPoll);
+            setIsThinking(false);
+            return;
+          }
           
-          // Quick polling for AI response (every 250ms for 2 seconds)
-          let pollAttempts = 0;
-          const quickPoll = setInterval(async () => {
-            if (pollAttempts >= 8) {
-              clearInterval(quickPoll);
-              return;
-            }
-            await refetch();
-            pollAttempts++;
-          }, 250);
-        }, 100);
+          const freshData = await refetch();
+          const newMessages = freshData.data || [];
+          
+          // Check if we got both user message AND AI response (2 new messages)
+          if (newMessages.length >= initialMessageCount + 2) {
+            clearInterval(smartPoll);
+            setIsThinking(false);
+            onChatUpdate();
+          }
+          
+          pollAttempts++;
+        }, 500);
+        
+        // Fallback timeout
+        setTimeout(() => {
+          clearInterval(smartPoll);
+          setIsThinking(false);
+        }, 12000);
       }
     } catch (error) {
+      setOptimisticMessages([]);
+      setIsThinking(false);
       toast({
         title: "Error",
         description: "Failed to send message",
@@ -331,25 +367,65 @@ const conversationStarters = [
             No messages yet. Start a conversation!
           </div>
         ) : (
-          messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
+          <>
+            {/* Render actual messages */}
+            {messages.map((message) => (
               <div
-                className={`max-w-[80%] rounded-lg p-4 ${
-                  message.role === 'user'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white'
-                }`}
+                key={message.id}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}
               >
-                <MessageContent 
-                  content={message.content} 
-                  className={message.role === 'user' ? 'text-white [&>*]:text-white [&>p]:text-white [&>div]:text-white' : ''}
-                />
+                <div
+                  className={`max-w-[80%] rounded-lg p-4 ${
+                    message.role === 'user'
+                      ? 'bg-blue-600 text-white shadow-lg'
+                      : 'bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white shadow-md'
+                  }`}
+                >
+                  <MessageContent 
+                    content={message.content} 
+                    className={message.role === 'user' ? 'text-white [&>*]:text-white [&>p]:text-white [&>div]:text-white' : ''}
+                  />
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+            
+            {/* Render optimistic user messages */}
+            {optimisticMessages.map((message) => (
+              <div
+                key={message.id}
+                className="flex justify-end animate-slideInFromRight"
+              >
+                <div className="max-w-[80%] rounded-lg p-4 bg-blue-600 text-white shadow-lg opacity-90">
+                  <MessageContent 
+                    content={message.content} 
+                    className="text-white [&>*]:text-white [&>p]:text-white [&>div]:text-white"
+                  />
+                </div>
+              </div>
+            ))}
+            
+            {/* AI Thinking State */}
+            {isThinking && (
+              <div className="flex justify-start animate-fadeIn">
+                <div className="max-w-[80%] rounded-lg p-4 bg-slate-100 dark:bg-slate-700 shadow-md">
+                  <div className="flex items-center space-x-3">
+                    <div className="relative">
+                      <Brain className="w-6 h-6 text-blue-600 dark:text-blue-400 animate-pulse" />
+                      <div className="absolute inset-0 animate-spin">
+                        <div className="w-6 h-6 border-2 border-blue-600 dark:border-blue-400 border-t-transparent rounded-full opacity-30"></div>
+                      </div>
+                    </div>
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                      <div className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                    </div>
+                    <span className="text-slate-600 dark:text-slate-300 text-sm">Thinking...</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         )}
         <div ref={messagesEndRef} />
       </div>
