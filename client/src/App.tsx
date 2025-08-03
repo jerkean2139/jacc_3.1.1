@@ -66,8 +66,9 @@ function AppContent() {
             {/* Admin Control Center Routes */}
             {user && (user.role === 'admin' || user.role === 'client-admin' || user.role === 'dev-admin') && (
               <>
-                <Route path="/admin" component={UnifiedAdminPanel} />
+                <Route path="/admin" component={AdminControlCenter} />
                 <Route path="/admin-control-center" component={AdminControlCenter} />
+                <Route path="/admin-unified" component={UnifiedAdminPanel} />
               </>
             )}
           </>

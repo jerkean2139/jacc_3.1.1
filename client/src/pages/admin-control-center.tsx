@@ -34,6 +34,8 @@ import AdvancedOCRManager from '@/components/admin/AdvancedOCRManager';
 import { RichTextEditor } from '@/components/admin/SimpleTextEditor';
 import AIProfileCreator from '@/components/ai-profile-creator';
 import SimpleSystemMonitor from '@/components/simple-system-monitor';
+import { WidgetBridge } from '@/components/widget-bridge';
+import { useWidgetConnector } from '@/services/widget-connector';
 
 interface FAQ {
   id: number;
@@ -68,6 +70,17 @@ interface PromptTemplate {
 export default function AdminControlCenter() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  
+  // Initialize widget connector for F35 cockpit system
+  const { 
+    registerWidget, 
+    updateWidget, 
+    syncChatData, 
+    syncDocumentData, 
+    syncFAQData, 
+    syncAIConfigData,
+    syncAnalyticsData
+  } = useWidgetConnector('admin-control-center');
 
   // State for creating new FAQ entries
   const [newQuestion, setNewQuestion] = useState('');
@@ -1139,7 +1152,7 @@ export default function AdminControlCenter() {
       console.log('Creating FAQ with data:', newFAQ);
       
       // Check for duplicates before creating
-      const duplicateCheck = checkForDuplicateFAQ(newFAQ.question, faqData || []);
+      const duplicateCheck = checkForDuplicateFAQ(newFAQ.question, Array.isArray(faqData) ? faqData : []);
       
       if (duplicateCheck.isDuplicate && duplicateCheck.similarFAQ) {
         // Show warning dialog
@@ -1692,6 +1705,106 @@ export default function AdminControlCenter() {
       deleteUrlMutation.mutate(urlId);
     }
   };
+
+  // Widget registration and data synchronization for F35 cockpit system
+  React.useEffect(() => {
+    // Register the admin control center as the main admin widget
+    registerWidget({
+      id: 'admin-control-center',
+      name: 'F35 Admin Control Center',
+      type: 'admin',
+      status: 'active',
+      data: { tabs: ['overview', 'chat-review', 'knowledge', 'documents', 'ai-config', 'settings'] },
+      lastUpdate: Date.now()
+    });
+
+    // Register all sub-widgets
+    registerWidget({
+      id: 'chat-review-center',
+      name: 'Chat Review & Training Center',
+      type: 'chat',
+      status: 'active',
+      data: { activeChats: chatData?.length || 0 },
+      lastUpdate: Date.now()
+    });
+
+    registerWidget({
+      id: 'knowledge-base-manager',
+      name: 'Q&A Knowledge Base',
+      type: 'faq',
+      status: 'active',
+      data: { totalFAQs: faqData?.length || 0 },
+      lastUpdate: Date.now()
+    });
+
+    registerWidget({
+      id: 'document-center',
+      name: 'Document Processing Center',
+      type: 'document',
+      status: 'active',
+      data: { totalDocuments: documentsData?.length || 0 },
+      lastUpdate: Date.now()
+    });
+
+    registerWidget({
+      id: 'ai-configuration-engine',
+      name: 'AI Configuration Engine',
+      type: 'ai-config',
+      status: 'active',
+      data: { models: aiConfigData || {} },
+      lastUpdate: Date.now()
+    });
+
+    registerWidget({
+      id: 'system-monitoring',
+      name: 'System Health Monitor',
+      type: 'monitoring',
+      status: 'active',
+      data: { health: 'operational' },
+      lastUpdate: Date.now()
+    });
+  }, []);
+
+  // Sync data across widgets when data changes
+  React.useEffect(() => {
+    if (chatData) {
+      syncChatData(chatData);
+      updateWidget('chat-review-center', { 
+        data: { activeChats: chatData.length },
+        status: 'active' 
+      });
+    }
+  }, [chatData, syncChatData, updateWidget]);
+
+  React.useEffect(() => {
+    if (faqData) {
+      syncFAQData(faqData);
+      updateWidget('knowledge-base-manager', { 
+        data: { totalFAQs: faqData.length },
+        status: 'active' 
+      });
+    }
+  }, [faqData, syncFAQData, updateWidget]);
+
+  React.useEffect(() => {
+    if (documentsData) {
+      syncDocumentData(documentsData);
+      updateWidget('document-center', { 
+        data: { totalDocuments: documentsData.length },
+        status: 'active' 
+      });
+    }
+  }, [documentsData, syncDocumentData, updateWidget]);
+
+  React.useEffect(() => {
+    if (aiConfigData) {
+      syncAIConfigData(aiConfigData);
+      updateWidget('ai-configuration-engine', { 
+        data: { models: aiConfigData },
+        status: 'active' 
+      });
+    }
+  }, [aiConfigData, syncAIConfigData, updateWidget]);
 
   // Filtered data for FAQ management
   const filteredFAQs = Array.isArray(faqData) ? faqData.filter((faq: FAQ) => {
@@ -2465,10 +2578,18 @@ export default function AdminControlCenter() {
         <p className="text-gray-600">Manage AI training, document processing, and system oversight</p>
       </div>
       
-      <Tabs defaultValue="knowledge" className="space-y-6">
+      <Tabs defaultValue="overview" className="space-y-6">
         {/* Navigation styled to match main sidebar */}
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg">
           <TabsList className="w-full bg-transparent border-none p-4 h-auto justify-start flex-wrap gap-2">
+            <TabsTrigger 
+              value="overview" 
+              className="py-2 px-4 text-sm font-medium text-slate-700 dark:text-slate-300 bg-transparent data-[state=active]:bg-slate-100 dark:data-[state=active]:bg-slate-800 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white rounded-lg border hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+            >
+              <Home className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">F35 Overview</span>
+              <span className="sm:hidden">Overview</span>
+            </TabsTrigger>
             <TabsTrigger 
               value="knowledge" 
               className="py-2 px-4 text-sm font-medium text-slate-700 dark:text-slate-300 bg-transparent data-[state=active]:bg-slate-100 dark:data-[state=active]:bg-slate-800 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white rounded-lg border hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
@@ -2528,6 +2649,104 @@ export default function AdminControlCenter() {
           </TabsList>
         </div>
 
+        {/* F35 Cockpit Overview Tab */}
+        <TabsContent value="overview" className="space-y-6 p-4 sm:p-6">
+          <div className="space-y-6">
+            {/* F35 Header with Widget Bridge */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  F35 Admin Control Center
+                </h1>
+                <p className="text-gray-600 mt-1">Advanced AI-powered merchant services platform cockpit</p>
+              </div>
+              <WidgetBridge className="hidden lg:block" />
+            </div>
+
+            {/* Widget Connection Status - Mobile */}
+            <div className="lg:hidden">
+              <WidgetBridge showDetails={false} />
+            </div>
+
+            {/* System Status Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Card className="border-2 border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2 text-blue-700">
+                    <MessageSquare className="w-5 h-5" />
+                    Chat System
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-blue-600">
+                    {Array.isArray(userChats) ? userChats.length : 0}
+                  </div>
+                  <p className="text-sm text-blue-600">Active Conversations</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-green-500 bg-gradient-to-br from-green-50 to-green-100">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2 text-green-700">
+                    <BookOpen className="w-5 h-5" />
+                    Knowledge Base
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-green-600">
+                    {Array.isArray(faqData) ? faqData.length : 0}
+                  </div>
+                  <p className="text-sm text-green-600">FAQ Entries</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-purple-500 bg-gradient-to-br from-purple-50 to-purple-100">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2 text-purple-700">
+                    <FileText className="w-5 h-5" />
+                    Document Center
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-purple-600">
+                    {Array.isArray(documentsData) ? documentsData.length : 0}
+                  </div>
+                  <p className="text-sm text-purple-600">Processed Documents</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2 text-orange-700">
+                    <Brain className="w-5 h-5" />
+                    AI Engine
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-orange-600">Online</div>
+                  <p className="text-sm text-orange-600">All Systems Operational</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Detailed Widget Bridge */}
+            <WidgetBridge showDetails={true} className="col-span-full" />
+
+            {/* System Health Monitor */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Activity className="w-5 h-5" />
+                  F35 System Health Monitor
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SimpleSystemMonitor />
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
         <TabsContent value="knowledge" className="space-y-6 p-4 sm:p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">Q&A Knowledge Base Management</h2>
@@ -2553,7 +2772,7 @@ export default function AdminControlCenter() {
                       setNewQuestion(e.target.value);
                       // Real-time duplicate detection
                       if (e.target.value.trim().length > 10) {
-                        const duplicateCheck = checkForDuplicateFAQ(e.target.value, faqData || []);
+                        const duplicateCheck = checkForDuplicateFAQ(e.target.value, Array.isArray(faqData) ? faqData : []);
                         if (duplicateCheck.isDuplicate && duplicateCheck.similarFAQ) {
                           // Show duplicate indicator
                           const element = document.getElementById('duplicate-indicator');
@@ -4461,10 +4680,10 @@ Use direct response marketing principles and focus on measurable results.`
                           <div>
                             <h4 className="text-lg font-semibold">System Users</h4>
                             <p className="text-sm text-gray-500">
-                              {usersData.length} total users - Search: "{userSearchTerm}" - Role: {userRoleFilter}
+                              {Array.isArray(usersData) ? usersData.length : 0} total users - Search: "{userSearchTerm}" - Role: {userRoleFilter}
                             </p>
                             <p className="text-xs text-blue-600">
-                              Filtered: {usersData.filter((user: any) => {
+                              Filtered: {Array.isArray(usersData) ? usersData.filter((user: any) => {
                                 const matchesSearch = userSearchTerm === '' || 
                                   user.firstName?.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
                                   user.lastName?.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
@@ -4472,7 +4691,7 @@ Use direct response marketing principles and focus on measurable results.`
                                   user.username?.toLowerCase().includes(userSearchTerm.toLowerCase());
                                 const matchesRole = userRoleFilter === 'all' || user.role === userRoleFilter;
                                 return matchesSearch && matchesRole;
-                              }).length} showing
+                              }).length : 0} showing
                             </p>
                           </div>
                           <Button onClick={() => setShowCreateUser(true)}>
