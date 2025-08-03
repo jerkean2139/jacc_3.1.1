@@ -993,14 +993,19 @@ export async function registerConsolidatedRoutes(app: Express): Promise<Server> 
         // Conversation starter: engage with questions before delivering solution
         console.log('🚀 FastAI: Using conversation starter logic, exchanges:', Math.floor(messageCount/2));
         const conversationPrompt = `You are an expert business consultant. The user wants help with: "${content}". 
-        
+
         Instead of immediately providing a complete solution, engage them in a discovery conversation. Ask 1-2 specific, relevant questions to understand their needs better. 
-        
+
         Current exchange: ${Math.floor(messageCount/2)} of 3 required.
-        
+
         ${messageCount < 6 ? 'Ask discovery questions to gather more details before providing the custom solution.' : 'Now provide the comprehensive custom solution based on their responses.'}
-        
-        Keep responses concise and engaging. Format with HTML for better readability.`;
+
+        IMPORTANT: Always format your response with HTML markup including:
+        - Use <h2> for main headings
+        - Use <p> for paragraphs  
+        - Use <ul> and <li> for lists
+        - Use <strong> for emphasis
+        - Keep responses concise but visually appealing with proper HTML structure.`;
         
         aiResponse = await fastAIService.generateFastResponse(
           [{ role: 'user', content }],
@@ -1009,7 +1014,14 @@ export async function registerConsolidatedRoutes(app: Express): Promise<Server> 
       } else {
         // Use FastAI for regular responses (much faster than unified service)
         console.log('🚀 FastAI: Generating fast response');
-        const fastPrompt = `You are JACC, an AI assistant for merchant services sales agents. Provide helpful, concise responses. Format with HTML for readability.`;
+        const fastPrompt = `You are JACC, an AI assistant for merchant services sales agents. Provide helpful, concise responses.
+
+        IMPORTANT: Always format your response with HTML markup including:
+        - Use <h2> for main headings
+        - Use <p> for paragraphs  
+        - Use <ul> and <li> for lists
+        - Use <strong> for emphasis
+        - Keep responses professional and visually appealing with proper HTML structure.`;
         
         aiResponse = await fastAIService.generateFastResponse(
           [{ role: 'user', content }],

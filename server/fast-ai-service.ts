@@ -31,7 +31,7 @@ export class FastAIService {
           content: msg.content
         })),
         temperature: 0.1,  // Very low for speed and consistency
-        max_tokens: 200,   // Reduced for ultra-fast responses
+        max_tokens: 800,   // Increased for complete HTML responses
       });
 
       const duration = Date.now() - startTime;
