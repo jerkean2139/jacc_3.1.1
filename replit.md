@@ -32,7 +32,7 @@ JACC is built as a Progressive Web App (PWA) combining a React 18 (with TypeScri
 - **Security**: Production-ready security implementation with mandatory SESSION_SECRET validation, proper API key authentication, restrictive CSP headers (no unsafe-eval), environment-specific CORS policies, generic error handling in production, comprehensive audit logging, role-based access control, session security (7-day timeout, SameSite strict), multi-tier rate limiting, CSRF protection, and account lockout mechanisms. All critical security vulnerabilities from audit have been resolved.
 
 ### UI/UX Decisions
-- Professional and clean design, often described as "F35 cockpit-style" for admin panels.
+- Professional and clean design with cockpit-style interface for admin panels.
 - Consistent color schemes, particularly using gradients and color-coded status indicators (green/yellow/red).
 - Emphasis on clear visual hierarchy, accessible components, and responsive design for mobile.
 - AI responses are formatted with HTML for improved readability, using structured layouts inspired by direct response marketing.

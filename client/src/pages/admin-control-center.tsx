@@ -71,7 +71,7 @@ export default function AdminControlCenter() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  // Initialize widget connector for F35 cockpit system
+  // Initialize widget connector for admin control system
   const { 
     registerWidget, 
     updateWidget, 
@@ -1706,12 +1706,12 @@ export default function AdminControlCenter() {
     }
   };
 
-  // Widget registration and data synchronization for F35 cockpit system
+  // Widget registration and data synchronization for admin control system
   React.useEffect(() => {
     // Register the admin control center as the main admin widget
     registerWidget({
       id: 'admin-control-center',
-      name: 'F35 Admin Control Center',
+      name: 'JACC Admin Control Center',
       type: 'admin',
       status: 'active',
       data: { tabs: ['overview', 'chat-review', 'knowledge', 'documents', 'ai-config', 'settings'] },
@@ -2587,7 +2587,7 @@ export default function AdminControlCenter() {
               className="py-2 px-4 text-sm font-medium text-slate-700 dark:text-slate-300 bg-transparent data-[state=active]:bg-slate-100 dark:data-[state=active]:bg-slate-800 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white rounded-lg border hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
             >
               <Home className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">F35 Overview</span>
+              <span className="hidden sm:inline">System Overview</span>
               <span className="sm:hidden">Overview</span>
             </TabsTrigger>
             <TabsTrigger 
@@ -2649,10 +2649,10 @@ export default function AdminControlCenter() {
           </TabsList>
         </div>
 
-        {/* F35 Cockpit Overview Tab */}
+        {/* System Overview Tab */}
         <TabsContent value="overview" className="space-y-6 p-4 sm:p-6">
           <div className="space-y-6">
-            {/* F35 Header with Widget Bridge */}
+            {/* System Header with Widget Bridge */}
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -2737,7 +2737,7 @@ export default function AdminControlCenter() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Activity className="w-5 h-5" />
-                  F35 System Health Monitor
+                  System Performance Monitor
                 </CardTitle>
               </CardHeader>
               <CardContent>
