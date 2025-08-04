@@ -2922,29 +2922,7 @@ File Information:
     }
   });
   
-  app.get('/api/admin/users', requireAdmin, async (req, res) => {
-    try {
-      console.log('Admin users endpoint called, fetching from database...');
-      const allUsers = await db
-        .select({
-          id: users.id,
-          username: users.username,
-          email: users.email,
-          role: users.role,
-          isActive: users.isActive,
-          createdAt: users.createdAt,
-          lastLoginAt: users.lastLoginAt
-        })
-        .from(users)
-        .orderBy(desc(users.createdAt));
-      
-      console.log(`Admin users API returning ${allUsers.length} users`);
-      res.json(allUsers);
-    } catch (error) {
-      console.error('Error fetching admin users:', error);
-      res.status(500).json({ error: 'Failed to fetch users' });
-    }
-  });
+  // Removed duplicate - using the correct endpoint below
 
   app.get('/api/admin/system-metrics', requireAdmin, async (req, res) => {
     try {
@@ -4072,6 +4050,7 @@ File Information:
   // Get all users (admin only)
   app.get('/api/admin/users', requireAdmin, async (req, res) => {
     try {
+      console.log('Admin users endpoint called, fetching from database...');
       const allUsers = await db.select({
         id: users.id,
         username: users.username,
@@ -4085,9 +4064,10 @@ File Information:
         updatedAt: users.updatedAt
       }).from(users).orderBy(desc(users.createdAt));
       
+      console.log(`Admin users API returning ${allUsers.length} users`);
       res.json(allUsers);
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error('Error fetching admin users:', error);
       res.status(500).json({ error: 'Failed to fetch users' });
     }
   });
