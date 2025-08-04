@@ -1,106 +1,110 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 interface ParallaxOptions {
   speed?: number;
-  direction?: 'up' | 'down';
-  enableOnMobile?: boolean;
+  direction?: 'up' | 'down' | 'left' | 'right';
+  offset?: number;
+  easing?: string;
+  mobile?: boolean;
 }
 
-export function useParallax(options: ParallaxOptions = {}) {
-  const {
-    speed = 0.5,
-    direction = 'up',
-    enableOnMobile = true
-  } = options;
-  
-  const elementRef = useRef<HTMLDivElement>(null);
+export const useParallax = ({
+  speed = 0.5,
+  direction = 'up',
+  offset = 0,
+  easing = 'ease-out',
+  mobile = true
+}: ParallaxOptions = {}) => {
   const [scrollY, setScrollY] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
-  useEffect(() => {
-    // Check if device is mobile
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+  const handleScroll = useCallback(() => {
+    const currentScrollY = window.scrollY;
+    setScrollY(currentScrollY);
     
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  useEffect(() => {
-    if (!enableOnMobile && isMobile) return;
-    
-    const handleScroll = () => {
-      setScrollY(window.pageYOffset);
-    };
-
-    const throttledHandleScroll = throttle(handleScroll, 16); // ~60fps
-    
-    window.addEventListener('scroll', throttledHandleScroll, { passive: true });
-    
-    return () => {
-      window.removeEventListener('scroll', throttledHandleScroll);
-    };
-  }, [enableOnMobile, isMobile]);
-
-  useEffect(() => {
-    if (!elementRef.current || (!enableOnMobile && isMobile)) return;
-    
-    const element = elementRef.current;
-    const rect = element.getBoundingClientRect();
-    const elementTop = rect.top + window.pageYOffset;
-    const elementHeight = rect.height;
-    const windowHeight = window.innerHeight;
-    
-    // Calculate if element is in viewport
-    const isInViewport = scrollY + windowHeight > elementTop && scrollY < elementTop + elementHeight;
-    
-    if (isInViewport) {
-      const progress = (scrollY + windowHeight - elementTop) / (windowHeight + elementHeight);
-      const clampedProgress = Math.max(0, Math.min(1, progress));
-      
-      const translateY = direction === 'up' 
-        ? -(clampedProgress * speed * 100)
-        : (clampedProgress * speed * 100);
-      
-      element.style.transform = `translate3d(0, ${translateY}px, 0)`;
+    // Optimize for mobile by reducing updates when not visible
+    if (mobile) {
+      setIsVisible(currentScrollY < window.innerHeight * 2);
     }
-  }, [scrollY, speed, direction, enableOnMobile, isMobile]);
+  }, [mobile]);
 
-  return elementRef;
-}
+  useEffect(() => {
+    if (!mobile && window.innerWidth <= 768) {
+      return; // Skip parallax on mobile if disabled
+    }
 
-// Utility function to throttle scroll events
-function throttle<T extends (...args: any[]) => void>(func: T, limit: number): T {
+    const throttledScroll = throttle(handleScroll, 16); // 60fps
+    window.addEventListener('scroll', throttledScroll, { passive: true });
+    
+    return () => window.removeEventListener('scroll', throttledScroll);
+  }, [handleScroll, mobile]);
+
+  const getTransform = useCallback(() => {
+    if (!isVisible && mobile) return 'translate3d(0, 0, 0)';
+    
+    const value = (scrollY + offset) * speed;
+    
+    switch (direction) {
+      case 'up':
+        return `translate3d(0, ${-value}px, 0)`;
+      case 'down':
+        return `translate3d(0, ${value}px, 0)`;
+      case 'left':
+        return `translate3d(${-value}px, 0, 0)`;
+      case 'right':
+        return `translate3d(${value}px, 0, 0)`;
+      default:
+        return `translate3d(0, ${-value}px, 0)`;
+    }
+  }, [scrollY, offset, speed, direction, isVisible, mobile]);
+
+  return {
+    transform: getTransform(),
+    scrollY,
+    isVisible,
+    style: {
+      transform: getTransform(),
+      transition: easing !== 'none' ? `transform 0.1s ${easing}` : 'none',
+      willChange: 'transform'
+    }
+  };
+};
+
+// Throttle utility for performance
+function throttle<T extends (...args: any[]) => any>(
+  func: T,
+  limit: number
+): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
-  return ((...args: any[]) => {
+  return function (this: any, ...args: Parameters<T>) {
     if (!inThrottle) {
-      func(...args);
+      func.apply(this, args);
       inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+      setTimeout(() => (inThrottle = false), limit);
     }
-  }) as T;
+  };
 }
 
-// Hook for smooth scroll-based animations
-export function useScrollAnimation() {
-  const [scrollProgress, setScrollProgress] = useState(0);
-  
+export const useScrollDirection = () => {
+  const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('down');
+  const [lastScrollY, setLastScrollY] = useState(0);
+
   useEffect(() => {
-    const handleScroll = () => {
-      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      setScrollProgress(Math.min(100, Math.max(0, scrolled)));
+    const updateScrollDirection = () => {
+      const scrollY = window.scrollY;
+      const direction = scrollY > lastScrollY ? 'down' : 'up';
+      
+      if (direction !== scrollDirection && Math.abs(scrollY - lastScrollY) > 10) {
+        setScrollDirection(direction);
+      }
+      setLastScrollY(scrollY > 0 ? scrollY : 0);
     };
 
-    const throttledHandleScroll = throttle(handleScroll, 16);
-    window.addEventListener('scroll', throttledHandleScroll, { passive: true });
+    const throttledUpdate = throttle(updateScrollDirection, 100);
+    window.addEventListener('scroll', throttledUpdate, { passive: true });
     
-    return () => window.removeEventListener('scroll', throttledHandleScroll);
-  }, []);
+    return () => window.removeEventListener('scroll', throttledUpdate);
+  }, [scrollDirection, lastScrollY]);
 
-  return scrollProgress;
-}
+  return scrollDirection;
+};

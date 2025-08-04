@@ -17,6 +17,10 @@ import { useToast } from "@/hooks/use-toast";
 import { UsageMeter } from "@/components/gamification/usage-meter";
 // import { Leaderboard } from "@/components/gamification/leaderboard";
 import { Leaderboard } from "@/components/gamification/leaderboard";
+import ParallaxContainer from "@/components/parallax/ParallaxContainer";
+import ParallaxBackground from "@/components/parallax/ParallaxBackground";
+import ParallaxCard from "@/components/parallax/ParallaxCard";
+import { useParallax, useScrollDirection } from "@/hooks/useParallax";
 
 export default function HomeStable() {
   const { user } = useAuth();
@@ -25,6 +29,11 @@ export default function HomeStable() {
   const queryClient = useQueryClient();
   const [isProcessingStatement, setIsProcessingStatement] = useState(false);
   const [processingProgress, setProcessingProgress] = useState(0);
+  
+  // Parallax effects
+  const scrollDirection = useScrollDirection();
+  const headerParallax = useParallax({ speed: 0.5, direction: 'up', mobile: true });
+  const backgroundParallax = useParallax({ speed: 0.3, direction: 'down', mobile: true });
 
   // Extract chatId from URL
   const activeChatId = location.includes('/chat/') ? location.split('/chat/')[1] : null;
@@ -287,9 +296,18 @@ Would you like me to run a competitive analysis and show you better processing o
   }, [user, refetchChats]);
 
   return (
-    <div className="h-screen bg-slate-50 dark:bg-slate-900 overflow-hidden w-full max-w-full">
-      {/* Mobile Header - Always visible on mobile */}
-      <div className="lg:hidden bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 flex items-center justify-between">
+    <div className="h-screen relative overflow-hidden w-full max-w-full">
+      {/* Parallax Background */}
+      <ParallaxBackground 
+        speed={0.2} 
+        className="fixed inset-0 -z-10"
+        overlay={false}
+      />
+      {/* Mobile Header with Parallax - Always visible on mobile */}
+      <ParallaxContainer 
+        speed={0.1} 
+        className="lg:hidden bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 p-4 flex items-center justify-between"
+      >
         <div className="flex items-center space-x-3">
           <Sheet>
             <SheetTrigger asChild>
@@ -297,7 +315,7 @@ Would you like me to run a competitive analysis and show you better processing o
                 <Menu className="w-5 h-5 text-slate-600 dark:text-slate-300" />
               </button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-80 p-0">
+            <SheetContent side="left" className="w-80 p-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-lg">
               <Sidebar
                 user={user}
                 chats={chats as any[]}
@@ -332,21 +350,27 @@ Would you like me to run a competitive analysis and show you better processing o
             New Chat
           </button>
         </div>
-      </div>
+      </ParallaxContainer>
 
-      {/* Mobile Chat Area */}
-      <div className="lg:hidden flex-1 h-[calc(100vh-80px)]">
+      {/* Mobile Chat Area with Parallax */}
+      <ParallaxContainer 
+        speed={0.05} 
+        className="lg:hidden flex-1 h-[calc(100vh-80px)]"
+      >
         <ChatInterface 
           chatId={activeChatId} 
           onChatUpdate={refetchChats}
           onNewChatWithMessage={handleNewChatWithMessage}
         />
-      </div>
+      </ParallaxContainer>
 
-      {/* Desktop Layout - CSS Grid for stability */}
-      <div className="hidden lg:grid grid-cols-[320px_1fr] h-full w-full">
-        {/* Sidebar - Fixed width grid column */}
-        <div className="border-r border-border overflow-hidden">
+      {/* Desktop Layout with Parallax - CSS Grid for stability */}
+      <ParallaxContainer 
+        speed={0.1} 
+        className="hidden lg:grid grid-cols-[320px_1fr] h-full w-full"
+      >
+        {/* Sidebar with glass effect - Fixed width grid column */}
+        <div className="border-r border-border overflow-hidden bg-white/90 dark:bg-slate-900/90 backdrop-blur-md">
           <Sidebar
             user={user}
             chats={chats as any[]}
@@ -366,55 +390,58 @@ Would you like me to run a competitive analysis and show you better processing o
           />
         </div>
 
-        {/* Chat Panel - Flexible grid column */}
+        {/* Chat Panel with Parallax - Flexible grid column */}
         <div className="overflow-hidden flex flex-col">
-          
-          {/* Chat Interface */}
-          <div className="flex-1 overflow-hidden">
+          {/* Chat Interface with Parallax Card Effect */}
+          <ParallaxCard 
+            className="flex-1 overflow-hidden"
+            intensity={0.02}
+            mobile={true}
+          >
             <ChatInterface
               chatId={activeChatId}
               onChatUpdate={refetchChats}
               onNewChatWithMessage={handleNewChatWithMessage}
             />
-          </div>
+          </ParallaxCard>
         </div>
+      </ParallaxContainer>
 
-
-      </div>
-
-      {/* Processing Modal */}
+      {/* Processing Modal with Parallax Card */}
       <Dialog open={isProcessingStatement} onOpenChange={() => {}}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <FileText className="w-5 h-5" />
-              Analyzing Statement
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
-              <div className="flex-1">
-                <p className="text-sm font-medium">Processing your statement...</p>
-                <p className="text-xs text-muted-foreground">This may take a few moments</p>
+          <ParallaxCard intensity={0.1} mobile={true}>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <FileText className="w-5 h-5" />
+                Analyzing Statement
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Processing your statement...</p>
+                  <p className="text-xs text-muted-foreground">This may take a few moments</p>
+                </div>
+              </div>
+              <Progress value={processingProgress} className="w-full" />
+              <div className="text-xs text-muted-foreground space-y-1">
+                <div className="flex justify-between">
+                  <span>Extracting data</span>
+                  <span>{processingProgress < 30 ? '...' : '✓'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Analyzing patterns</span>
+                  <span>{processingProgress < 60 ? '...' : '✓'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Generating insights</span>
+                  <span>{processingProgress < 90 ? '...' : '✓'}</span>
+                </div>
               </div>
             </div>
-            <Progress value={processingProgress} className="w-full" />
-            <div className="text-xs text-muted-foreground space-y-1">
-              <div className="flex justify-between">
-                <span>Extracting data</span>
-                <span>{processingProgress < 30 ? '...' : '✓'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Analyzing patterns</span>
-                <span>{processingProgress < 60 ? '...' : '✓'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Generating insights</span>
-                <span>{processingProgress < 90 ? '...' : '✓'}</span>
-              </div>
-            </div>
-          </div>
+          </ParallaxCard>
         </DialogContent>
       </Dialog>
     </div>
