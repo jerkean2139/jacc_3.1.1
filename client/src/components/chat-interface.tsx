@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Mic, MicOff, Calculator, TrendingUp, BarChart3, Brain } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useParallax, useScrollDirection } from "@/hooks/useParallax";
+import { useScrollDirection } from "@/hooks/useParallax";
 import { MessageContent } from "./message-content";
 // Types for messages
 interface MessageWithActions {
@@ -44,10 +44,6 @@ export default function ChatInterface({
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  // Reduced parallax effects to prevent jumping
-  const logoRef = useParallax({ speed: 0.05, direction: 'up' });
-  const titleRef = useParallax({ speed: 0.03, direction: 'up' });
-  const conversationStartersRef = useParallax({ speed: 0.01, direction: 'up' });
   const scrollDirection = useScrollDirection();
 
 
@@ -234,8 +230,7 @@ const conversationStarters = [
   if (!chatId) {
     return (
       <div 
-        className="flex-1 flex flex-col p-3 sm:p-4 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 overflow-y-auto pb-32 sm:pb-4 mobile-full-height parallax-container"
-        style={conversationStartersRef.style}
+        className="flex-1 flex flex-col p-3 sm:p-4 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 overflow-y-auto pb-32 sm:pb-4 mobile-full-height"
       >
         {/* Scroll Progress Indicator */}
         <div 
@@ -246,24 +241,21 @@ const conversationStarters = [
         <div className="max-w-4xl w-full mx-auto mobile-container sm:flex sm:flex-col sm:min-h-full">
           <div className="flex-1 space-y-3 sm:space-y-6 mt-8 sm:mt-12">
             <div className="text-center space-y-3 sm:space-y-4">
-              <div ref={logoRef} className="flex justify-center parallax-layer">
+              <div className="flex justify-center">
                 <img 
                   src="/jacc-logo.jpg" 
                   alt="JACC Logo" 
                   className="w-16 sm:w-20 h-16 sm:h-20 rounded-full shadow-lg object-cover"
-                  style={logoRef.style}
                 />
               </div>
-              <div ref={titleRef} className="parallax-layer">
+              <div>
                 <h1 
                   className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white"
-                  style={titleRef.style}
                 >
                   Welcome to JACC
                 </h1>
                 <p 
                   className="text-base sm:text-lg text-slate-600 dark:text-slate-300"
-                  style={titleRef.style}
                 >
                   Your AI-Powered Merchant Services Assistant
                 </p>
