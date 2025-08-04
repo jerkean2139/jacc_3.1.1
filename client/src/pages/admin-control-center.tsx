@@ -1733,7 +1733,7 @@ export default function AdminControlCenter() {
       name: 'Q&A Knowledge Base',
       type: 'faq',
       status: 'active',
-      data: { totalFAQs: faqData?.length || 0 },
+      data: { totalFAQs: Array.isArray(faqData) ? faqData.length : 0 },
       lastUpdate: Date.now()
     });
 
@@ -1777,7 +1777,7 @@ export default function AdminControlCenter() {
   }, [userChats, syncChatData, updateWidget]);
 
   React.useEffect(() => {
-    if (faqData) {
+    if (faqData && Array.isArray(faqData)) {
       syncFAQData(faqData);
       updateWidget('knowledge-base-manager', { 
         data: { totalFAQs: faqData.length },

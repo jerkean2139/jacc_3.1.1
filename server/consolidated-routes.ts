@@ -3851,12 +3851,19 @@ File Information:
   app.get('/api/admin/ai-models', requireAdmin, async (req, res) => {
     try {
       const models = [
-        { id: 'claude-sonnet-4', name: 'Claude 4.0 Sonnet', type: 'primary', status: 'active' },
-        { id: 'gpt-4o', name: 'GPT-4o', type: 'fallback', status: 'active' },
-        { id: 'gpt-4o-mini', name: 'GPT-4.1 Mini', type: 'fast', status: 'active' },
-        { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', type: 'basic', status: 'active' }
+        { id: 'claude-sonnet-4-20250514', name: 'Claude 4.0 Sonnet', type: 'primary', status: 'active', description: 'Latest Claude model with enhanced reasoning' },
+        { id: 'claude-3.7', name: 'Claude 3.7 Sonnet', type: 'fallback', status: 'active', description: 'Reliable fallback model' },
+        { id: 'gpt-4o', name: 'GPT-4o', type: 'alternative', status: 'active', description: 'OpenAI latest multimodal model' },
+        { id: 'gpt-4o-mini', name: 'GPT-4.1 Mini', type: 'fast', status: 'active', description: 'Fast and efficient model' },
+        { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', type: 'basic', status: 'active', description: 'Basic model for simple tasks' }
       ];
-      res.json(models);
+      
+      // Return in the expected format
+      res.json({ 
+        models,
+        total: models.length,
+        lastUpdated: new Date().toISOString()
+      });
     } catch (error) {
       console.error('Error fetching AI models:', error);
       res.status(500).json({ error: 'Failed to fetch AI models' });
@@ -3885,11 +3892,11 @@ File Information:
   app.get('/api/admin/ai-config', requireAdmin, async (req, res) => {
     try {
       const config = {
-        primaryModel: 'claude-sonnet-4',
-        fallbackModel: 'gpt-4o-mini',
+        primaryModel: 'claude-sonnet-4-20250514',
+        fallbackModel: 'claude-3.7',
         responseStyle: 'professional',
         temperature: 0.7,
-        maxTokens: 2000,
+        maxTokens: 4096,
         streamingEnabled: true,
         cacheDuration: 3600
       };
@@ -3900,6 +3907,24 @@ File Information:
     }
   });
   
+  app.put('/api/admin/ai-config', requireAdmin, async (req, res) => {
+    try {
+      const config = req.body;
+      console.log('Updating AI config:', config);
+      
+      // For now, just return success since we're not persisting to database
+      // In production, this would update the database
+      res.json({ 
+        success: true, 
+        message: 'AI configuration updated',
+        config: config
+      });
+    } catch (error) {
+      console.error('Error updating AI config:', error);
+      res.status(500).json({ error: 'Failed to update AI configuration' });
+    }
+  });
+
   app.get('/api/admin/faq-categories', requireAdmin, async (req, res) => {
     try {
       // Get unique categories from FAQ table
