@@ -481,12 +481,18 @@ export default function Sidebar({
                       : "text-slate-400 dark:text-slate-500"
                   )} />
                   
-                  <span className={cn(
-                    "text-sm truncate flex-1",
-                    activeChatId === chat.id 
-                      ? "text-white dark:text-white font-medium" 
-                      : "text-white dark:text-slate-300"
-                  )}>
+                  <span 
+                    className={cn(
+                      "text-sm truncate flex-1 overflow-hidden",
+                      activeChatId === chat.id 
+                        ? "font-medium" 
+                        : ""
+                    )}
+                    style={{ 
+                      color: '#050000d6',
+                      maxWidth: 'calc(100% - 60px)' // Leave space for icons
+                    }}
+                  >
                     {(() => {
                       // Clean the title by removing newlines and extra content
                       const cleanTitle = chat.title 
