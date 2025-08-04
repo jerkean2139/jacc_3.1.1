@@ -155,6 +155,8 @@ interface SidebarProps {
   onFolderCreate: (name: string, parentId?: string, color?: string) => void;
   onFolderDelete?: (folderId: string) => void;
   onChatDelete?: (chatId: string) => void;
+  chatsLoading?: boolean;
+  chatsError?: any;
   collapsed?: boolean;
 }
 
@@ -168,16 +170,20 @@ export default function Sidebar({
   onFolderCreate,
   onFolderDelete,
   onChatDelete,
+  chatsLoading = false,
+  chatsError = null,
   collapsed = false
 }: SidebarProps) {
   // Debug logging
-  console.log("Sidebar Debug:", {
+  console.log("🔍 Sidebar Debug:", {
     chatsCount: chats.length,
     hasOnChatDelete: !!onChatDelete,
     onChatDeleteType: typeof onChatDelete,
     recentChatsCount: chats.filter(chat => chat.id).length,
     firstChat: chats[0],
-    chats: chats
+    chats: chats,
+    displayedChatsLength: displayedChats.length,
+    recentChatsLength: recentChats.length
   });
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
   const [creatingFolder, setCreatingFolder] = useState(false);
@@ -239,7 +245,7 @@ export default function Sidebar({
   };
 
   const recentChats = chats
-    .filter(chat => chat.id) // Just ensure the chat has an ID
+    .filter(chat => chat.id && (chat.isActive !== false)) // Show all chats except explicitly inactive ones
     .sort((a, b) => {
       const aTime = new Date(a.updatedAt || a.createdAt).getTime();
       const bTime = new Date(b.updatedAt || b.createdAt).getTime();
@@ -435,7 +441,16 @@ export default function Sidebar({
             </Badge>
           </div>
 
-          {displayedChats.length === 0 ? (
+          {chatsLoading ? (
+            <div className="text-xs dark:text-slate-400 italic p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg text-[#23252f] flex items-center">
+              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600 mr-2"></div>
+              Loading chats...
+            </div>
+          ) : chatsError ? (
+            <div className="text-xs text-red-500 italic p-2 bg-red-50 dark:bg-red-900/20 rounded-lg">
+              Error loading chats: {chatsError.message || 'Unknown error'}
+            </div>
+          ) : displayedChats.length === 0 ? (
             <div className="text-xs dark:text-slate-400 italic p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg text-[#23252f]">
               No recent chats yet. Start a conversation above.
             </div>

@@ -33,12 +33,13 @@ export default function HomeStable() {
   console.log('URL Debug:', { location, activeChatId, hasChat: location.includes('/chat/') });
 
   // Fetch chats and folders
-  const { data: chats = [], refetch: refetchChats } = useQuery({
+  const { data: chats = [], refetch: refetchChats, isLoading: chatsLoading, error: chatsError } = useQuery({
     queryKey: ["/api/chats"],
     staleTime: 0, // Always fetch fresh data
     gcTime: 30000, // Keep in cache for 30 seconds
     refetchOnMount: "always",
     refetchOnWindowFocus: true,
+    enabled: !!user, // Only fetch when user is authenticated
   });
 
   const { data: folders = [] } = useQuery({
@@ -243,12 +244,17 @@ Would you like me to run a competitive analysis and show you better processing o
   // Connect the floating action button to new chat creation
   // useNewChatFAB(handleNewChat); // Commented out during Phase 1 cleanup
 
-  console.log('HomeStable render debug:', { 
+  console.log('🏠 HomeStable render debug:', { 
     user: !!user, 
     activeChatId, 
     location,
     chatsCount: Array.isArray(chats) ? chats.length : 0,
-    foldersCount: Array.isArray(folders) ? folders.length : 0 
+    foldersCount: Array.isArray(folders) ? folders.length : 0,
+    chatsData: chats,
+    chatsType: typeof chats,
+    isArray: Array.isArray(chats),
+    chatsLoading,
+    chatsError: chatsError?.message || 'no error'
   });
 
   // Force refresh chats when component mounts or location changes
@@ -295,6 +301,8 @@ Would you like me to run a competitive analysis and show you better processing o
                   queryClient.invalidateQueries({ queryKey: ["/api/chats"] });
                   refetchChats();
                 }}
+                chatsLoading={chatsLoading}
+                chatsError={chatsError}
                 collapsed={false}
               />
             </SheetContent>
@@ -342,6 +350,8 @@ Would you like me to run a competitive analysis and show you better processing o
               queryClient.invalidateQueries({ queryKey: ["/api/chats"] });
               refetchChats();
             }}
+            chatsLoading={chatsLoading}
+            chatsError={chatsError}
             collapsed={false}
           />
         </div>
