@@ -676,6 +676,16 @@ export async function registerConsolidatedRoutes(app: Express): Promise<Server> 
         }
       }
       
+      // Check express session
+      if (!userId && req.session?.user) {
+        userId = req.session.user.id || req.session.user.userId;
+      }
+      
+      // Check admin session sync
+      if (!userId && req.session?.passport?.user) {
+        userId = req.session.passport.user.userId || req.session.passport.user.id || 'cburnell-user-id';
+      }
+      
       if (!userId) {
         return res.status(401).json({ error: 'Not authenticated' });
       }
@@ -3388,6 +3398,26 @@ File Information:
     if (sessionId && sessions.has(sessionId)) {
       const userSession = sessions.get(sessionId);
       console.log('User found in memory session:', userSession);
+      return res.json(userSession);
+    }
+    
+    // PRIORITY 3: Check if user has admin authentication and sync it to main auth
+    if (req.session?.passport?.user) {
+      const adminUser = req.session.passport.user;
+      console.log('Found admin authentication, syncing to main auth:', adminUser);
+      
+      // Sync admin session to main user session
+      const userSession = {
+        id: adminUser.userId || adminUser.id || 'cburnell-user-id',
+        userId: adminUser.userId || adminUser.id || 'cburnell-user-id',
+        username: adminUser.username || adminUser.email || 'cburnell',
+        email: adminUser.email || 'cburnell@cocard.net',
+        role: adminUser.role || 'client-admin'
+      };
+      
+      // Set express session
+      req.session.user = userSession;
+      
       return res.json(userSession);
     }
     
