@@ -174,7 +174,10 @@ export default function Sidebar({
   console.log("Sidebar Debug:", {
     chatsCount: chats.length,
     hasOnChatDelete: !!onChatDelete,
-    onChatDeleteType: typeof onChatDelete
+    onChatDeleteType: typeof onChatDelete,
+    recentChatsCount: chats.filter(chat => chat.id).length,
+    firstChat: chats[0],
+    chats: chats
   });
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
   const [creatingFolder, setCreatingFolder] = useState(false);
@@ -236,7 +239,7 @@ export default function Sidebar({
   };
 
   const recentChats = chats
-    .filter(chat => chat.isActive)
+    .filter(chat => chat.id) // Just ensure the chat has an ID
     .sort((a, b) => {
       const aTime = new Date(a.updatedAt || a.createdAt).getTime();
       const bTime = new Date(b.updatedAt || b.createdAt).getTime();

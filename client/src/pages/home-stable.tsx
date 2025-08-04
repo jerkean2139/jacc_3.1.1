@@ -291,6 +291,10 @@ Would you like me to run a competitive analysis and show you better processing o
                 onChatSelect={handleChatSelect}
                 onFolderCreate={handleFolderCreate}
                 onFolderDelete={handleFolderDelete}
+                onChatDelete={(chatId) => {
+                  queryClient.invalidateQueries({ queryKey: ["/api/chats"] });
+                  refetchChats();
+                }}
                 collapsed={false}
               />
             </SheetContent>
@@ -334,6 +338,10 @@ Would you like me to run a competitive analysis and show you better processing o
             onChatSelect={handleChatSelect}
             onFolderCreate={handleFolderCreate}
             onFolderDelete={handleFolderDelete}
+            onChatDelete={(chatId) => {
+              queryClient.invalidateQueries({ queryKey: ["/api/chats"] });
+              refetchChats();
+            }}
             collapsed={false}
           />
         </div>
