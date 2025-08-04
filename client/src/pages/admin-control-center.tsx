@@ -517,7 +517,7 @@ export default function AdminControlCenter() {
   console.log('Users Data:', safeUsersData.length, 'total, Filter:', userRoleFilter, 'Search:', userSearchTerm);
   
   // Debug logging for chat reviews data
-  console.log('Chat Reviews Data:', {
+  console.log('✅ Chat Reviews Data:', {
     userChats: userChats,
     isArray: Array.isArray(userChats),
     length: Array.isArray(userChats) ? userChats.length : 'not array',
@@ -526,6 +526,13 @@ export default function AdminControlCenter() {
     errorObject: chatsError,
     sampleData: Array.isArray(userChats) && userChats.length > 0 ? userChats[0] : 'no data'
   });
+
+  // Force data refresh if we have data but it's not showing
+  React.useEffect(() => {
+    if (!chatsLoading && !chatsError && Array.isArray(userChats) && userChats.length > 0) {
+      console.log('✅ Chat data loaded successfully:', userChats.length, 'chats');
+    }
+  }, [userChats, chatsLoading, chatsError]);
 
   // Debug logging for documents data
   console.log('Documents Data:', {
@@ -2066,11 +2073,24 @@ export default function AdminControlCenter() {
                   <RefreshCw className="h-6 w-6 animate-spin" />
                   <span className="ml-2">Loading chat reviews...</span>
                 </div>
+              ) : chatsError ? (
+                <div className="text-center py-8 text-red-500">
+                  <AlertCircle className="h-8 w-8 mx-auto mb-2" />
+                  <p>Error loading chats: {chatsError.message}</p>
+                  <Button 
+                    onClick={() => queryClient.invalidateQueries({ queryKey: ['/api/admin/chat-reviews'] })}
+                    variant="outline" 
+                    className="mt-2"
+                  >
+                    Retry
+                  </Button>
+                </div>
               ) : (
                 <div className="h-full overflow-hidden">
                   <ScrollArea className="h-full">
                     <div className="space-y-3 pr-1 sm:pr-2">
                       {Array.isArray(userChats) && userChats.length > 0 ? (
+                        // Force re-render when data changes
                         userChats
                           .filter((chat: any) => {
                             if (chatReviewTab === 'active') return chat.reviewStatus !== 'archived';
@@ -2153,7 +2173,20 @@ export default function AdminControlCenter() {
                         <div className="text-center py-12">
                           <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                           <h3 className="text-lg font-medium mb-2">No Chat Reviews</h3>
-                          <p className="text-gray-500">User conversations will appear here for review and training</p>
+                          <p className="text-gray-500 mb-4">
+                            {chatsLoading ? 'Loading conversations...' : 'User conversations will appear here for review and training'}
+                          </p>
+                          <Button 
+                            onClick={() => {
+                              console.log('🔄 Manual refresh triggered');
+                              queryClient.invalidateQueries({ queryKey: ['/api/admin/chat-reviews'] });
+                            }}
+                            variant="outline"
+                            size="sm"
+                          >
+                            <RefreshCw className="w-4 h-4 mr-2" />
+                            Refresh
+                          </Button>
                         </div>
                       )}
 
