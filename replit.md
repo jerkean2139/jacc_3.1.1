@@ -41,7 +41,7 @@ JACC is built as a Progressive Web App (PWA) combining a React 18 (with TypeScri
 - **Scalability**: Designed with auto-scaling policies and performance monitoring for production.
 - **Modularity**: Services are decoupled for easier maintenance and development.
 - **Data Flow**: Defined flows for user authentication, chat processing (query to AI response), and document processing (upload to vector storage).
-- **Deployment**: Primarily hosted on Replit, with considerations for external IDE compatibility via dotenv.
+- **Deployment**: Production-ready for Vercel deployment with 60-second function timeouts, native TypeScript support, and comprehensive serverless configuration. Netlify configuration also available but not recommended due to timeout limitations for AI processing.
 
 ## External Dependencies
 - **AI Services**: Anthropic Claude API, OpenAI API, Pinecone (vector database).
