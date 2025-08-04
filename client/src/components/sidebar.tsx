@@ -487,9 +487,19 @@ export default function Sidebar({
                       ? "text-white dark:text-white font-medium" 
                       : "text-white dark:text-slate-300"
                   )}>
-                    {chat.title && chat.title.trim() !== "" && chat.title !== "New Chat" && chat.title !== "Untitled Chat" 
-                      ? chat.title 
-                      : `Chat ${chat.id.substring(0, 8)}...`}
+                    {(() => {
+                      // Clean the title by removing newlines and extra content
+                      const cleanTitle = chat.title 
+                        ? chat.title.split('\n')[0].trim() // Take only first line
+                            .replace(/📋.*$/, '') // Remove document indicators
+                            .replace(/📄.*$/, '') // Remove file indicators  
+                            .trim()
+                        : '';
+                      
+                      return cleanTitle && cleanTitle !== "New Chat" && cleanTitle !== "Untitled Chat" 
+                        ? cleanTitle 
+                        : `Chat ${chat.id.substring(0, 8)}...`;
+                    })()}
                   </span>
                   
                   {activeChatId === chat.id && (
