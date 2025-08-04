@@ -1,22 +1,18 @@
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-import express from 'express';
-import serverless from 'serverless-http';
+const serverless = require('serverless-http');
 
-// Import your existing server
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// Import the built server
+let app;
+try {
+  app = require('../../dist/index.js').default;
+} catch (error) {
+  console.error('Failed to import server:', error);
+  // Fallback handler
+  const express = require('express');
+  app = express();
+  app.get('*', (req, res) => {
+    res.status(503).json({ error: 'Server not available', message: error.message });
+  });
+}
 
-// Import the main server file
-import('../../dist/index.js').then(({ default: app }) => {
-  // Export the serverless handler
-  export const handler = serverless(app);
-}).catch(console.error);
-
-// Temporary handler while the main app loads
-export const handler = (event, context) => {
-  return {
-    statusCode: 503,
-    body: JSON.stringify({ message: 'Server starting...' })
-  };
-};
+// Export the serverless handler
+exports.handler = serverless(app);
