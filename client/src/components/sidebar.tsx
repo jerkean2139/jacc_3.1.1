@@ -484,18 +484,13 @@ export default function Sidebar({
                   <span className={cn(
                     "text-sm truncate flex-1",
                     activeChatId === chat.id 
-                      ? "text-slate-900 dark:text-white font-medium" 
-                      : "text-slate-700 dark:text-slate-300"
+                      ? "text-white dark:text-white font-medium" 
+                      : "text-white dark:text-slate-300"
                   )}>
                     {chat.title && chat.title.trim() !== "" && chat.title !== "New Chat" && chat.title !== "Untitled Chat" 
                       ? chat.title 
                       : `Chat ${chat.id.substring(0, 8)}...`}
                   </span>
-                  
-                  {/* Debug display of title data */}
-                  <div className="text-xs text-red-500 mt-1">
-                    Debug: {JSON.stringify({ title: chat.title, id: chat.id?.substring(0, 8) })}
-                  </div>
                   
                   {activeChatId === chat.id && (
                     <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />
