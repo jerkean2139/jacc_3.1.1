@@ -134,28 +134,7 @@
       padding-bottom: 1rem;
     }
 
-    /* Parallax scroll effects for mobile */
-    .parallax-container {
-      transform-style: preserve-3d;
-      perspective: 1000px;
-    }
 
-    .parallax-layer {
-      will-change: transform;
-      transition: transform 0.1s ease-out;
-    }
-
-    .parallax-bg {
-      transform: translateZ(-1px) scale(2);
-    }
-
-    .parallax-mid {
-      transform: translateZ(-0.5px) scale(1.5);
-    }
-
-    .parallax-front {
-      transform: translateZ(0);
-    }
   }
 }
 
@@ -1476,37 +1455,4 @@ select.glass-input option {
   color: white !important;
 }
 
-/* Parallax System - Mobile Optimized */
-.parallax-container {
-  will-change: transform;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
 
-.parallax-card {
-  transition: transform 0.2s ease-out;
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-
-.parallax-background {
-  will-change: transform;
-  transform-style: preserve-3d;
-}
-
-/* Mobile parallax optimizations */
-@media (max-width: 768px) {
-  .parallax-container {
-    transform: translate3d(0, 0, 0);
-  }
-  
-  @media (prefers-reduced-motion: reduce) {
-    .parallax-container,
-    .parallax-card,
-    .parallax-background {
-      transform: none !important;
-      transition: none !important;
-    }
-  }
-}

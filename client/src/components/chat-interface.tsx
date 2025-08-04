@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Mic, MicOff, Calculator, TrendingUp, BarChart3, Brain } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useScrollDirection } from "@/hooks/useParallax";
+
 import { MessageContent } from "./message-content";
 // Types for messages
 interface MessageWithActions {
@@ -44,7 +44,7 @@ export default function ChatInterface({
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  const scrollDirection = useScrollDirection();
+
 
 
 
