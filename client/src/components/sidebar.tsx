@@ -461,14 +461,14 @@ export default function Sidebar({
                 <div
                   key={chat.id}
                   className={cn(
-                    "group flex items-center p-2 rounded-lg transition-colors border cursor-pointer",
+                    "group flex items-center p-2 rounded-lg transition-colors border cursor-pointer w-full max-w-full overflow-hidden",
                     activeChatId === chat.id 
                     ? "bg-slate-100 dark:bg-slate-800 border-blue-200" 
                     : "hover:bg-slate-50 dark:hover:bg-slate-800/50 border-transparent"
                 )}
               >
                 <div 
-                  className="flex items-center space-x-3 flex-1 min-w-0 cursor-pointer group"
+                  className="flex items-center space-x-2 flex-1 min-w-0 cursor-pointer group overflow-hidden"
                   onClick={() => {
                     console.log('Chat clicked:', chat.id, chat.title);
                     onChatSelect(chat.id);
@@ -483,14 +483,15 @@ export default function Sidebar({
                   
                   <span 
                     className={cn(
-                      "text-sm truncate flex-1 overflow-hidden",
+                      "text-sm truncate flex-1 overflow-hidden whitespace-nowrap",
                       activeChatId === chat.id 
                         ? "font-medium" 
                         : ""
                     )}
                     style={{ 
                       color: '#050000d6',
-                      maxWidth: 'calc(100% - 60px)' // Leave space for icons
+                      maxWidth: 'calc(100% - 80px)', // More space for icons
+                      textOverflow: 'ellipsis'
                     }}
                   >
                     {(() => {
@@ -513,76 +514,35 @@ export default function Sidebar({
                   )}
                 </div>
 
-                {/* Delete button outside the main click area */}
-                <button
-                  onClick={async (e) => {
-                    e.stopPropagation();
-                    if (confirm("JACC wants to make sure you want to delete this chat history from the internal memory?")) {
-                      try {
-                        const response = await fetch(`/api/chats/${chat.id}`, {
-                          method: "DELETE",
-                          credentials: "include",
-                        });
-                        
-                        if (response.ok) {
-                          // Use the chat delete callback to refresh the list
-                          onChatDelete?.(chat.id);
-                          window.location.reload();
-                        } else {
-                          alert("Failed to delete chat");
-                        }
-                      } catch (error) {
-                        alert("Error deleting chat");
-                      }
-                    }
-                  }}
-                  className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-100 dark:hover:bg-red-900/20 rounded"
-                  title="Delete this chat"
-                >
-                  <Trash2 className="w-3 h-3 text-red-500 hover:text-red-700" />
-                </button>
-                
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="w-6 h-6 text-slate-400 hover:text-slate-600"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <MoreVertical className="w-3 h-3" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem 
-                      onClick={async (e) => {
-                        e.stopPropagation();
-                        if (confirm("Are you sure you want to delete this chat?")) {
-                          try {
-                            const response = await fetch(`/api/chats/${chat.id}`, {
-                              method: "DELETE",
-                              credentials: "include",
-                            });
-                            
-                            if (response.ok) {
-                              // Use the chat delete callback to refresh the list
-                              onChatDelete?.(chat.id);
-                              window.location.reload();
-                            } else {
-                              alert("Failed to delete chat");
-                            }
-                          } catch (error) {
-                            alert("Error deleting chat");
+                {/* Compact action buttons */}
+                <div className="flex items-center gap-1 flex-shrink-0">
+                  <button
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      if (confirm("JACC wants to make sure you want to delete this chat history from the internal memory?")) {
+                        try {
+                          const response = await fetch(`/api/chats/${chat.id}`, {
+                            method: "DELETE",
+                            credentials: "include",
+                          });
+                          
+                          if (response.ok) {
+                            onChatDelete?.(chat.id);
+                            window.location.reload();
+                          } else {
+                            alert("Failed to delete chat");
                           }
+                        } catch (error) {
+                          alert("Error deleting chat");
                         }
-                      }}
-                      className="text-red-600 hover:text-red-700"
-                    >
-                      <Trash2 className="w-4 h-4 mr-2" />
-                      Delete Chat
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                      }
+                    }}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-100 dark:hover:bg-red-900/20 rounded w-6 h-6 flex items-center justify-center flex-shrink-0"
+                    title="Delete this chat"
+                  >
+                    <Trash2 className="w-3 h-3 text-red-500 hover:text-red-700" />
+                  </button>
+                </div>
               </div>
             ))}
             
