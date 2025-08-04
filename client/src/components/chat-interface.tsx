@@ -44,10 +44,10 @@ export default function ChatInterface({
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  // Parallax effects for mobile
-  const logoRef = useParallax({ speed: 0.3, direction: 'up' });
-  const titleRef = useParallax({ speed: 0.2, direction: 'up' });
-  const conversationStartersRef = useParallax({ speed: 0.1, direction: 'up' });
+  // Reduced parallax effects to prevent jumping
+  const logoRef = useParallax({ speed: 0.05, direction: 'up' });
+  const titleRef = useParallax({ speed: 0.03, direction: 'up' });
+  const conversationStartersRef = useParallax({ speed: 0.01, direction: 'up' });
   const scrollDirection = useScrollDirection();
 
 
@@ -270,22 +270,21 @@ const conversationStarters = [
               </div>
             </div>
 
-            <div ref={conversationStartersRef} className="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0 parallax-layer">
+            <div className="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
               {conversationStarters.map((starter, index) => {
                 const IconComponent = starter.icon;
                 return (
                   <button
                     key={starter.id}
                     onClick={() => handleConversationStarter(starter.text)}
-                    className="p-3 sm:p-6 rounded-lg sm:rounded-xl border-2 hover:shadow-lg transition-all duration-300 text-left group bg-white dark:bg-slate-800 hover:scale-105 w-full parallax-layer"
+                    className="p-3 sm:p-6 rounded-lg sm:rounded-xl border-2 hover:shadow-lg transition-all duration-300 text-left group bg-white dark:bg-slate-800 hover:scale-105 w-full"
                     style={{
                       borderColor: starter.id === 'rates' ? '#2563eb' : 
                                   starter.id === 'compare' ? '#16a34a' : 
                                   starter.id === 'proposal' ? '#ea580c' : 
                                   '#7c3aed',
                       borderWidth: '2px',
-                      ...conversationStartersRef.style,
-                      transition: 'transform 0.1s ease-out, all 0.3s ease'
+                      transition: 'all 0.3s ease'
                     }}
                     disabled={isProcessing}
                   >

@@ -64,7 +64,7 @@ export const useParallax = ({
     isVisible,
     style: {
       transform: getTransform(),
-      transition: easing !== 'none' ? `transform 0.1s ${easing}` : 'none',
+      transition: easing !== 'none' ? `transform 0.3s ${easing}` : 'none',
       willChange: 'transform'
     }
   };
