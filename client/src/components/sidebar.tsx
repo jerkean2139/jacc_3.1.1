@@ -174,17 +174,6 @@ export default function Sidebar({
   chatsError = null,
   collapsed = false
 }: SidebarProps) {
-  // Debug logging
-  console.log("🔍 Sidebar Debug:", {
-    chatsCount: chats.length,
-    hasOnChatDelete: !!onChatDelete,
-    onChatDeleteType: typeof onChatDelete,
-    recentChatsCount: chats.filter(chat => chat.id).length,
-    firstChat: chats[0],
-    chats: chats,
-    displayedChatsLength: displayedChats.length,
-    recentChatsLength: recentChats.length
-  });
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
   const [creatingFolder, setCreatingFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
@@ -254,6 +243,18 @@ export default function Sidebar({
 
   const displayedChats = showAllChats ? recentChats : recentChats.slice(0, 7);
   const displayedFolders = showAllFolders ? folders : folders.slice(0, 7);
+
+  // Debug logging
+  console.log("🔍 Sidebar Debug:", {
+    chatsCount: chats.length,
+    hasOnChatDelete: !!onChatDelete,
+    onChatDeleteType: typeof onChatDelete,
+    recentChatsCount: chats.filter(chat => chat.id).length,
+    firstChat: chats[0],
+    chats: chats,
+    displayedChatsLength: displayedChats.length,
+    recentChatsLength: recentChats.length
+  });
 
   if (collapsed) {
     return (
