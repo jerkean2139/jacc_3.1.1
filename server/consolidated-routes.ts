@@ -1238,7 +1238,6 @@ export async function registerConsolidatedRoutes(app: Express): Promise<Server> 
       const now = new Date();
       
       await db.insert(messages).values({
-        id: userMessageId,
         chatId: actualChatId,
         role: 'user',
         content: message,
@@ -1247,7 +1246,6 @@ export async function registerConsolidatedRoutes(app: Express): Promise<Server> 
       
       // AI response saved slightly after to ensure proper order
       await db.insert(messages).values({
-        id: assistantMessageId,
         chatId: actualChatId,
         role: 'assistant',
         content: aiResponse.response || aiResponse || 'Sorry, I could not generate a response.',
@@ -2781,7 +2779,7 @@ File Information:
         query,
         response: actualResponse,
         source: 'admin_correction',
-        userId: req.user?.id,
+        userId: req.user?.id || 'system',
         wasCorrect: false,
         correctedResponse: enhancedExpectedResponse,
         createdAt: new Date()
