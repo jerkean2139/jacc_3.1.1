@@ -235,7 +235,7 @@ const conversationStarters = [
         {/* Scroll Progress Indicator */}
         <div 
           className="fixed top-0 left-0 h-1 bg-gradient-to-r from-blue-600 to-green-400 z-50 transition-all duration-150 ease-out sm:hidden opacity-80"
-          style={{ width: `${scrollDirection === 'down' ? '70%' : '30%'}` }}
+          style={{ width: '50%' }}
         />
         
         <div className="max-w-4xl w-full mx-auto mobile-container sm:flex sm:flex-col sm:min-h-full">
