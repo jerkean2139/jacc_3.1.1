@@ -1,4 +1,5 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from '@/lib/queryClient';
 import { useAuth } from '@/hooks/useAuth';
 import { Toaster } from '@/components/ui/toaster';
 import { Switch, Route } from 'wouter';
@@ -16,8 +17,6 @@ import AdminControlCenter from '@/pages/admin-control-center';
 // import { GamificationProvider } from '@/components/gamification-provider'; // Removed during Phase 2 cleanup
 import PWAStatus from '@/components/pwa-status';
 import { BottomNav } from '@/components/bottom-nav';
-
-const queryClient = new QueryClient();
 
 function App() {
   return (
