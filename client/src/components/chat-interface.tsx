@@ -235,15 +235,12 @@ const conversationStarters = [
     return (
       <div 
         className="flex-1 flex flex-col p-3 sm:p-4 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 overflow-y-auto pb-32 sm:pb-4 mobile-full-height parallax-container"
-        style={{
-          backgroundPosition: `center ${scrollProgress * 0.5}px`,
-          transition: 'background-position 0.1s ease-out'
-        }}
+        style={conversationStartersRef.style}
       >
         {/* Scroll Progress Indicator */}
         <div 
-          className="fixed top-0 left-0 h-1 bg-gradient-to-r from-blue-600 to-green-400 z-50 transition-all duration-150 ease-out sm:hidden"
-          style={{ width: `${scrollProgress}%` }}
+          className="fixed top-0 left-0 h-1 bg-gradient-to-r from-blue-600 to-green-400 z-50 transition-all duration-150 ease-out sm:hidden opacity-80"
+          style={{ width: `${scrollDirection === 'down' ? '70%' : '30%'}` }}
         />
         
         <div className="max-w-4xl w-full mx-auto mobile-container sm:flex sm:flex-col sm:min-h-full">
@@ -254,28 +251,19 @@ const conversationStarters = [
                   src="/jacc-logo.jpg" 
                   alt="JACC Logo" 
                   className="w-16 sm:w-20 h-16 sm:h-20 rounded-full shadow-lg object-cover"
-                  style={{ 
-                    transform: `translateY(${scrollProgress * 0.1}px)`,
-                    transition: 'transform 0.1s ease-out'
-                  }}
+                  style={logoRef.style}
                 />
               </div>
               <div ref={titleRef} className="parallax-layer">
                 <h1 
                   className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white"
-                  style={{ 
-                    transform: `translateY(${scrollProgress * 0.05}px)`,
-                    transition: 'transform 0.1s ease-out'
-                  }}
+                  style={titleRef.style}
                 >
                   Welcome to JACC
                 </h1>
                 <p 
                   className="text-base sm:text-lg text-slate-600 dark:text-slate-300"
-                  style={{ 
-                    transform: `translateY(${scrollProgress * 0.03}px)`,
-                    transition: 'transform 0.1s ease-out'
-                  }}
+                  style={titleRef.style}
                 >
                   Your AI-Powered Merchant Services Assistant
                 </p>
@@ -296,7 +284,7 @@ const conversationStarters = [
                                   starter.id === 'proposal' ? '#ea580c' : 
                                   '#7c3aed',
                       borderWidth: '2px',
-                      transform: `translateY(${scrollProgress * (0.02 + index * 0.01)}px)`,
+                      ...conversationStartersRef.style,
                       transition: 'transform 0.1s ease-out, all 0.3s ease'
                     }}
                     disabled={isProcessing}
