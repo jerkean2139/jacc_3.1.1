@@ -32,6 +32,14 @@ export default function HomeStable() {
   // Debug logging
   console.log('URL Debug:', { location, activeChatId, hasChat: location.includes('/chat/') });
 
+  // Debug user authentication state
+  console.log('🔐 User auth debug:', { 
+    user: user,
+    hasUser: !!user,
+    userType: typeof user,
+    userKeys: user ? Object.keys(user) : 'no user'
+  });
+
   // Fetch chats and folders
   const { data: chats = [], refetch: refetchChats, isLoading: chatsLoading, error: chatsError } = useQuery({
     queryKey: ["/api/chats"],
@@ -39,7 +47,7 @@ export default function HomeStable() {
     gcTime: 30000, // Keep in cache for 30 seconds
     refetchOnMount: "always",
     refetchOnWindowFocus: true,
-    enabled: !!user, // Only fetch when user is authenticated
+    // enabled: !!user, // Temporarily removed to debug
   });
 
   const { data: folders = [] } = useQuery({
@@ -254,7 +262,8 @@ Would you like me to run a competitive analysis and show you better processing o
     chatsType: typeof chats,
     isArray: Array.isArray(chats),
     chatsLoading,
-    chatsError: chatsError?.message || 'no error'
+    chatsError: chatsError?.message || 'no error',
+    queryEnabled: !!user
   });
 
   // Force refresh chats when component mounts or location changes
