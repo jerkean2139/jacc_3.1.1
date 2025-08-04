@@ -1226,10 +1226,11 @@ export async function registerConsolidatedRoutes(app: Express): Promise<Server> 
         - Use <strong> for emphasis
         - Keep responses professional and visually appealing with proper HTML structure.`;
         
-        aiResponse = await fastAIService.generateFastResponse(
+        const fastResponse = await fastAIService.generateFastResponse(
           [{ role: 'user', content: message }],
           fastPrompt
         );
+        aiResponse = { response: fastResponse };
       }
       
       // Save user message first, then AI response to maintain proper chronological order
@@ -1249,7 +1250,7 @@ export async function registerConsolidatedRoutes(app: Express): Promise<Server> 
         id: assistantMessageId,
         chatId: actualChatId,
         role: 'assistant',
-        content: aiResponse.response || 'Sorry, I could not generate a response.',
+        content: aiResponse.response || aiResponse || 'Sorry, I could not generate a response.',
         createdAt: new Date(now.getTime() + 1) // 1ms later for proper ordering
       });
       
@@ -1308,7 +1309,7 @@ Return only the title, no quotes or extra text.`;
       }
       
       res.json({
-        response: aiResponse.response || 'Sorry, I could not generate a response.',
+        response: aiResponse.response || aiResponse || 'Sorry, I could not generate a response.',
         chatId: actualChatId,
         message: 'Message sent successfully'
       });
