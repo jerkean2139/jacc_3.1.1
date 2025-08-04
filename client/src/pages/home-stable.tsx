@@ -140,6 +140,7 @@ export default function HomeStable() {
   };
 
   const handleChatSelect = (chatId: string) => {
+    console.log('🔄 Navigating to chat:', chatId);
     navigate(`/chat/${chatId}`);
   };
 
