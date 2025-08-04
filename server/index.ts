@@ -35,13 +35,21 @@
           "frame-ancestors 'self' https://*.replit.app https://*.replit.dev https://iso-hub-domain.com"
         );
 
-        // CORS allowlist
-        const allowedOrigins = [
-          "https://iso-hub-domain.com",
-          "https://your-main-saas.com",
-          /https:\/\/.*\.replit\.app$/,
-          /https:\/\/.*\.replit\.dev$/
-        ];
+        // SECURITY FIX: More restrictive CORS in production
+        const allowedOrigins = process.env.NODE_ENV === 'production' 
+          ? [
+              // Only allow specific production domains
+              process.env.PRODUCTION_DOMAIN,
+              process.env.ISO_HUB_DOMAIN
+            ].filter(Boolean)
+          : [
+              // Development domains
+              "http://localhost:3000",
+              "http://localhost:5000",
+              /https:\/\/.*\.replit\.app$/,
+              /https:\/\/.*\.replit\.dev$/,
+              /https:\/\/.*\.replit\.co$/
+            ];
         const origin = req.headers.origin;
         if (origin && allowedOrigins.some(a => (typeof a === "string" ? a === origin : a.test(origin)))) {
           res.setHeader("Access-Control-Allow-Origin", origin);

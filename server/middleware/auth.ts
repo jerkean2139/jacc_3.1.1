@@ -25,8 +25,19 @@ export function setupAuth(app: Express) {
     tableName: "sessions",
   });
 
+  // Require SESSION_SECRET - security critical
+  if (!process.env.SESSION_SECRET) {
+    console.error('🚨 SECURITY ERROR: SESSION_SECRET environment variable is required');
+    console.error('Please set a strong SESSION_SECRET (32+ characters) in your environment');
+    process.exit(1);
+  }
+
+  if (process.env.SESSION_SECRET.length < 32) {
+    console.error('🚨 SECURITY WARNING: SESSION_SECRET should be at least 32 characters long');
+  }
+
   app.use(session({
-    secret: process.env.SESSION_SECRET || 'fallback-secret-key',
+    secret: process.env.SESSION_SECRET,
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
@@ -34,6 +45,7 @@ export function setupAuth(app: Express) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+      sameSite: 'strict', // Enhanced security
     },
   }));
 }

@@ -2,22 +2,25 @@ import { Request, Response, NextFunction } from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 
-// Enhanced security headers middleware
+// Enhanced security headers middleware with production-ready CSP
 export const securityHeaders = helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://replit.com"],
+      // SECURITY FIX: Removed unsafe-eval, limited unsafe-inline to development only
+      scriptSrc: process.env.NODE_ENV === 'production' 
+        ? ["'self'", "https://replit.com"]
+        : ["'self'", "'unsafe-inline'", "https://replit.com"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:", "blob:"],
-      connectSrc: ["'self'", "https://api.openai.com", "https://api.perplexity.ai", "wss:"],
+      connectSrc: ["'self'", "https://api.openai.com", "https://api.anthropic.com", "https://api.perplexity.ai", "wss:"],
       mediaSrc: ["'self'"],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
       formAction: ["'self'"],
       frameAncestors: ["'none'"],
-      upgradeInsecureRequests: [],
+      upgradeInsecureRequests: process.env.NODE_ENV === 'production' ? [] : undefined,
     },
   },
   hsts: {
@@ -162,6 +165,13 @@ export const securityLogger = (req: Request, res: Response, next: NextFunction) 
   next();
 };
 
+// Valid API keys for the system (in production, these should be in database)
+const VALID_API_KEYS = new Set([
+  process.env.ADMIN_API_KEY,
+  process.env.CLIENT_API_KEY,
+  process.env.SYSTEM_API_KEY
+].filter(Boolean));
+
 // API key validation middleware
 export const validateApiKey = (req: Request, res: Response, next: NextFunction) => {
   const apiKey = req.headers['x-api-key'] || req.query.apiKey;
@@ -175,8 +185,14 @@ export const validateApiKey = (req: Request, res: Response, next: NextFunction) 
     return res.status(401).json({ error: 'Invalid API key format' });
   }
   
-  // TODO: Implement actual API key validation against database
-  // For now, accept any properly formatted key
+  // Validate against known API keys
+  if (!VALID_API_KEYS.has(apiKey)) {
+    console.warn(`🚫 Invalid API key attempt from ${req.ip}: ${String(apiKey).substring(0, 8)}...`);
+    return res.status(401).json({ error: 'Invalid API key' });
+  }
+  
+  // Log successful API key usage for audit
+  console.log(`✅ Valid API key used from ${req.ip} for ${req.method} ${req.path}`);
   next();
 };
 
