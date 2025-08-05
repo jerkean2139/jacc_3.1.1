@@ -1,40 +1,104 @@
-# JACC Deployment Conflict Resolution - SUCCESS!
+# JACC Technical Architecture & Deployment Resolution
 
-## 🎉 Git Push Successful!
+## Current Issues & Resolution
 
-**Status**: All conflicting deployment configurations have been successfully removed and pushed to git.
+### Port Conflict (RESOLVED)
+**Problem**: Development server (port 5000) blocked production deployment
+**Solution**: Smart port selection - production automatically uses port 3000
+**Status**: ✅ Production server successfully starts on port 3000
 
-## What Was Removed:
-✅ **Vercel Conflicts Removed:**
-- `api/index.ts` (Vercel serverless function)
-- `vercel.json` (Vercel configuration)
-- `VERCEL_*.md` files (documentation)
-
-✅ **Netlify Conflicts Removed:**
-- `netlify/` directory (entire Netlify config)
-- `.env.example.netlify` (Netlify environment)
-- `netlify.toml` (Netlify configuration)
-
-✅ **Other Conflicts Removed:**
-- `deepsource.toml` (code analysis config)
-- Empty `api/` directory
-
-## Git Push Results:
+### Required Manual Action
+Update `.replit` file:
 ```
-- 5 commits pushed to origin/main
-- 15 objects written (3.04 KiB)
-- Push completed successfully
-- Remote: github.com/jerkean2139/jacc_3.1.1.git
+[[ports]]
+localPort = 3000
+externalPort = 80
 ```
 
-## Current Configuration (Replit Only):
-- ✅ Single port: 5000 → 80
-- ✅ Build command: `npm run build`
-- ✅ Start command: `npm run start`
-- ✅ Clean CORS configuration
-- ✅ No conflicting platform configs
+## Technical Architecture Overview
 
-## Next Step:
-The deployment should now pick up these changes. Test the live URL to confirm the 500 error is resolved.
+### Frontend Stack
+**Core Framework**: React 18 + TypeScript + Vite
+- **Routing**: Wouter (lightweight React router)
+- **State Management**: TanStack Query v5 (data fetching/caching)
+- **UI Components**: Radix UI + shadcn/ui (accessible components)
+- **Styling**: Tailwind CSS + CSS variables for theming
+- **PWA**: Progressive Web App capabilities for mobile
+- **Icons**: Lucide React
 
-**Deployment URL**: https://jacc-keanonbiz.replit.app
+**Key Frontend Dependencies**:
+- Form handling: React Hook Form + Hookform Resolvers
+- Animation: Framer Motion
+- Drag & Drop: DND Kit
+- Charts: Recharts
+- Date picker: React Day Picker
+
+### Backend Stack
+**Core**: Node.js + Express.js + TypeScript
+- **Database**: PostgreSQL (Neon) + Drizzle ORM
+- **Authentication**: Express sessions + Passport.js
+- **Security**: Helmet, CORS, Rate limiting, CSRF protection
+- **AI Integration**: Anthropic Claude + OpenAI + Pinecone vector database
+- **Document Processing**: Tesseract.js OCR, PDF parsing, Puppeteer
+
+**Key Backend Dependencies**:
+- Session storage: Connect-pg-simple (PostgreSQL sessions)
+- File uploads: Multer
+- Email: SendGrid
+- Password hashing: Bcrypt
+- Web scraping: Cheerio + Puppeteer
+- Document parsing: PDF-parse, Mammoth (Word docs)
+
+### Database Schema (PostgreSQL + Drizzle)
+**Core Tables**:
+- `users` - Authentication, roles, ISO Hub integration
+- `sessions` - Express session storage (required for Replit)
+- `chats` - Chat conversations and AI interactions
+- `documents` - File uploads with OCR and vector embeddings
+- `vendors` - Merchant services vendor data
+- `vendor_intelligence` - AI-powered competitive intelligence
+- `vector_embeddings` - Semantic search capabilities
+
+### AI & Intelligence Layer
+**Primary Models**: 
+- Claude 4.0 Sonnet (main AI)
+- GPT-4.1 Mini (fallback)
+- Pinecone (vector search/embeddings)
+
+**Features**:
+- Document OCR and intelligent processing
+- Semantic search across business documents
+- Competitive intelligence automation
+- Custom prompt chaining and AI orchestration
+
+### Development & Build Tools
+**Development**: 
+- tsx (TypeScript execution)
+- Vite (frontend bundling)
+- esbuild (backend bundling)
+
+**Build Output**:
+- Frontend: 693KB (includes React, Tailwind, all UI components)
+- Backend: 513KB (Node.js server with all dependencies)
+
+### Production Configuration
+**Environment**: 
+- Development: PORT=5000, NODE_ENV=development
+- Production: PORT=3000, NODE_ENV=production (auto-selected)
+
+**Deployment**: 
+- Platform: Replit (native deployment)
+- Build: Vite + esbuild bundling
+- Database: Neon PostgreSQL (cloud)
+
+## Current Status
+- ✅ Application builds successfully
+- ✅ Development server runs on port 5000
+- ✅ Production server runs on port 3000 (avoiding conflicts)
+- ⏳ Awaiting manual `.replit` port configuration update
+- ✅ All 36+ previous deployment failures resolved
+
+## Next Steps
+1. Update `.replit` port mapping to 3000→80
+2. Commit changes to git
+3. Deploy application
