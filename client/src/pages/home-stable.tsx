@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import Sidebar from "@/components/sidebar";
 import ChatInterface from "@/components/chat-interface";
@@ -392,6 +392,9 @@ Would you like me to run a competitive analysis and show you better processing o
                 <FileText className="w-5 h-5" />
                 Analyzing Statement
               </DialogTitle>
+              <DialogDescription>
+                Please wait while we process and analyze your merchant statement for insights and recommendations.
+              </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div className="flex items-center gap-3">

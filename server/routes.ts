@@ -10,12 +10,13 @@ import { setupAuth, isAuthenticated, requireRole, hashPassword, comparePasswords
 import { authenticateApiKey, requireApiPermission, generateApiKey, hashApiKey } from "./api-auth";
 import { insertUserSchema, insertApiKeySchema } from "@shared/schema";
 import { generateChatResponse, analyzeDocument, generateTitle } from "./openai";
+// Import available services (placeholders created for missing ones)
+import { enhancedAIService } from "./enhanced-ai";
+import { pineconeVectorService } from "./pinecone-vector";
+import { duplicateDetectionService } from "./duplicate-detector";
 // Temporarily disable heavy services to reduce memory
-// import { enhancedAIService } from "./enhanced-ai";
 // import { googleDriveService } from "./google-drive";
-// import { pineconeVectorService } from "./pinecone-vector";
 // import { smartRoutingService } from "./smart-routing";
-// import { duplicateDetectionService } from "./duplicate-detector";
 // import { aiEnhancedSearchService } from "./ai-enhanced-search";
 // import { perplexitySearchService } from "./perplexity-search";
 // import { aiOrchestrator } from "./ai-orchestrator";
@@ -31,9 +32,9 @@ import { eq, desc } from "drizzle-orm";
 import { setupOAuthHelper } from "./oauth-helper";
 import { zipProcessor } from "./zip-processor";
 import { isoHubAuthMiddleware, handleISOHubSSO, isoHubAuthService } from "./iso-hub-auth";
-// import { chatMonitoringService } from "./chat-monitoring";
-// import { vendorIntelligence } from "./vendor-intelligence";
-// import { schedulerService } from "./scheduler";
+import { chatMonitoringService } from "./chat-monitoring";
+import { vendorIntelligence } from "./vendor-intelligence";
+import { schedulerService } from "./scheduler";
 
 // Configure multer for file uploads
 const uploadDir = path.join(process.cwd(), "uploads");
