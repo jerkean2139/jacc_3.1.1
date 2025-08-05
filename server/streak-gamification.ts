@@ -1,6 +1,5 @@
 import { db } from './db';
 import { userStats, userAchievements, users } from '@shared/schema';
-import { eq, desc, sql, and, gte } from 'drizzle-orm';
 import { eq, desc, sql, and, gte, inArray } from 'drizzle-orm';
 import { emailNotificationService } from './email-notifications';
 
@@ -335,11 +334,7 @@ export class StreakGamificationEngine {
       await db.insert(userAchievements).values({
         userId,
         achievementId: achievement.id,
-        title: achievement.title,
-        description: achievement.description,
-        badgeIcon: achievement.badgeIcon,
-        pointsAwarded: achievement.points,
-        earnedAt: new Date()
+        unlockedAt: new Date()
       });
 
       // Award bonus points
@@ -426,11 +421,6 @@ export class StreakGamificationEngine {
           totalChats: userStats.totalChats,
           totalMessages: userStats.totalMessages,
           lastActiveDate: userStats.lastActiveDate
-        })
-        .from(userStats)
-        .leftJoin(users, eq(userStats.userId, users.id))
-          lastActiveDate: userStats.lastActiveDate,
-          role: users.role
         })
         .from(userStats)
         .leftJoin(users, eq(userStats.userId, users.id))

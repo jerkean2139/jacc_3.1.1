@@ -3,13 +3,6 @@ import {
   achievements, 
   userAchievements, 
   userStats,
-  type Achievement,
-  type UserAchievement,
-  type UserStats,
-  type InsertUserAchievement,
-  type InsertUserStats
-} from '@shared/schema';
-import { eq, and } from 'drizzle-orm';
   users,
   chatRatings,
   dailyUsage,
@@ -18,13 +11,8 @@ import { eq, and } from 'drizzle-orm';
   type Achievement,
   type UserAchievement,
   type UserStats,
-  type ChatRating,
-  type DailyUsage,
-  type Leaderboard,
   type InsertUserAchievement,
-  type InsertUserStats,
-  type InsertChatRating,
-  type InsertDailyUsage
+  type InsertUserStats
 } from '@shared/schema';
 import { eq, and, desc, gte, lte, avg, count, sum } from 'drizzle-orm';
 
