@@ -145,17 +145,48 @@
         // Always use Vite middleware in Replit to avoid deployment white screen
         await setupVite(app, server);
 
-        // Listen - Use different port for production deployment
+        // Listen - Smart port selection for deployment
         const isDevelopment = process.env.NODE_ENV === "development";
-        const port = process.env.PORT ? parseInt(process.env.PORT) : (isDevelopment ? 5000 : 3000);
+        const preferredPort = process.env.PORT ? parseInt(process.env.PORT) : (isDevelopment ? 5000 : 3000);
         const host = "0.0.0.0";
         
-        server.listen(port, host, () => {
-          log(`serving on ${host}:${port}`);
-          if (app.get("env") === "production") {
-            console.log("✅ Production server ready for deployment");
+        // For production deployment, try multiple ports to avoid conflicts
+        const tryPorts = isDevelopment ? [preferredPort] : [preferredPort, 3000, 3001, 4000, 8000];
+        
+        let serverStarted = false;
+        for (const port of tryPorts) {
+          try {
+            await new Promise<void>((resolve, reject) => {
+              const testServer = server.listen(port, host, () => {
+                log(`serving on ${host}:${port}`);
+                if (!isDevelopment) {
+                  console.log(`✅ Production server ready for deployment on port ${port}`);
+                }
+                serverStarted = true;
+                resolve();
+              });
+              testServer.on('error', (err: any) => {
+                if (err.code === 'EADDRINUSE') {
+                  console.log(`Port ${port} in use, trying next...`);
+                  reject(err);
+                } else {
+                  reject(err);
+                }
+              });
+            });
+            break; // Success, exit loop
+          } catch (err: any) {
+            if (err.code !== 'EADDRINUSE' || port === tryPorts[tryPorts.length - 1]) {
+              console.error(`Failed to start server: ${err.message}`);
+              process.exit(1);
+            }
           }
-        });
+        }
+        
+        if (!serverStarted) {
+          console.error("Failed to find available port");
+          process.exit(1);
+        }
 
         // Graceful shutdown
         process.on("SIGTERM", () => {
