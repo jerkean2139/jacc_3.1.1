@@ -38,9 +38,11 @@
         // SECURITY FIX: More restrictive CORS in production
         const allowedOrigins = process.env.NODE_ENV === 'production' 
           ? [
-              // Only allow specific production domains
+              // Production domains including Replit deployment
               process.env.PRODUCTION_DOMAIN,
-              process.env.ISO_HUB_DOMAIN
+              process.env.ISO_HUB_DOMAIN,
+              /https:\/\/.*\.replit\.app$/,
+              /https:\/\/.*\.replit\.dev$/
             ].filter(Boolean)
           : [
               // Development domains
