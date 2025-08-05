@@ -10,10 +10,15 @@ packages = ["tesseract", "imagemagick", "graphicsmagick", "chromium", "jq", "uti
 deploymentTarget = "autoscale"
 build = ["npm", "run", "build"]
 run = ["npm", "run", "start"]
+ignorePorts = false
 
 [[ports]]
 localPort = 3000
 externalPort = 80
+
+[env]
+NODE_ENV = "production"
+PORT = "3000"
 
 [workflows]
 runButton = "Project"
@@ -34,7 +39,4 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm run dev"
-waitForPort = 5000
-
-[agent]
-integrations = ["javascript_openai==1.0.0", "javascript_database==1.0.0"]
+waitForPort = 3000
