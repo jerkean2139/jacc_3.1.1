@@ -1804,7 +1804,7 @@ export default function AdminControlCenter() {
         status: 'active' 
       });
     }
-  }, [userChats, syncChatData, updateWidget]);
+  }, [userChats]); // Remove function dependencies that cause re-renders
 
   React.useEffect(() => {
     if (faqData && Array.isArray(faqData)) {
@@ -1814,7 +1814,7 @@ export default function AdminControlCenter() {
         status: 'active' 
       });
     }
-  }, [faqData, syncFAQData, updateWidget]);
+  }, [faqData]); // Remove function dependencies that cause re-renders
 
   React.useEffect(() => {
     if (documentsData) {
@@ -1824,7 +1824,7 @@ export default function AdminControlCenter() {
         status: 'active' 
       });
     }
-  }, [documentsData, syncDocumentData, updateWidget]);
+  }, [documentsData]); // Remove function dependencies that cause re-renders
 
   React.useEffect(() => {
     if (aiConfigData) {
@@ -1834,7 +1834,7 @@ export default function AdminControlCenter() {
         status: 'active' 
       });
     }
-  }, [aiConfigData, syncAIConfigData, updateWidget]);
+  }, [aiConfigData]); // Remove function dependencies that cause re-renders
 
   // Filtered data for FAQ management
   const filteredFAQs = Array.isArray(faqData) ? faqData.filter((faq: FAQ) => {
