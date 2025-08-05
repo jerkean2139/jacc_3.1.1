@@ -394,13 +394,32 @@ export default function AdminControlCenter() {
     queryKey: [`/api/chats/${selectedChatId}/messages`],
     queryFn: async () => {
       if (!selectedChatId) return [];
+      console.log('🔄 Fetching messages for chat:', selectedChatId);
+      
+      // Try admin endpoint first for chat messages
+      const adminResponse = await fetch(`/api/admin/chats/${selectedChatId}/messages`, {
+        credentials: 'include'
+      });
+      
+      if (adminResponse.ok) {
+        const data = await adminResponse.json();
+        console.log('✅ Admin messages loaded:', data?.length || 0);
+        return data;
+      }
+      
+      // Fallback to regular endpoint
       const response = await fetch(`/api/chats/${selectedChatId}/messages`, {
         credentials: 'include'
       });
+      
       if (!response.ok) {
+        console.error('❌ Messages fetch failed:', response.status, response.statusText);
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-      return response.json();
+      
+      const data = await response.json();
+      console.log('✅ Messages loaded:', data?.length || 0);
+      return data;
     },
     enabled: !!selectedChatId,
     select: (data: any) => {
@@ -2145,39 +2164,55 @@ export default function AdminControlCenter() {
                               <Button
                                 size="sm"
                                 variant={selectedChatId === chat.chatId ? "default" : "outline"}
-                                className={`w-full text-xs ${
+                                className={`w-full text-xs font-medium ${
                                   selectedChatId === chat.chatId 
-                                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                                    ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-md' 
+                                    : 'bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-700 border border-gray-300'
                                 }`}
-                                onClick={() => {
-                                  console.log('View button clicked! Chat ID:', chat.chatId);
-                                  console.log('Current selected:', selectedChatId);
-                                  setSelectedChatId(chat.chatId);
-                                  // Clear any previous edits when selecting new chat
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  console.log('🔍 VIEW BUTTON CLICKED!');
+                                  console.log('Chat data:', chat);
+                                  console.log('Chat ID:', chat.chatId);
+                                  console.log('Previous selected:', selectedChatId);
+                                  
+                                  const chatId = chat.chatId || chat.id;
+                                  if (!chatId) {
+                                    console.error('❌ No chat ID found!');
+                                    toast({
+                                      title: "Error",
+                                      description: "Chat ID not found",
+                                      variant: "destructive",
+                                    });
+                                    return;
+                                  }
+                                  
+                                  setSelectedChatId(chatId);
                                   setEditingMessageId(null);
                                   setEditedResponses({});
                                   
-                                  // Show immediate visual feedback
                                   toast({
-                                    title: "Loading Chat",
-                                    description: `Loading conversation: ${chat.title?.substring(0, 50)}...`,
-                                    duration: 2000,
+                                    title: "Chat Selected",
+                                    description: `Loading: ${(chat.chatTitle || chat.title || 'Untitled').substring(0, 40)}...`,
+                                    duration: 3000,
                                   });
                                   
-                                  // On mobile, scroll to the conversation panel
+                                  console.log('✅ Selected chat ID set to:', chatId);
+                                  
+                                  // Force scroll on mobile
                                   if (window.innerWidth < 1024) {
                                     setTimeout(() => {
                                       const panel = document.querySelector('[data-chat-panel]');
                                       if (panel) {
                                         panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
                                       }
-                                    }, 100);
+                                    }, 200);
                                   }
                                 }}
                               >
-                                <Eye className="h-3 w-3 flex-shrink-0" />
-                                <span className="hidden sm:inline">View</span>
+                                <Eye className="h-3 w-3 mr-1" />
+                                <span>View</span>
                               </Button>
                             </div>
                           ))

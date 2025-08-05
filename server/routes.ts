@@ -3987,6 +3987,23 @@ User Context: {userRole}`,
   });
 
   // Chat reviews endpoint for Admin Control Center
+  // Admin chat messages endpoint
+  app.get('/api/admin/chats/:chatId/messages', async (req: any, res) => {
+    try {
+      const { chatId } = req.params;
+      console.log('🔍 Admin loading chat messages for:', chatId);
+      
+      // Get messages from database
+      const chatMessages = await db.select().from(messages).where(eq(messages.chatId, chatId)).orderBy(messages.createdAt);
+      console.log(`✅ Admin found ${chatMessages.length} messages for chat ${chatId}`);
+      
+      res.json(chatMessages);
+    } catch (error) {
+      console.error("❌ Admin error fetching messages:", error);
+      res.status(500).json({ error: "Failed to fetch messages", details: error.message });
+    }
+  });
+
   app.get('/api/admin/chat-reviews', async (req: Request, res: Response) => {
     try {
       const { sql, eq, desc, count } = await import('drizzle-orm');
