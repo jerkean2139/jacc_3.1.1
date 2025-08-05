@@ -130,7 +130,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         passwordHash,
         firstName,
         lastName,
-        role: role || 'sales-agent'
+        role: role || 'sales-agent',
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
       });
 
       // Remove password hash from response
@@ -466,8 +469,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Search all documents but paginate results
-      // const searchResults = await enhancedAIService.searchDocuments(query);
-      const searchResults = [];
+      const searchResults = await enhancedAIService.searchDocuments(query.toString());
+      // const searchResults: any[] = [];
       
       const startIndex = parseInt(page) * parseInt(limit);
       const endIndex = startIndex + parseInt(limit);
@@ -1653,7 +1656,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         tags: tags || [],
         priority: priority || 1,
         isActive: isActive !== false,
-        createdBy: req.user?.id || 'admin'
+        createdBy: (req.user as any)?.id || 'admin'
       }).returning();
 
       res.json({ success: true, entry: newEntry });
@@ -1782,7 +1785,7 @@ Respond as a helpful training assistant that understands merchant services and c
             tags: ['admin_training', 'ai_improvement'],
             priority: 2,
             isActive: true,
-            createdBy: req.user?.id || 'admin'
+            createdBy: (req.user as any)?.id || 'admin'
           }).returning();
           
           trainingApplied = true;
@@ -2051,7 +2054,9 @@ User Context: {userRole}`,
     try {
       const user = await storage.upsertUser({
         id: 'simple-user-001',
+        username: 'tracer-user',
         email: 'user@tracer.com',
+        passwordHash: 'placeholder-hash',
         firstName: 'Tracer',
         lastName: 'User',
         profileImageUrl: null
@@ -2078,7 +2083,9 @@ User Context: {userRole}`,
       try {
         const adminUser = await storage.upsertUser({
           id: 'dev-admin-001',
+          username: 'dev-admin',
           email: 'admin@jacc.dev',
+          passwordHash: 'placeholder-hash',
           firstName: 'Admin',
           lastName: 'User',
           profileImageUrl: null
@@ -2103,7 +2110,9 @@ User Context: {userRole}`,
       try {
         const clientAdmin = await storage.upsertUser({
           id: 'dev-client-admin-001',
+          username: 'client-admin',
           email: 'client.admin@testcompany.com',
+          passwordHash: 'placeholder-hash',
           firstName: 'Client',
           lastName: 'Admin',
           profileImageUrl: null
@@ -2128,7 +2137,9 @@ User Context: {userRole}`,
       try {
         const clientUser = await storage.upsertUser({
           id: 'dev-client-user-001',
+          username: 'sarah-johnson',
           email: 'sales.agent@tracercocard.com',
+          passwordHash: 'placeholder-hash',
           firstName: 'Sarah',
           lastName: 'Johnson',
           profileImageUrl: null
@@ -2617,7 +2628,7 @@ User Context: {userRole}`,
         let content = 'Tracer FAQ Knowledge Base\n';
         content += '='.repeat(50) + '\n\n';
         
-        const categories = [...new Set(faqs.map(f => f.category))];
+        const categories = Array.from(new Set(faqs.map(f => f.category)));
         categories.forEach(category => {
           content += `${category.toUpperCase()}\n`;
           content += '-'.repeat(category.length) + '\n\n';
@@ -3211,7 +3222,7 @@ User Context: {userRole}`,
             isPublic: permissions.viewAll || false,
             adminOnly: permissions.adminOnly || false,
             managerOnly: permissions.managerAccess || false,
-            agentOnly: permissions.agentAccess || false,
+            // agentOnly: permissions.agentAccess || false, // Field doesn't exist in schema
             trainingData: permissions.trainingData || false,
             autoVectorize: permissions.autoVectorize || false,
           };
@@ -3221,10 +3232,10 @@ User Context: {userRole}`,
           // Process document for vectorization if enabled
           if (permissions.autoVectorize) {
             try {
-              const { enhancedPdfAnalyzer } = await import('./enhanced-pdf-analyzer');
+              const enhancedPdfAnalyzer = (await import('./enhanced-pdf-analyzer')).default;
               const document = await storage.getDocument(documentId);
               if (document) {
-                await enhancedPdfAnalyzer.processDocument(document);
+                await enhancedPdfAnalyzer(document.path);
               }
             } catch (vectorError) {
               console.error(`Vectorization failed for ${documentId}:`, vectorError);
@@ -3592,7 +3603,7 @@ User Context: {userRole}`,
           id: crypto.randomUUID(),
           userId,
           name: req.body.newFolderName,
-          description: `Created via wizard for ${sourceType} import`
+          vectorNamespace: `wizard-${crypto.randomUUID().slice(0, 8)}`
         });
         folderId = folder.id;
       }
@@ -3606,7 +3617,7 @@ User Context: {userRole}`,
               id: crypto.randomUUID(),
               userId,
               name: file.name,
-              description: `Imported from ${cloudProvider || 'local'}`,
+              vectorNamespace: `import-${crypto.randomUUID().slice(0, 8)}`,
               parentId: folderId
             });
 
@@ -3626,7 +3637,7 @@ User Context: {userRole}`,
                     isPublic: permissions.viewAll || false,
                     adminOnly: permissions.adminOnly || false,
                     managerOnly: permissions.managerAccess || false,
-                    agentOnly: permissions.agentAccess || false,
+                    // agentOnly: permissions.agentAccess || false, // Field doesn't exist
                     trainingData: permissions.trainingData || false,
                     autoVectorize: permissions.autoVectorize || true,
                     cloudFileId: child.id,
@@ -4254,7 +4265,7 @@ User Context: {userRole}`,
             points: stats?.totalPoints || 0,
             level: stats?.currentLevel || 1,
             rank: 0, // Will be set after sorting
-            badges: achievements.map(a => a.badgeId).filter(Boolean)
+            badges: achievements.map(a => (a as any).badgeId).filter(Boolean)
           };
         })
         .filter(user => user.points > 0) // Only show users with points
