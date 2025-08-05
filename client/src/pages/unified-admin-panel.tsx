@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -35,6 +35,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Activity,
   BarChart3,
@@ -51,6 +62,8 @@ import {
   ChevronRight,
   Home,
   Database,
+  Download,
+  Upload as UploadIcon,
 } from "lucide-react";
 import SystemHealthMonitor from "@/components/system-health-monitor";
 import DocumentUpload from "@/components/document-upload";
@@ -71,6 +84,30 @@ export default function UnifiedAdminPanel() {
   const [newAnswer, setNewAnswer] = useState("");
   const [newCategory, setNewCategory] = useState("merchant_services");
   const [newPriority, setNewPriority] = useState(2);
+  
+  // AI Configuration State
+  const [aiConfig, setAiConfig] = useState({
+    primaryModel: 'claude-sonnet-4-20250514',
+    fallbackModel: 'claude-3.7',
+    responseStyle: 'professional',
+    temperature: 0.7,
+    maxTokens: 4096,
+    searchSensitivity: 0.75,
+    streamingEnabled: true,
+    cacheDuration: 3600
+  });
+  
+  // User Management State
+  const [showAddUserDialog, setShowAddUserDialog] = useState(false);
+  const [newUser, setNewUser] = useState({
+    username: '',
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: '',
+    role: 'sales-agent'
+  });
+  
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -124,6 +161,41 @@ export default function UnifiedAdminPanel() {
     retry: false,
   });
 
+  // AI Configuration Query
+  const { data: aiConfigData } = useQuery({
+    queryKey: ['/api/admin/ai-config'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/ai-config', {
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      return response.json();
+    },
+    retry: false,
+  });
+
+  // Users Query
+  const { data: usersData = [] } = useQuery({
+    queryKey: ['/api/admin/users'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/users', {
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      return response.json();
+    },
+    retry: false,
+  });
+
+  // Update AI config when data is loaded
+  useEffect(() => {
+    if (aiConfigData) {
+      setAiConfig(prevConfig => ({ ...prevConfig, ...aiConfigData }));
+    }
+  }, [aiConfigData]);
+
   // Mutations
   const createFAQMutation = useMutation({
     mutationFn: async (faqData: {
@@ -154,6 +226,57 @@ export default function UnifiedAdminPanel() {
     }
   });
 
+  // AI Config Mutation
+  const updateAIConfigMutation = useMutation({
+    mutationFn: async (config: typeof aiConfig) => {
+      return apiRequest('PUT', '/api/admin/ai-config', config);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/ai-config'] });
+      toast({
+        title: "AI Settings Updated",
+        description: "AI configuration has been saved successfully."
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error updating AI settings",
+        description: error.message || "Failed to update AI configuration",
+        variant: "destructive"
+      });
+    }
+  });
+
+  // User Management Mutations
+  const createUserMutation = useMutation({
+    mutationFn: async (userData: typeof newUser) => {
+      return apiRequest('POST', '/api/admin/users', userData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
+      setNewUser({
+        username: '',
+        email: '',
+        password: '',
+        firstName: '',
+        lastName: '',
+        role: 'sales-agent'
+      });
+      setShowAddUserDialog(false);
+      toast({
+        title: "User Created",
+        description: "New user has been added successfully."
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error creating user",
+        description: error.message || "Failed to create user",
+        variant: "destructive"
+      });
+    }
+  });
+
   const handleCreateFAQ = () => {
     if (!newQuestion.trim() || !newAnswer.trim()) return;
     
@@ -163,6 +286,98 @@ export default function UnifiedAdminPanel() {
       category: newCategory,
       priority: newPriority,
     });
+  };
+
+  // AI Configuration Handlers
+  const handleModelChange = (value: string) => {
+    const updatedConfig = { ...aiConfig, primaryModel: value };
+    setAiConfig(updatedConfig);
+    updateAIConfigMutation.mutate(updatedConfig);
+  };
+
+  const handleResponseStyleChange = (value: string) => {
+    const updatedConfig = { ...aiConfig, responseStyle: value };
+    setAiConfig(updatedConfig);
+    updateAIConfigMutation.mutate(updatedConfig);
+  };
+
+  const handleTemperatureChange = (value: number[]) => {
+    const updatedConfig = { ...aiConfig, temperature: value[0] };
+    setAiConfig(updatedConfig);
+    updateAIConfigMutation.mutate(updatedConfig);
+  };
+
+  const handleSearchSensitivityChange = (value: number[]) => {
+    const updatedConfig = { ...aiConfig, searchSensitivity: value[0] };
+    setAiConfig(updatedConfig);
+    updateAIConfigMutation.mutate(updatedConfig);
+  };
+
+  // User Management Handlers
+  const handleCreateUser = () => {
+    if (!newUser.username.trim() || !newUser.email.trim() || !newUser.password.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all required fields",
+        variant: "destructive"
+      });
+      return;
+    }
+    createUserMutation.mutate(newUser);
+  };
+
+  const handleExportUsers = () => {
+    if (!usersData?.length) {
+      toast({
+        title: "No Data",
+        description: "No users available to export",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const dataStr = JSON.stringify(usersData, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = `users-export-${new Date().toISOString().split('T')[0]}.json`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+    
+    toast({
+      title: "Export Complete",
+      description: "Users data exported successfully"
+    });
+  };
+
+  const handleImportUsers = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const importedData = JSON.parse(e.target?.result as string);
+        if (Array.isArray(importedData)) {
+          // Here you would typically validate and import the users
+          toast({
+            title: "Import Ready",
+            description: `Found ${importedData.length} users ready to import. Feature coming soon.`
+          });
+        } else {
+          throw new Error("Invalid file format");
+        }
+      } catch (error) {
+        toast({
+          title: "Import Error",
+          description: "Invalid JSON file format",
+          variant: "destructive"
+        });
+      }
+    };
+    reader.readAsText(file);
   };
 
   const safeArrayData = (data: unknown): any[] => {
@@ -589,23 +804,29 @@ export default function UnifiedAdminPanel() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium">AI Model</Label>
-                  <Select defaultValue="claude-sonnet-4">
+                  <Label className="text-sm font-medium">Primary AI Model</Label>
+                  <Select 
+                    value={aiConfig.primaryModel} 
+                    onValueChange={handleModelChange}
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="claude-sonnet-4">Claude 4.0 Sonnet (Default)</SelectItem>
+                      <SelectItem value="claude-sonnet-4-20250514">Claude 4.0 Sonnet (Default)</SelectItem>
                       <SelectItem value="gpt-4.1-mini">GPT-4.1-mini</SelectItem>
                       <SelectItem value="gpt-4">GPT-4</SelectItem>
-                      <SelectItem value="claude-3.5-sonnet">Claude 3.5 Sonnet</SelectItem>
+                      <SelectItem value="claude-3.7">Claude 3.7 Sonnet</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Response Style</Label>
-                  <Select defaultValue="professional">
+                  <Select 
+                    value={aiConfig.responseStyle} 
+                    onValueChange={handleResponseStyleChange}
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -618,12 +839,41 @@ export default function UnifiedAdminPanel() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium">Search Sensitivity: 75%</Label>
-                  <div className="px-3">
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="bg-blue-600 h-2 rounded-full" style={{width: '75%'}}></div>
-                    </div>
-                  </div>
+                  <Label className="text-sm font-medium">
+                    Temperature: {Math.round(aiConfig.temperature * 100)}%
+                  </Label>
+                  <Slider
+                    value={[aiConfig.temperature]}
+                    onValueChange={handleTemperatureChange}
+                    max={1}
+                    min={0}
+                    step={0.01}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">
+                    Search Sensitivity: {Math.round(aiConfig.searchSensitivity * 100)}%
+                  </Label>
+                  <Slider
+                    value={[aiConfig.searchSensitivity]}
+                    onValueChange={handleSearchSensitivityChange}
+                    max={1}
+                    min={0}
+                    step={0.01}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="pt-2">
+                  <Button 
+                    onClick={() => updateAIConfigMutation.mutate(aiConfig)}
+                    disabled={updateAIConfigMutation.isPending}
+                    size="sm"
+                  >
+                    {updateAIConfigMutation.isPending ? "Saving..." : "Save Configuration"}
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -714,20 +964,151 @@ export default function UnifiedAdminPanel() {
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm">Active Sessions</span>
-                    <Badge className="bg-green-100 text-green-800">1 Online</Badge>
+                    <span className="text-sm">Total Users</span>
+                    <Badge className="bg-blue-100 text-blue-800">{usersData?.length || 0}</Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Admin Users</span>
-                    <Badge className="bg-blue-100 text-blue-800">2 Configured</Badge>
+                    <Badge className="bg-green-100 text-green-800">
+                      {usersData?.filter((u: any) => u.role?.includes('admin')).length || 0}
+                    </Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Sales Agents</span>
-                    <Badge className="bg-purple-100 text-purple-800">3 Active</Badge>
+                    <Badge className="bg-purple-100 text-purple-800">
+                      {usersData?.filter((u: any) => u.role === 'sales-agent').length || 0}
+                    </Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Authentication</span>
                     <Badge className="bg-green-100 text-green-800">Secure</Badge>
+                  </div>
+                </div>
+
+                <div className="pt-4 space-y-2">
+                  <Dialog open={showAddUserDialog} onOpenChange={setShowAddUserDialog}>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="w-full">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add New User
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add New User</DialogTitle>
+                        <DialogDescription>
+                          Create a new user account with role-based access
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Label htmlFor="firstName">First Name</Label>
+                            <Input
+                              id="firstName"
+                              value={newUser.firstName}
+                              onChange={(e) => setNewUser({...newUser, firstName: e.target.value})}
+                              placeholder="John"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="lastName">Last Name</Label>
+                            <Input
+                              id="lastName"
+                              value={newUser.lastName}
+                              onChange={(e) => setNewUser({...newUser, lastName: e.target.value})}
+                              placeholder="Doe"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <Label htmlFor="username">Username</Label>
+                          <Input
+                            id="username"
+                            value={newUser.username}
+                            onChange={(e) => setNewUser({...newUser, username: e.target.value})}
+                            placeholder="johndoe"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="email">Email</Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            value={newUser.email}
+                            onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                            placeholder="john@example.com"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="password">Password</Label>
+                          <Input
+                            id="password"
+                            type="password"
+                            value={newUser.password}
+                            onChange={(e) => setNewUser({...newUser, password: e.target.value})}
+                            placeholder="••••••••"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="role">Role</Label>
+                          <Select
+                            value={newUser.role}
+                            onValueChange={(value) => setNewUser({...newUser, role: value})}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="sales-agent">Sales Agent</SelectItem>
+                              <SelectItem value="client-admin">Client Admin</SelectItem>
+                              <SelectItem value="admin">System Admin</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button
+                          variant="outline"
+                          onClick={() => setShowAddUserDialog(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={handleCreateUser}
+                          disabled={createUserMutation.isPending}
+                        >
+                          {createUserMutation.isPending ? "Creating..." : "Create User"}
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleExportUsers}
+                    >
+                      Export Users
+                    </Button>
+                    <div>
+                      <input
+                        type="file"
+                        accept=".json"
+                        onChange={handleImportUsers}
+                        className="hidden"
+                        id="import-users"
+                      />
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => document.getElementById('import-users')?.click()}
+                        className="w-full"
+                      >
+                        Import Users
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </CardContent>
