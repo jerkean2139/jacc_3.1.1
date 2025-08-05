@@ -53,7 +53,7 @@
               /https:\/\/.*\.replit\.co$/
             ];
         const origin = req.headers.origin;
-        if (origin && allowedOrigins.some(a => (typeof a === "string" ? a === origin : a.test(origin)))) {
+        if (origin && allowedOrigins.some(a => (typeof a === "string" ? a === origin : (a as RegExp).test(origin)))) {
           res.setHeader("Access-Control-Allow-Origin", origin);
           res.setHeader("Access-Control-Allow-Credentials", "true");
           res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -145,9 +145,11 @@
         // Always use Vite middleware in Replit to avoid deployment white screen
         await setupVite(app, server);
 
-        // Listen
-        const port = process.env.PORT ? parseInt(process.env.PORT) : 5000;
+        // Listen - Use different port for production deployment
+        const isDevelopment = process.env.NODE_ENV === "development";
+        const port = process.env.PORT ? parseInt(process.env.PORT) : (isDevelopment ? 5000 : 3000);
         const host = "0.0.0.0";
+        
         server.listen(port, host, () => {
           log(`serving on ${host}:${port}`);
           if (app.get("env") === "production") {
