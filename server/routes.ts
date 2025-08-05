@@ -4009,11 +4009,20 @@ User Context: {userRole}`,
   });
 
   // Chat reviews endpoint for Admin Control Center
-  // Admin chat messages endpoint
+  // Admin chat messages endpoint with proper authentication
   app.get('/api/admin/chats/:chatId/messages', async (req: any, res) => {
     try {
+      // Check admin authentication
+      if (!req.session?.user || !['admin', 'client-admin', 'dev-admin'].includes(req.session.user.role)) {
+        return res.status(401).json({ error: 'Admin access required' });
+      }
+
       const { chatId } = req.params;
       console.log('🔍 Admin loading chat messages for:', chatId);
+      
+      if (!chatId) {
+        return res.status(400).json({ error: 'Chat ID is required' });
+      }
       
       // Get messages from database
       const chatMessages = await db.select().from(messages).where(eq(messages.chatId, chatId)).orderBy(messages.createdAt);

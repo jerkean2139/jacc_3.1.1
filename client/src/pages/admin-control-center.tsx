@@ -397,29 +397,45 @@ export default function AdminControlCenter() {
       console.log('🔄 Fetching messages for chat:', selectedChatId);
       
       // Try admin endpoint first for chat messages
-      const adminResponse = await fetch(`/api/admin/chats/${selectedChatId}/messages`, {
-        credentials: 'include'
-      });
-      
-      if (adminResponse.ok) {
-        const data = await adminResponse.json();
-        console.log('✅ Admin messages loaded:', data?.length || 0);
-        return data;
+      try {
+        const adminResponse = await fetch(`/api/admin/chats/${selectedChatId}/messages`, {
+          credentials: 'include'
+        });
+        
+        if (adminResponse.ok) {
+          const contentType = adminResponse.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            const data = await adminResponse.json();
+            console.log('✅ Admin messages loaded:', data?.length || 0);
+            return Array.isArray(data) ? data : [];
+          } else {
+            console.warn('⚠️ Admin endpoint returned non-JSON response');
+          }
+        } else {
+          console.warn('⚠️ Admin endpoint failed with status:', adminResponse.status);
+        }
+      } catch (error) {
+        console.warn('⚠️ Admin endpoint error:', error);
       }
       
       // Fallback to regular endpoint
-      const response = await fetch(`/api/chats/${selectedChatId}/messages`, {
-        credentials: 'include'
-      });
-      
-      if (!response.ok) {
-        console.error('❌ Messages fetch failed:', response.status, response.statusText);
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      try {
+        const response = await fetch(`/api/chats/${selectedChatId}/messages`, {
+          credentials: 'include'
+        });
+        
+        if (!response.ok) {
+          console.error('❌ Messages fetch failed:', response.status, response.statusText);
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        console.log('✅ Fallback messages loaded:', data?.length || 0);
+        return Array.isArray(data) ? data : [];
+      } catch (error) {
+        console.error('❌ Both endpoints failed:', error);
+        return [];
       }
-      
-      const data = await response.json();
-      console.log('✅ Messages loaded:', data?.length || 0);
-      return data;
     },
     enabled: !!selectedChatId,
     select: (data: any) => {
