@@ -308,13 +308,17 @@ export default function AdminControlCenter() {
   const { data: userChats = [], isLoading: chatsLoading, error: chatsError } = useQuery({
     queryKey: ['/api/admin/chat-reviews'],
     queryFn: async () => {
+      console.log('🔄 Fetching chat reviews for admin panel...');
       const response = await fetch('/api/admin/chat-reviews', {
         credentials: 'include'
       });
       if (!response.ok) {
+        console.error('❌ Chat reviews fetch failed:', response.status);
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-      return response.json();
+      const data = await response.json();
+      console.log('✅ Admin chat reviews loaded:', data?.length || 0, 'chats');
+      return data;
     },
     retry: false,
     meta: {
@@ -2138,20 +2142,28 @@ export default function AdminControlCenter() {
                               </div>
                               
                               {/* View Conversation Button */}
-                              <button
-                                type="button"
-                                className={`w-full py-2 px-2 text-xs font-medium rounded-md flex items-center justify-center gap-1 transition-all ${
+                              <Button
+                                size="sm"
+                                variant={selectedChatId === chat.chatId ? "default" : "outline"}
+                                className={`w-full text-xs ${
                                   selectedChatId === chat.chatId 
                                     ? 'bg-blue-600 text-white hover:bg-blue-700' 
                                     : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
                                 }`}
                                 onClick={() => {
-                                  console.log('Button clicked! Chat ID:', chat.chatId);
+                                  console.log('View button clicked! Chat ID:', chat.chatId);
                                   console.log('Current selected:', selectedChatId);
                                   setSelectedChatId(chat.chatId);
                                   // Clear any previous edits when selecting new chat
                                   setEditingMessageId(null);
                                   setEditedResponses({});
+                                  
+                                  // Show immediate visual feedback
+                                  toast({
+                                    title: "Loading Chat",
+                                    description: `Loading conversation: ${chat.title?.substring(0, 50)}...`,
+                                    duration: 2000,
+                                  });
                                   
                                   // On mobile, scroll to the conversation panel
                                   if (window.innerWidth < 1024) {
@@ -2166,7 +2178,7 @@ export default function AdminControlCenter() {
                               >
                                 <Eye className="h-3 w-3 flex-shrink-0" />
                                 <span className="hidden sm:inline">View</span>
-                              </button>
+                              </Button>
                             </div>
                           ))
                       ) : (
