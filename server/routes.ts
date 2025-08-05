@@ -1762,6 +1762,136 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // AI Simulator Training Endpoint - Critical for admin corrections learning
+  app.post('/api/admin/ai-simulator/train', isAuthenticated, requireRole(['client-admin', 'dev-admin']), async (req: any, res) => {
+    try {
+      const { 
+        originalQuery, 
+        originalResponse, 
+        correctedResponse, 
+        improvementType = 'admin_correction',
+        addToKnowledgeBase = true,
+        chatId,
+        messageId 
+      } = req.body;
+
+      console.log('🎯 AI Training Correction Received:', {
+        originalQuery: originalQuery?.substring(0, 100) + '...',
+        originalResponse: originalResponse?.substring(0, 100) + '...',
+        correctedResponse: correctedResponse?.substring(0, 100) + '...',
+        chatId,
+        messageId,
+        improvementType
+      });
+
+      const userId = req.session?.user?.id || 'admin';
+      
+      // Step 1: Store in Training Interactions table for machine learning
+      const trainingInteraction = await db.insert(trainingInteractions).values({
+        query: originalQuery,
+        response: originalResponse,
+        source: 'admin_correction',
+        userId: userId,
+        sessionId: chatId,
+        wasCorrect: false,
+        correctedResponse: correctedResponse,
+        metadata: {
+          improvementType,
+          chatId,
+          messageId,
+          correctedAt: new Date().toISOString(),
+          correctedBy: userId
+        }
+      }).returning();
+
+      // Step 2: Store in AI Training Feedback table for review and analysis
+      const feedbackEntry = await db.insert(aiTrainingFeedback).values({
+        chatId: chatId,
+        messageId: messageId,
+        userQuery: originalQuery,
+        aiResponse: originalResponse,
+        correctResponse: correctedResponse,
+        feedbackType: 'needs_training',
+        adminNotes: `Admin correction applied via AI training interface`,
+        status: 'trained',
+        reviewedBy: userId,
+        reviewedAt: new Date(),
+        priority: 2,
+        createdBy: userId
+      }).returning();
+
+      // Step 3: Add to Knowledge Base if requested (for immediate AI reference)
+      let knowledgeBaseEntry = null;
+      if (addToKnowledgeBase) {
+        try {
+          knowledgeBaseEntry = await db.insert(qaKnowledgeBase).values({
+            question: originalQuery,
+            answer: correctedResponse,
+            category: 'admin_corrections',
+            tags: ['admin_training', 'corrected_response', improvementType],
+            priority: 1, // High priority for admin corrections
+            isActive: true,
+            createdBy: userId
+          }).returning();
+          
+          console.log('✅ Added correction to knowledge base:', knowledgeBaseEntry[0]?.id);
+        } catch (kbError) {
+          console.warn('⚠️ Failed to add to knowledge base:', kbError);
+        }
+      }
+
+      // Step 4: Store detailed correction analysis
+      if (feedbackEntry[0]) {
+        const correctionAnalysis = await db.insert(aiKnowledgeCorrections).values({
+          feedbackId: feedbackEntry[0].id,
+          incorrectInformation: originalResponse,
+          correctInformation: correctedResponse,
+          category: 'general_knowledge',
+          appliedToSystem: true,
+          adminVerified: true,
+          verifiedBy: userId,
+          verifiedAt: new Date()
+        }).returning();
+        
+        console.log('✅ Stored correction analysis:', correctionAnalysis[0]?.id);
+      }
+
+      // Update the original message in the database to reflect the correction
+      if (messageId) {
+        try {
+          await db.update(messages)
+            .set({ 
+              content: correctedResponse,
+              updatedAt: new Date()
+            })
+            .where(eq(messages.id, messageId));
+          
+          console.log('✅ Updated original message with correction');
+        } catch (updateError) {
+          console.warn('⚠️ Failed to update original message:', updateError);
+        }
+      }
+
+      res.json({
+        success: true,
+        message: 'AI training correction processed successfully',
+        trainingId: trainingInteraction[0]?.id,
+        feedbackId: feedbackEntry[0]?.id,
+        knowledgeBaseId: knowledgeBaseEntry?.[0]?.id,
+        appliedToSystem: true,
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error) {
+      console.error('❌ Error processing AI training correction:', error);
+      res.status(500).json({ 
+        success: false,
+        error: 'Failed to process training correction',
+        details: error.message 
+      });
+    }
+  });
+
   // Conversational Training Endpoint
   app.post('/api/admin/training/conversational', isAuthenticated, async (req, res) => {
     try {
