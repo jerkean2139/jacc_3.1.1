@@ -6195,7 +6195,7 @@ Provide actionable, data-driven insights that would help a payment processing sa
 
   // Admin middleware to check admin role
   const requireAdmin = (req: any, res: any, next: any) => {
-    if (!req.user || req.user.role !== 'admin') {
+    if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'client-admin')) {
       return res.status(403).json({ message: "Admin access required" });
     }
     next();
@@ -6215,17 +6215,37 @@ Provide actionable, data-driven insights that would help a payment processing sa
 
   app.post('/api/admin/users', isAuthenticated, requireAdmin, async (req: any, res) => {
     try {
+      console.log('👤 Creating user with data:', req.body);
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByUsername(req.body.username);
+      if (existingUser) {
+        return res.status(400).json({ message: "Username already exists" });
+      }
+
+      const existingEmail = await storage.getUserByEmail(req.body.email);
+      if (existingEmail) {
+        return res.status(400).json({ message: "Email already exists" });
+      }
+      
+      // Hash password
+      const bcrypt = require('bcrypt');
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      
       const userData = {
         id: crypto.randomUUID(),
         ...req.body,
-        passwordHash: await hashPassword(req.body.password)
+        password: hashedPassword,
+        createdAt: new Date(),
+        updatedAt: new Date()
       };
-      delete userData.password;
       
+      console.log('✅ Creating user:', userData.username);
       const user = await storage.createUser(userData);
+      console.log('✅ User created successfully:', user.username);
       res.json(user);
     } catch (error) {
-      console.error("Error creating user:", error);
+      console.error("❌ Error creating user:", error);
       res.status(500).json({ message: "Failed to create user" });
     }
   });

@@ -5402,7 +5402,7 @@ Use direct response marketing principles and focus on measurable results.`
           </div>
           <DialogFooter>
             <Button
-              onClick={() => createUserMutation.mutate(newUser)}
+              onClick={handleCreateUser}
               disabled={createUserMutation.isPending}
             >
               {createUserMutation.isPending ? 'Creating...' : 'Create User'}
