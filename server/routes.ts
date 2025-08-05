@@ -227,6 +227,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Note: /api/user endpoint moved to simple-routes.ts with auto-login functionality
 
   // Get current user
+  // Add /api/user endpoint for frontend compatibility
+  app.get('/api/user', async (req: any, res) => {
+    try {
+      // Use our custom middleware-free authentication check
+      const sessionId = req.cookies?.['connect.sid'] || req.cookies?.sessionId;
+      if (!sessionId) {
+        return res.status(401).json({ error: 'Not authenticated' });
+      }
+
+      // Check Express session
+      if (req.session?.user) {
+        console.log('🔐 User auth debug:', { user: req.session.user, hasUser: true, userType: typeof req.session.user, userKeys: Object.keys(req.session.user || {}) });
+        return res.json(req.session.user);
+      }
+
+      return res.status(401).json({ error: 'Not authenticated' });
+    } catch (error) {
+      console.error('User endpoint error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
   app.get('/api/auth/me', isAuthenticated, async (req, res) => {
     try {
       const user = await storage.getUser((req as any).user.id);
