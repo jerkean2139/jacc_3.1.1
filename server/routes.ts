@@ -6230,14 +6230,114 @@ Provide actionable, data-driven insights that would help a payment processing sa
     }
   });
 
+  // Update User Endpoint
+  app.put('/api/admin/users/:id', isAuthenticated, requireAdmin, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const userData = req.body;
+      
+      console.log('🔄 Updating user:', id, 'with data:', userData);
+      
+      // Update user in database using storage interface
+      const updatedUser = await storage.updateUser(id, userData);
+      
+      console.log('✅ User updated successfully:', updatedUser.username);
+      res.json(updatedUser);
+    } catch (error) {
+      console.error('❌ Error updating user:', error);
+      res.status(500).json({ message: "Failed to update user" });
+    }
+  });
+
   app.delete('/api/admin/users/:id', isAuthenticated, requireAdmin, async (req: any, res) => {
     try {
       const userId = req.params.id;
+      console.log('🗑️ Deleting user:', userId);
       await storage.deleteUser(userId);
+      console.log('✅ User deleted successfully');
       res.status(204).send();
     } catch (error) {
       console.error("Error deleting user:", error);
       res.status(500).json({ message: "Failed to delete user" });
+    }
+  });
+
+  // Reset Password Endpoint
+  app.post('/api/admin/users/:id/reset-password', isAuthenticated, requireAdmin, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const { newPassword } = req.body;
+      
+      console.log('🔑 Resetting password for user:', id);
+      
+      // Hash the new password
+      const bcrypt = require('bcrypt');
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      
+      // Update password using storage interface
+      await storage.updateUser(id, { password: hashedPassword });
+
+      console.log('✅ Password reset successfully for user:', id);
+      res.json({ message: "Password reset successfully" });
+    } catch (error) {
+      console.error('❌ Error resetting password:', error);
+      res.status(500).json({ message: "Failed to reset password" });
+    }
+  });
+
+  // AI Config Endpoints
+  app.get('/api/admin/ai-config', isAuthenticated, requireAdmin, async (req: any, res) => {
+    try {
+      console.log('🤖 Fetching AI config');
+      const [setting] = await db.select()
+        .from(adminSettings)
+        .where(eq(adminSettings.key, 'ai_config'))
+        .limit(1);
+
+      const defaultConfig = {
+        primaryModel: 'claude-sonnet-4-20250514',
+        fallbackModel: 'claude-3.7',
+        temperature: 0.7,
+        maxTokens: 4096,
+        responseStyle: 'professional',
+        streamingEnabled: true,
+        cacheDuration: 3600
+      };
+
+      const config = setting ? { ...defaultConfig, ...JSON.parse(setting.value) } : defaultConfig;
+      console.log('✅ AI config fetched:', config);
+      res.json(config);
+    } catch (error) {
+      console.error('❌ Error fetching AI config:', error);
+      res.status(500).json({ message: "Failed to fetch AI config" });
+    }
+  });
+
+  app.put('/api/admin/ai-config', isAuthenticated, requireAdmin, async (req: any, res) => {
+    try {
+      const config = req.body;
+      console.log('🔄 Updating AI config:', config);
+      
+      // Upsert AI config in admin settings
+      await db.insert(adminSettings)
+        .values({
+          key: 'ai_config',
+          value: JSON.stringify(config),
+          description: 'AI model configuration'
+        })
+        .onConflictDoUpdate({
+          target: adminSettings.key,
+          set: { 
+            value: JSON.stringify(config),
+            updatedAt: new Date()
+          }
+        });
+
+      console.log('✅ AI config updated successfully');
+      res.json({ message: "AI config updated successfully" });
+    } catch (error) {
+      console.error('❌ Error updating AI config:', error);
+      res.status(500).json({ message: "Failed to update AI config" });
     }
   });
 

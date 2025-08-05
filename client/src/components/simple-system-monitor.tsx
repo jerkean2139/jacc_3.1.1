@@ -49,14 +49,13 @@ const SimpleSystemMonitor: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div className="flex items-center gap-3">
             <Activity className="w-5 h-5 sm:w-6 sm:h-6 text-green-400" />
-            <h2 className="text-lg sm:text-xl font-bold text-white">F35 System Monitor</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-white">System Monitor</h2>
           </div>
           <div className="text-xs sm:text-sm text-slate-300">
             Last Update: {new Date().toLocaleTimeString()}
           </div>
         </div>
       </div>
-
       {/* System Status Grid - Mobile Responsive */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         
@@ -162,7 +161,6 @@ const SimpleSystemMonitor: React.FC = () => {
           </CardContent>
         </Card>
       </div>
-
       {/* Quick Stats - Mobile Responsive */}
       <Card>
         <CardHeader className="pb-3 sm:pb-6">

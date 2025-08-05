@@ -197,7 +197,7 @@ export default function AdminControlCenter() {
   const [isScrapingForKnowledge, setIsScrapingForKnowledge] = useState(false);
   const [enableWeeklyUpdates, setEnableWeeklyUpdates] = useState(false);
   const [settingsTab, setSettingsTab] = useState("ai-search");
-  const [settingsCategory, setSettingsCategory] = useState('iframe-integration');
+  const [settingsCategory, setSettingsCategory] = useState('ai-search');
   
   // Dialog states for glassomorphic settings
   const [showCreateFolder, setShowCreateFolder] = useState(false);
@@ -3547,15 +3547,7 @@ export default function AdminControlCenter() {
                     </CardHeader>
                     <CardContent className="p-0">
                       <nav className="space-y-1">
-                        <button
-                          onClick={() => setSettingsCategory('iframe-integration')}
-                          className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 ${
-                            settingsCategory === 'iframe-integration' ? 'bg-gray-100 dark:bg-gray-800 border-r-2 border-blue-500' : ''
-                          }`}
-                        >
-                          <Globe className="h-4 w-4" />
-                          <span className="text-sm">Iframe Integration</span>
-                        </button>
+
                         <button
                           onClick={() => setSettingsCategory('ai-search')}
                           className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 ${
@@ -3600,7 +3592,7 @@ export default function AdminControlCenter() {
                 {/* Settings Panel */}
                 <div className="lg:col-span-3">
                   {/* Settings content will be rendered here based on settingsTab state */}
-                  {settingsCategory === "iframe-integration" && (
+                  {settingsCategory === "iframe-integration-removed" && (
                     <div className="space-y-6">
                       <div className="flex items-center gap-3 mb-6">
                         <ExternalLink className="w-6 h-6 text-indigo-600" />
@@ -4142,8 +4134,16 @@ document.getElementById('jacc-sidebar-close').onclick = function() {
                               <Select 
                                 value={aiConfig?.primaryModel || 'claude-sonnet-4-20250514'}
                                 onValueChange={(value) => {
+                                  console.log('🔄 Updating AI model to:', value);
                                   updateAiConfigMutation.mutate({ 
-                                    ...aiConfig || { temperature: 0.7 }, 
+                                    ...aiConfig || { 
+                                      temperature: 0.7,
+                                      fallbackModel: 'claude-3.7',
+                                      responseStyle: 'professional',
+                                      maxTokens: 4096,
+                                      streamingEnabled: true,
+                                      cacheDuration: 3600
+                                    }, 
                                     primaryModel: value 
                                   });
                                 }}
@@ -5406,6 +5406,112 @@ Use direct response marketing principles and focus on measurable results.`
               disabled={createUserMutation.isPending}
             >
               {createUserMutation.isPending ? 'Creating...' : 'Create User'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit User Dialog */}
+      <Dialog open={showEditUser} onOpenChange={setShowEditUser}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Edit User</DialogTitle>
+            <DialogDescription>
+              Update user information and permissions.
+            </DialogDescription>
+          </DialogHeader>
+          {editingUser && (
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="firstName">First Name</Label>
+                  <Input
+                    id="firstName"
+                    value={editingUser.firstName || ''}
+                    onChange={(e) => setEditingUser({...editingUser, firstName: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <Input
+                    id="lastName"
+                    value={editingUser.lastName || ''}
+                    onChange={(e) => setEditingUser({...editingUser, lastName: e.target.value})}
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={editingUser.email || ''}
+                  onChange={(e) => setEditingUser({...editingUser, email: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="role">Role</Label>
+                <Select 
+                  value={editingUser.role || 'sales-agent'} 
+                  onValueChange={(value) => setEditingUser({...editingUser, role: value})}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sales-agent">Sales Agent</SelectItem>
+                    <SelectItem value="client-admin">Client Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="isActive"
+                  checked={editingUser.isActive}
+                  onCheckedChange={(checked) => setEditingUser({...editingUser, isActive: checked})}
+                />
+                <Label htmlFor="isActive">Active</Label>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowEditUser(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleUpdateUser} disabled={updateUserMutation.isPending}>
+              {updateUserMutation.isPending ? 'Updating...' : 'Update User'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reset Password Dialog */}
+      <Dialog open={showResetPassword} onOpenChange={setShowResetPassword}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Reset Password</DialogTitle>
+            <DialogDescription>
+              Set a new password for {editingUser?.username || editingUser?.email}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div>
+              <Label htmlFor="newPassword">New Password</Label>
+              <Input
+                id="newPassword"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Enter new password"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowResetPassword(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleResetPassword} disabled={resetPasswordMutation.isPending}>
+              {resetPasswordMutation.isPending ? 'Resetting...' : 'Reset Password'}
             </Button>
           </DialogFooter>
         </DialogContent>
