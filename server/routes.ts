@@ -1592,7 +1592,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // AI Training & Feedback Management Routes
-  app.get('/api/admin/training/feedback', isAuthenticated, async (req, res) => {
+  app.get('/api/admin/training/feedback', isAuthenticated, requireRole(['client-admin', 'dev-admin']), async (req, res) => {
     try {
       // Get training feedback from database
       const rawFeedback = await db.select()
@@ -1923,7 +1923,7 @@ User Context: {userRole}`,
     }
   });
 
-  app.post('/api/admin/training/test', isAuthenticated, async (req, res) => {
+  app.post('/api/admin/training/test', isAuthenticated, requireRole(['client-admin', 'dev-admin']), async (req, res) => {
     try {
       const { query } = req.body;
       const userId = (req as any).user?.id || 'admin-test';
@@ -4077,7 +4077,7 @@ User Context: {userRole}`,
   });
 
   // Admin Chat Monitoring Routes
-  app.get('/api/admin/chat-monitoring', async (req: any, res) => {
+  app.get('/api/admin/chat-monitoring', isAuthenticated, requireRole(['client-admin', 'dev-admin']), async (req: any, res) => {
     try {
       const { db } = await import('./db');
       const { chats, messages, users } = await import('@shared/schema');

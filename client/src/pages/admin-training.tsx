@@ -150,11 +150,7 @@ export function AdminTrainingPage() {
   // Update prompt template mutation
   const updatePromptMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<PromptTemplate> }) => {
-      return apiRequest(`/api/admin/prompt-templates/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
+      return apiRequest('PUT', `/api/admin/prompt-templates/${id}`, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/prompt-templates'] });
@@ -197,7 +193,7 @@ export function AdminTrainingPage() {
     mutationFn: async (query: string) => {
       return apiRequest('POST', '/api/admin/training/test', { query, useTestMode: true });
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       setTestResponse(data.response);
       setTestResponseData(data);
     },
@@ -474,7 +470,7 @@ export function AdminTrainingPage() {
                                       Temperature: {currentValues.temperature}
                                     </Label>
                                     <Slider
-                                      value={[currentValues.temperature]}
+                                      value={[currentValues.temperature || 0.7]}
                                       onValueChange={(value) => updatePromptValue(template.id, 'temperature', value[0])}
                                       max={2}
                                       min={0}
@@ -835,10 +831,10 @@ export function AdminTrainingPage() {
                           onClick={() => setSelectedFolder(null)}
                         >
                           <FolderOpen className="w-4 h-4 mr-2" />
-                          All Documents ({documentsData.length})
+                          All Documents ({Array.isArray(documentsData) ? documentsData.length : 0})
                         </Button>
                         {Array.isArray(foldersData) && foldersData.map((folder: any) => {
-                          const folderDocCount = documentsData.filter((doc: any) => doc.folderId === folder.id).length;
+                          const folderDocCount = Array.isArray(documentsData) ? documentsData.filter((doc: any) => doc.folderId === folder.id).length : 0;
                           return (
                             <Button
                               key={folder.id}
@@ -865,9 +861,9 @@ export function AdminTrainingPage() {
                           { type: 'text', label: 'Text Files', icon: FileText },
                           { type: 'image', label: 'Images', icon: FileText }
                         ].map(({ type, label, icon: Icon }) => {
-                          const count = documentsData.filter((doc: any) => 
+                          const count = Array.isArray(documentsData) ? documentsData.filter((doc: any) => 
                             doc.mimeType?.includes(type) || doc.originalName?.toLowerCase().includes(`.${type}`)
-                          ).length;
+                          ).length : 0;
                           return (
                             <Button
                               key={type}
@@ -894,20 +890,20 @@ export function AdminTrainingPage() {
                         <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded text-sm">
                           <div className="flex justify-between">
                             <span>Total Documents:</span>
-                            <span className="font-medium">{documentsData.length}</span>
+                            <span className="font-medium">{Array.isArray(documentsData) ? documentsData.length : 0}</span>
                           </div>
                         </div>
                         <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded text-sm">
                           <div className="flex justify-between">
                             <span>Total Folders:</span>
-                            <span className="font-medium">{foldersData.length}</span>
+                            <span className="font-medium">{Array.isArray(foldersData) ? foldersData.length : 0}</span>
                           </div>
                         </div>
                         <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded text-sm">
                           <div className="flex justify-between">
                             <span>Total Size:</span>
                             <span className="font-medium">
-                              {(documentsData.reduce((sum: number, doc: any) => sum + (doc.size || 0), 0) / 1024 / 1024).toFixed(1)} MB
+                              {Array.isArray(documentsData) ? (documentsData.reduce((sum: number, doc: any) => sum + (doc.size || 0), 0) / 1024 / 1024).toFixed(1) : '0'} MB
                             </span>
                           </div>
                         </div>
