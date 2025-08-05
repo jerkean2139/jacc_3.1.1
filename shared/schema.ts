@@ -173,7 +173,7 @@ export const vendors = pgTable("vendors", {
 });
 
 // Folders for organizing documents and chats with vector namespaces
-export const folders = pgTable("folders", {
+export const folders: any = pgTable("folders", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 255 }).notNull(),
   userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
@@ -305,7 +305,7 @@ export const personalDocuments = pgTable("personal_documents", {
 });
 
 // Personal folders - user-specific folder structure
-export const personalFolders = pgTable("personal_folders", {
+export const personalFolders: any = pgTable("personal_folders", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 255 }).notNull(),
   description: text("description"),
@@ -1253,8 +1253,6 @@ export const monthlyUsageSummary = pgTable("monthly_usage_summary", {
   index("idx_monthly_usage_provider").on(table.provider, table.model),
 ]);
 
-export type UserPrompt = typeof userPrompts.$inferSelect;
-export type InsertUserPrompt = typeof userPrompts.$inferInsert;
 // API Usage Types
 export type ApiUsageLog = typeof apiUsageLogs.$inferSelect;
 export type InsertApiUsageLog = typeof apiUsageLogs.$inferInsert;
