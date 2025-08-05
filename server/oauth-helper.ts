@@ -1,4 +1,3 @@
-import { google } from 'googleapis';
 // MEMORY OPTIMIZATION: Disabled googleapis (123MB)
 // import { google } from 'googleapis';
 const google: any = null;

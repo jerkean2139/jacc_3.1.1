@@ -193,14 +193,18 @@ export class GoogleDriveService {
         default:
           throw new Error(`Unsupported file type: ${file.mimeType}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Error extracting text from ${file.name}:`, error);
-      return `Error extracting content from ${file.name}: ${error.message}`;
+      return `Error extracting content from ${file.name}: ${error?.message || 'Unknown error'}`;
     }
   }
 
   chunkDocument(content: string, maxTokens: number = 1000): DocumentChunk[] {
-    const encoder = get_encoding('cl100k_base');
+    // const encoder = get_encoding('cl100k_base'); // Disabled for memory optimization
+    const encoder = { 
+      encode: (text: string) => text.split(''), 
+      free: () => {} 
+    }; // Simple fallback
     const chunks: DocumentChunk[] = [];
     const sentences = content.split(/[.!?]+/).filter(s => s.trim().length > 0);
     
@@ -273,6 +277,9 @@ export class GoogleDriveService {
         name: file.name,
         content,
         chunks,
+        tags: [],
+        category: 'document',
+        isFavorite: false,
         metadata: {
           mimeType: file.mimeType,
           size: file.size,
@@ -280,7 +287,8 @@ export class GoogleDriveService {
           webViewLink: file.webViewLink,
           thumbnailLink: file.thumbnailLink,
           wordCount: content.split(/\s+/).length,
-          chunkCount: chunks.length
+          chunkCount: chunks.length,
+          version: 1
         }
       };
     } catch (error) {
