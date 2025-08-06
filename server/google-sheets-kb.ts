@@ -1,6 +1,4 @@
-// MEMORY OPTIMIZATION: Disabled googleapis (123MB)
-// import { google } from 'googleapis';
-const google: any = null;
+import { google } from 'googleapis';
 import { db } from './db';
 import { faqKnowledgeBase, googleSheetsSyncConfig, googleSheetsSyncLog } from '../shared/schema';
 import { eq } from 'drizzle-orm';
@@ -179,7 +177,7 @@ export class GoogleSheetsKBService {
                 question: row.question,
                 answer: row.answer,
                 category: row.category,
-                tags: row.tags,
+                tags: Array.isArray(row.tags) ? row.tags : [],
                 priority: row.priority,
                 isActive: row.isActive,
                 lastUpdated: new Date()
@@ -194,10 +192,10 @@ export class GoogleSheetsKBService {
           await db.insert(faqKnowledgeBase).values({
             question: row.question,
             answer: row.answer,
-            category: row.category,
-            tags: row.tags || [],
-            priority: row.priority,
-            isActive: row.isActive,
+            category: row.category || 'general',
+            tags: Array.isArray(row.tags) ? row.tags : [],
+            priority: row.priority || 1,
+            isActive: row.isActive !== false,
             sourceType: 'google_sheets',
             googleSheetRowId: row.rowId,
             createdBy: 'google_sheets_sync'
