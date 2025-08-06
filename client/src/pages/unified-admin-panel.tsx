@@ -813,9 +813,13 @@ export default function UnifiedAdminPanel() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="claude-opus-4-1-20250805">🆕 Claude Opus 4.1 (Latest)</SelectItem>
+                      <SelectItem value="claude-4-opus">Claude 4 Opus</SelectItem>
                       <SelectItem value="claude-sonnet-4-20250514">Claude 4.0 Sonnet (Default)</SelectItem>
+                      <SelectItem value="gpt-4o-sonnet">GPT-4o Sonnet</SelectItem>
+                      <SelectItem value="gpt-4o">GPT-4o</SelectItem>
+                      <SelectItem value="gpt-4o-mini">GPT-4o Mini</SelectItem>
                       <SelectItem value="gpt-4.1-mini">GPT-4.1-mini</SelectItem>
-                      <SelectItem value="gpt-4">GPT-4</SelectItem>
                       <SelectItem value="claude-3.7">Claude 3.7 Sonnet</SelectItem>
                     </SelectContent>
                   </Select>

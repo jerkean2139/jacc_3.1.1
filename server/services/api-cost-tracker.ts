@@ -2,10 +2,26 @@ import { db } from '../db';
 import { apiUsageLogs, monthlyUsageSummary, type InsertApiUsageLog, type InsertMonthlyUsageSummary } from '@shared/schema';
 import { eq, and, sql } from 'drizzle-orm';
 
-// Current LLM pricing (updated as of January 2025)
+// Current LLM pricing (updated as of August 2025)
 export const LLM_PRICING = {
   // Anthropic Claude pricing per 1M tokens
   anthropic: {
+    'claude-opus-4-1-20250805': {
+      input: 15.00,   // $15.00 per 1M input tokens - NEW: Claude Opus 4.1 (Released Aug 5, 2025)
+      output: 75.00   // $75.00 per 1M output tokens
+    },
+    'claude-4-opus': {
+      input: 15.00,
+      output: 75.00
+    },
+    'claude-sonnet-4-20250514': {
+      input: 3.00,   // Claude 4.0 Sonnet
+      output: 15.00
+    },
+    'claude-3.7': {
+      input: 3.00,   // Claude 3.7 Sonnet
+      output: 15.00
+    },
     'claude-3.5-sonnet': {
       input: 3.00,   // $3.00 per 1M input tokens
       output: 15.00  // $15.00 per 1M output tokens
@@ -21,9 +37,21 @@ export const LLM_PRICING = {
   },
   // OpenAI pricing per 1M tokens
   openai: {
+    'gpt-4o-sonnet': {
+      input: 5.00,   // GPT-4o Sonnet - Latest model
+      output: 20.00  // Updated pricing: $20.00 per 1M output tokens
+    },
     'gpt-4o': {
       input: 5.00,   // $5.00 per 1M input tokens
-      output: 15.00  // $15.00 per 1M output tokens
+      output: 20.00  // Updated pricing: $20.00 per 1M output tokens
+    },
+    'gpt-4o-mini': {
+      input: 0.15,   // Budget option
+      output: 0.60
+    },
+    'gpt-4.1-mini': {
+      input: 0.15,   // GPT-4.1 Mini
+      output: 0.60
     },
     'gpt-4-turbo': {
       input: 10.00,
@@ -211,23 +239,19 @@ export class ApiCostTracker {
     }>;
   }> {
     try {
-      let query = db
-        .select()
-        .from(monthlyUsageSummary)
-        .where(eq(monthlyUsageSummary.userId, userId));
+      let whereConditions = [eq(monthlyUsageSummary.userId, userId)];
 
       if (year && month) {
-        query = query.where(
-          and(
-            eq(monthlyUsageSummary.year, year),
-            eq(monthlyUsageSummary.month, month)
-          )
-        );
+        whereConditions.push(eq(monthlyUsageSummary.year, year));
+        whereConditions.push(eq(monthlyUsageSummary.month, month));
       } else if (year) {
-        query = query.where(eq(monthlyUsageSummary.year, year));
+        whereConditions.push(eq(monthlyUsageSummary.year, year));
       }
 
-      const results = await query;
+      const results = await db
+        .select()
+        .from(monthlyUsageSummary)
+        .where(and(...whereConditions));
 
       const stats = {
         totalCost: 0,

@@ -7,6 +7,16 @@ JACC is an advanced AI-powered assistant platform for independent sales agents i
 Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (August 2025)
+
+### API Pricing Model & Cost Tracking Updates (Aug 6, 2025)
+- **NEW**: Added Claude Opus 4.1 model (released Aug 5, 2025) - latest AI model with enhanced coding capabilities
+- Updated OpenAI GPT-4o pricing to current market rates ($20 per 1M output tokens)
+- Added GPT-4o Sonnet, GPT-4o Mini, and GPT-4.1 Mini models to pricing structure
+- Fixed database query issues in ApiCostTracker service for monthly usage summaries
+- Updated admin interface dropdowns to include all latest AI models
+- Synchronized API cost tracking with actual model usage for accurate billing
+- Enhanced pricing structure covers all models: Anthropic Claude (4.1 Opus to 3 Haiku) and OpenAI GPT (4o variants to 3.5 Turbo)
+
 ### AI Training & Chat Review System Complete (Aug 5, 2025)
 - Successfully implemented comprehensive AI learning system with 4-step correction process
 - Fixed React infinite re-render warnings by removing function dependencies from useEffect hooks
