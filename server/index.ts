@@ -90,6 +90,15 @@ app.use(
   })
 );
 
+// Also serve public files directly from root for compatibility
+app.use(
+  express.static("public", {
+    maxAge: "1d",
+    etag: true,
+    lastModified: true
+  })
+);
+
 // Startup sequence
 (async () => {
   console.log("🚀 Starting JACC application server...");
