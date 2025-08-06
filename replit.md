@@ -53,7 +53,8 @@ Preferred communication style: Simple, everyday language.
 - AI Training Pipeline: **FULLY FUNCTIONAL**
 - API endpoints: All functional with proper error handling
 - Database: Connected and responsive
-- Next phase: Settings sections enhancement
+- OCR System: **DEPRECATED** - Modern LLMs have built-in document analysis capabilities
+- Next phase: Leverage LLM native document processing instead of complex OCR pipeline
 
 ## System Architecture
 JACC is built as a Progressive Web App (PWA) combining a React 18 (with TypeScript) frontend, a Node.js (with Express.js and TypeScript) backend, and a PostgreSQL database.
@@ -75,7 +76,7 @@ JACC is built as a Progressive Web App (PWA) combining a React 18 (with TypeScri
 
 ### Key Components
 - **AI Integration**: Primary language models are Claude 4.0 Sonnet and OpenAI GPT-4.1 Mini. Fallback models are OpenAI GPT-4.1 Mini and Claude 3.7 Sonnet. Utilizes Pinecone for vector search, custom prompt chaining, and AI orchestration.
-- **Document Processing**: Advanced OCR pipeline (Tesseract.js) supporting PDF, CSV, text, and image files with batch processing, quality assessment, intelligent text chunking, metadata extraction, and vector embedding generation. Documents are encrypted at rest with AES-256-GCM.
+- **Document Processing**: Simplified approach leveraging native LLM document analysis capabilities for PDF, CSV, text, and image files. Modern AI models provide superior document understanding without complex OCR pipelines. Documents are encrypted at rest with AES-256-GCM.
 - **ISO Hub Integration**: SSO authentication, token-based authentication, CORS configuration, and iframe embedding support with PostMessage communication for seamless integration with external merchant services platforms.
 - **Performance Optimization**: Includes in-memory vector caching (LRU eviction), query optimization (expansion, intent detection, domain-specific terms, rewriting), search result reranking (multi-signal scoring), and configurable batch processing with job queue management and error handling.
 - **Security**: Production-ready security implementation with mandatory SESSION_SECRET validation, proper API key authentication, restrictive CSP headers (no unsafe-eval), environment-specific CORS policies, generic error handling in production, comprehensive audit logging, role-based access control, session security (7-day timeout, SameSite strict), multi-tier rate limiting, CSRF protection, and account lockout mechanisms. All critical security vulnerabilities from audit have been resolved.
