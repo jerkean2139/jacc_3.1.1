@@ -59,15 +59,13 @@ class MemoryManager {
 
   private clearCaches() {
     try {
-      // Clear Node.js require cache for non-essential modules
-      const excludeKeys = ['express', 'drizzle-orm', '@anthropic-ai/sdk', 'openai'];
-      Object.keys(require.cache).forEach(key => {
-        const shouldKeep = excludeKeys.some(exclude => key.includes(exclude));
-        if (!shouldKeep && !key.includes('node_modules')) {
-          delete require.cache[key];
-        }
-      });
-      console.log("✅ Require cache cleared");
+      // ES modules don't use require.cache, so just force garbage collection
+      if (typeof global.gc === 'function') {
+        global.gc();
+        console.log("✅ Memory caches cleared via GC");
+      } else {
+        console.log("⚠️ Garbage collection not available for cache clearing");
+      }
     } catch (error) {
       console.error("❌ Cache cleanup failed:", error);
     }

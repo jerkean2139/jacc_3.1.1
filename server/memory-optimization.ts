@@ -5,7 +5,7 @@ export async function configureMemoryOptimization() {
   if (typeof global.gc === 'function') {
     setInterval(() => {
       try {
-        global.gc();
+        if (global.gc) global.gc();
         console.log('🧹 Manual garbage collection completed');
       } catch (e) {
         console.error('GC error:', e);
@@ -19,7 +19,7 @@ export async function configureMemoryOptimization() {
     const rssMB = Math.round(usage.rss / 1024 / 1024);
     const heapUsedMB = Math.round(usage.heapUsed / 1024 / 1024);
     const heapTotalMB = Math.round(usage.heapTotal / 1024 / 1024);
-    const resBudgetMB = 200; // Target 200MB max (400MB actual limit in Replit)
+    const resBudgetMB = 500; // Target 500MB max (realistic for development)
     const percentage = Math.round((usage.rss / (resBudgetMB * 1024 * 1024)) * 100);
     
     console.log(`📊 Memory: ${rssMB}MB / ${resBudgetMB}MB (${percentage}%)`);
@@ -66,25 +66,19 @@ export function optimizeStringOperations() {
   };
 }
 
-// Aggressive memory cleanup function
+// Aggressive memory cleanup function for ES modules
 function performAggressiveCleanup() {
   try {
     // Force multiple GC cycles
-    if (global.gc) {
+    if (typeof global.gc === 'function') {
       for (let i = 0; i < 3; i++) {
         global.gc();
       }
+      console.log('🧹 Aggressive garbage collection completed');
     }
     
-    // Clear require cache more aggressively
-    const keysToDelete = Object.keys(require.cache).filter(key => 
-      !key.includes('node_modules') && 
-      !key.includes('express') && 
-      !key.includes('drizzle-orm')
-    );
-    
-    keysToDelete.forEach(key => delete require.cache[key]);
-    console.log(`🧹 Cleared ${keysToDelete.length} cached modules`);
+    // ES modules don't use require.cache, so just do additional GC cleanup
+    // This helps optimize V8 memory layout
     
   } catch (error) {
     console.error('Aggressive cleanup failed:', error);
@@ -94,7 +88,7 @@ function performAggressiveCleanup() {
 // Configure process limits with reduced memory target
 export function configureProcessLimits() {
   // Set aggressive memory limits
-  const targetMemoryMB = 180; // Very conservative target
+  const targetMemoryMB = 400; // Realistic target for current workload
   const maxMemoryMB = parseInt(process.env.MAX_MEMORY || '200');
   
   // Monitor for memory leaks more aggressively
@@ -109,6 +103,8 @@ export function configureProcessLimits() {
     if (rssMB > targetMemoryMB) {
       console.warn(`⚠️ Memory over target: ${rssMB}MB > ${targetMemoryMB}MB`);
       performAggressiveCleanup();
+    } else {
+      console.log(`✅ Memory under target: ${rssMB}MB / ${targetMemoryMB}MB`);
     }
     
     if (currentRss > lastRss) {

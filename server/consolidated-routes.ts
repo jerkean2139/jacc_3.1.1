@@ -5538,6 +5538,27 @@ please implement OCR service integration (Tesseract.js, Google Vision API, or si
     }
   });
 
+  // Admin chat messages endpoint with proper authentication  
+  app.get('/api/admin/chats/:chatId/messages', requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const { chatId } = req.params;
+      console.log('🔍 Admin loading chat messages for:', chatId);
+      
+      if (!chatId) {
+        return res.status(400).json({ error: 'Chat ID is required' });
+      }
+      
+      // Get messages from database
+      const chatMessages = await db.select().from(messages).where(eq(messages.chatId, chatId)).orderBy(messages.createdAt);
+      console.log(`✅ Admin found ${chatMessages.length} messages for chat ${chatId}`);
+      
+      res.json(chatMessages);
+    } catch (error) {
+      console.error("❌ Admin error fetching messages:", error);
+      res.status(500).json({ error: "Failed to fetch messages", details: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
