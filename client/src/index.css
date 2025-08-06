@@ -324,12 +324,11 @@
   }
   
   * {
-    border-color: hsl(var(--border));
+    @apply border-border;
   }
 
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
+    @apply bg-background text-foreground;
   }
 }
 
@@ -870,26 +869,20 @@ select.glass-input option {
 
 @layer base {
   * {
-    border-color: hsl(var(--border));
+    @apply border-border;
   }
 
   body {
-    font-family: ui-sans-serif, system-ui, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    overflow-x: hidden;
+    @apply font-sans antialiased bg-background text-foreground overflow-x-hidden;
   }
   
   #root {
-    overflow-x: hidden;
-    min-height: 100vh;
+    @apply overflow-x-hidden min-h-screen;
+    @apply font-sans antialiased bg-background text-foreground;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-weight: 500;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
   }
   
   /* Enhanced typography for better readability */
