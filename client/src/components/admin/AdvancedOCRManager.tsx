@@ -11,10 +11,9 @@ import { FileText, Eye, Zap, Settings, BarChart3, CheckCircle, AlertTriangle, Cl
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 
-interface OCRResult {
+interface DocumentAnalysisResult {
   success: boolean;
   documentId: string;
-  pages: number;
   totalCharacters: number;
   totalWords: number;
   averageConfidence: number;
@@ -23,7 +22,10 @@ interface OCRResult {
     recommendations: string[];
   };
   methods: string[];
-  improvements: string[];
+  summary?: string;
+  keyInsights?: string[];
+  documentType?: string;
+  extractedData?: any;
   processingTime: number;
   chunksCreated: number;
 }
@@ -51,39 +53,42 @@ interface OCRQualityAnalysis {
   recommendations: string[];
 }
 
-const AdvancedOCRManager: React.FC = () => {
+const DocumentAnalysisManager: React.FC = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedDocument, setSelectedDocument] = useState<string>('');
   const [processingDocument, setProcessingDocument] = useState<string>('');
   const [batchProcessing, setBatchProcessing] = useState<boolean>(false);
 
-  // Fetch documents that can be processed with OCR
+  // Fetch documents that can be analyzed with AI
   const { data: documents = [], isLoading: documentsLoading } = useQuery({
     queryKey: ['/api/admin/documents'],
     select: (data: any[]) => data.filter(doc => 
-      doc.mimeType === 'application/pdf' || doc.mimeType?.startsWith('image/')
+      doc.mimeType === 'application/pdf' || 
+      doc.mimeType?.startsWith('image/') || 
+      doc.mimeType === 'text/plain' ||
+      doc.mimeType?.includes('csv')
     ),
   });
 
-  // Process single document with advanced OCR
+  // Process single document with AI analysis
   const processDocumentMutation = useMutation({
-    mutationFn: async ({ documentId, forceReprocess }: { documentId: string; forceReprocess: boolean }): Promise<OCRResult> => {
+    mutationFn: async ({ documentId, forceReprocess }: { documentId: string; forceReprocess: boolean }): Promise<DocumentAnalysisResult> => {
       const response = await apiRequest('POST', `/api/admin/ocr/process-document/${documentId}`, { forceReprocess });
-      return response as OCRResult;
+      return response as unknown as DocumentAnalysisResult;
     },
-    onSuccess: (result: OCRResult) => {
-      // Check if OCR actually extracted any content
+    onSuccess: (result: DocumentAnalysisResult) => {
+      // Check if analysis actually extracted any content
       if (!result.totalCharacters || result.totalCharacters === 0) {
         toast({
-          title: "OCR Processing Failed",
+          title: "Document Analysis Failed",
           description: "No text could be extracted from this document. The file may be corrupted, empty, or contain only images without text.",
           variant: "destructive",
         });
       } else {
         toast({
-          title: "OCR Processing Complete",
-          description: `Extracted ${result.totalCharacters} characters (${result.totalWords || 0} words) with ${result.averageConfidence || 0}% confidence${result.methods && result.methods.length > 0 ? ` using ${result.methods.join(', ')}` : ''}`,
+          title: "Document Analysis Complete",
+          description: `Extracted ${result.totalCharacters} characters (${result.totalWords || 0} words) with ${result.averageConfidence || 0}% confidence${result.methods && result.methods.length > 0 ? ` using ${result.methods.join(', ')}` : ''}${result.documentType ? `. Detected as: ${result.documentType}` : ''}`,
         });
       }
       queryClient.invalidateQueries({ queryKey: ['/api/admin/documents'] });
@@ -92,8 +97,8 @@ const AdvancedOCRManager: React.FC = () => {
     },
     onError: (error: any) => {
       toast({
-        title: "OCR Processing Failed",
-        description: error.message || "Failed to process document",
+        title: "Document Analysis Failed",
+        description: error.message || "Failed to analyze document",
         variant: "destructive",
       });
       setProcessingDocument('');
@@ -542,4 +547,4 @@ const AdvancedOCRManager: React.FC = () => {
   );
 };
 
-export default AdvancedOCRManager;
+export default DocumentAnalysisManager;
