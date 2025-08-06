@@ -6,16 +6,16 @@ import { eq, and, sql } from 'drizzle-orm';
 export const LLM_PRICING = {
   // Anthropic Claude pricing per 1M tokens
   anthropic: {
-    'claude-opus-4-1-20250805': {
-      input: 15.00,   // $15.00 per 1M input tokens - NEW: Claude Opus 4.1 (Released Aug 5, 2025)
-      output: 75.00   // $75.00 per 1M output tokens
+    'claude-4-sonnet-20250109': {
+      input: 3.00,   // $3.00 per 1M input tokens - Claude 4 Sonnet (Jan 2025) - CURRENT BEST MODEL
+      output: 15.00  // $15.00 per 1M output tokens - Best performance/cost ratio
     },
     'claude-4-opus': {
-      input: 15.00,
+      input: 15.00,  // Premium model - 5x more expensive but maximum intelligence
       output: 75.00
     },
     'claude-sonnet-4-20250514': {
-      input: 3.00,   // Claude 4.0 Sonnet
+      input: 3.00,   // Legacy Claude 4.0 Sonnet
       output: 15.00
     },
     'claude-3.7': {

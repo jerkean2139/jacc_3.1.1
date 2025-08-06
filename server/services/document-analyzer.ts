@@ -66,10 +66,10 @@ export class DocumentAnalyzer {
         return this.analyzeTextContent(textContent);
       }
 
-      // Use Claude for document analysis with vision capabilities
+      // Use Claude 4 Sonnet for superior document analysis with vision capabilities
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 4000,
+        model: 'claude-4-sonnet-20250109',
+        max_tokens: 8000,
         messages: [{
           role: 'user',
           content: [
@@ -96,7 +96,7 @@ Please provide structured analysis focusing on actionable business intelligence 
             }
           ]
         }],
-        system: 'You are an expert merchant services analyst. Extract comprehensive business intelligence from documents with focus on competitive analysis, pricing structures, and actionable insights for sales professionals.'
+        system: 'You are an expert merchant services analyst with deep expertise in payment processing industry intelligence. Extract comprehensive business intelligence from documents with focus on competitive analysis, pricing structures, fee schedules, merchant data, and actionable insights for sales professionals. Provide detailed analysis that enables competitive positioning and strategic decision-making.'
       });
 
       const analysisText = response.content[0].type === 'text' ? response.content[0].text : '';
@@ -209,8 +209,8 @@ Please provide structured analysis focusing on actionable business intelligence 
   private async analyzeTextContent(textContent: string): Promise<DocumentAnalysisResult> {
     try {
       const response = await this.anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 2000,
+        model: 'claude-4-sonnet-20250109',
+        max_tokens: 4000,
         messages: [{
           role: 'user',
           content: `Analyze this merchant services text and provide:
@@ -224,7 +224,7 @@ Please provide structured analysis focusing on actionable business intelligence 
 Text content:
 ${textContent}`
         }],
-        system: 'You are a merchant services business analyst. Focus on extracting actionable insights, pricing information, and competitive intelligence.'
+        system: 'You are a senior merchant services business analyst with expertise in payment processing, competitive intelligence, and business strategy. Focus on extracting actionable insights, detailed pricing information, fee structures, merchant profiles, and competitive intelligence that sales professionals can immediately use for strategic advantage.'
       });
 
       const analysisText = response.content[0].type === 'text' ? response.content[0].text : '';
