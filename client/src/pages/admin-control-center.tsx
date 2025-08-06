@@ -30,7 +30,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { ContentQualityManager } from '@/components/admin/ContentQualityManager';
-import AdvancedOCRManager from '@/components/admin/AdvancedOCRManager';
+import DocumentAnalysisManager from '@/components/admin/AdvancedOCRManager';
 import { RichTextEditor } from '@/components/admin/SimpleTextEditor';
 import AIProfileCreator from '@/components/ai-profile-creator';
 import SimpleSystemMonitor from '@/components/simple-system-monitor';
@@ -2763,9 +2763,9 @@ export default function AdminControlCenter() {
               value="advanced-ocr" 
               className="py-2 px-4 text-sm font-medium text-slate-700 dark:text-slate-300 bg-transparent data-[state=active]:bg-slate-100 dark:data-[state=active]:bg-slate-800 data-[state=active]:text-slate-900 dark:data-[state=active]:text-white rounded-lg border hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
             >
-              <Scan className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">Advanced OCR</span>
-              <span className="sm:hidden">OCR</span>
+              <Brain className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Document Analysis</span>
+              <span className="sm:hidden">Analysis</span>
             </TabsTrigger>
             <TabsTrigger 
               value="chat-training" 
@@ -3556,7 +3556,7 @@ export default function AdminControlCenter() {
         </TabsContent>
 
         <TabsContent value="advanced-ocr" className="space-y-6 p-4 sm:p-6">
-          <AdvancedOCRManager />
+          <DocumentAnalysisManager />
         </TabsContent>
 
         <TabsContent value="chat-training" className="space-y-6 p-4 sm:p-6">
