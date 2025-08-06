@@ -102,22 +102,53 @@ export interface ApiUsageMetrics {
 
 export class ApiCostTracker {
   /**
+   * Map legacy/alternative model names to current pricing model keys
+   */
+  private mapModelName(provider: string, model: string): string {
+    const modelMappings: Record<string, Record<string, string>> = {
+      anthropic: {
+        'claude-sonnet-4': 'claude-sonnet-4-20250514',
+        'claude-4-sonnet': 'claude-sonnet-4-20250514',
+        'claude-4.0-sonnet': 'claude-sonnet-4-20250514',
+        'claude-3.5': 'claude-3.5-sonnet',
+        'claude-3.7-sonnet': 'claude-3.7',
+        'claude-opus-4-1': 'claude-opus-4-1-20250805',
+        'claude-4.1-opus': 'claude-opus-4-1-20250805'
+      },
+      openai: {
+        'gpt-4o-mini': 'gpt-4o-mini',
+        'gpt-4.1-mini': 'gpt-4.1-mini',
+        'gpt4': 'gpt-4-turbo',
+        'gpt-4-turbo-preview': 'gpt-4-turbo'
+      }
+    };
+
+    return modelMappings[provider]?.[model] || model;
+  }
+
+  /**
    * Calculate estimated cost based on usage metrics
    */
   private calculateCost(metrics: ApiUsageMetrics): number {
     const { provider, model, inputTokens = 0, outputTokens = 0, requestCount = 1 } = metrics;
     
+    // Map legacy model names to current pricing keys
+    const mappedModel = this.mapModelName(provider, model);
+    
     let cost = 0;
     
-    if (provider === 'anthropic' && LLM_PRICING.anthropic[model as keyof typeof LLM_PRICING.anthropic]) {
-      const pricing = LLM_PRICING.anthropic[model as keyof typeof LLM_PRICING.anthropic];
+    if (provider === 'anthropic' && LLM_PRICING.anthropic[mappedModel as keyof typeof LLM_PRICING.anthropic]) {
+      const pricing = LLM_PRICING.anthropic[mappedModel as keyof typeof LLM_PRICING.anthropic];
       cost = (inputTokens * pricing.input / 1_000_000) + (outputTokens * pricing.output / 1_000_000);
-    } else if (provider === 'openai' && LLM_PRICING.openai[model as keyof typeof LLM_PRICING.openai]) {
-      const pricing = LLM_PRICING.openai[model as keyof typeof LLM_PRICING.openai];
+    } else if (provider === 'openai' && LLM_PRICING.openai[mappedModel as keyof typeof LLM_PRICING.openai]) {
+      const pricing = LLM_PRICING.openai[mappedModel as keyof typeof LLM_PRICING.openai];
       cost = (inputTokens * pricing.input / 1_000_000) + (outputTokens * pricing.output / 1_000_000);
-    } else if (provider === 'pinecone' && LLM_PRICING.pinecone[model as keyof typeof LLM_PRICING.pinecone]) {
-      const pricing = LLM_PRICING.pinecone[model as keyof typeof LLM_PRICING.pinecone];
+    } else if (provider === 'pinecone' && LLM_PRICING.pinecone[mappedModel as keyof typeof LLM_PRICING.pinecone]) {
+      const pricing = LLM_PRICING.pinecone[mappedModel as keyof typeof LLM_PRICING.pinecone];
       cost = requestCount * pricing.input / 1_000; // Per 1K queries
+    } else {
+      // Log unmapped models for debugging
+      console.warn(`⚠️ Cost calculation: Unknown model '${model}' for provider '${provider}'. Mapped to: '${mappedModel}'`);
     }
     
     return Math.round(cost * 1_000_000) / 1_000_000; // Round to 6 decimal places
