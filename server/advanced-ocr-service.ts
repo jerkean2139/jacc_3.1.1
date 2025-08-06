@@ -1,14 +1,13 @@
-// MEMORY OPTIMIZATION: Disabled tesseract.js
-// import Tesseract from 'tesseract.js';
-let Tesseract: any = null;
+import Tesseract from 'tesseract.js';
 import fs from 'fs/promises';
 import path from 'path';
-// MEMORY OPTIMIZATION: Disabled canvas (24MB) and sharp
-// import { createCanvas, loadImage } from 'canvas';
-// import sharp from 'sharp';
+// Note: Using lightweight fallback for image processing
 let sharp: any = null;
-const createCanvas = () => null;
-const loadImage = () => null;
+try {
+  sharp = require('sharp');
+} catch (e) {
+  console.warn('Sharp not available, using fallback image processing');
+}
 
 interface OCRResult {
   text: string;
@@ -35,7 +34,7 @@ export class AdvancedOCRService {
   }
 
   /**
-   * Advanced image preprocessing with multiple enhancement techniques
+   * Lightweight image preprocessing fallback when Sharp is not available
    */
   private async preprocessImage(imagePath: string): Promise<PreprocessingResult> {
     const improvements: string[] = [];
@@ -45,54 +44,48 @@ export class AdvancedOCRService {
     const processedPath = path.join(tempDir, `processed_${Date.now()}.png`);
 
     try {
-      // Load and analyze image
-      const image = sharp(imagePath);
-      const metadata = await image.metadata();
-      
-      let pipeline = image;
-      
-      // 1. Resolution enhancement for small images
-      if (metadata.width && metadata.width < 1200) {
-        pipeline = pipeline.resize({
-          width: Math.max(1200, metadata.width * 2),
-          height: Math.max(800, (metadata.height || 600) * 2),
-          kernel: sharp.kernel.cubic
-        });
-        improvements.push('Resolution upscaling applied');
+      if (sharp) {
+        // Use Sharp for advanced preprocessing if available
+        const image = sharp(imagePath);
+        const metadata = await image.metadata();
+        
+        let pipeline = image;
+        
+        // 1. Resolution enhancement for small images
+        if (metadata.width && metadata.width < 1200) {
+          pipeline = pipeline.resize({
+            width: Math.max(1200, metadata.width * 2),
+            height: Math.max(800, (metadata.height || 600) * 2),
+            kernel: sharp.kernel.cubic
+          });
+          improvements.push('Resolution upscaling applied');
+        }
+
+        // 2. Contrast and brightness optimization
+        pipeline = pipeline.normalize({
+          lower: 5,
+          upper: 95
+        }).linear(1.2, -(128 * 1.2) + 128);
+        improvements.push('Contrast and brightness optimization');
+
+        // 3. Noise reduction
+        pipeline = pipeline.median(3);
+        improvements.push('Noise reduction filter');
+
+        // Save processed image
+        await pipeline.png().toFile(processedPath);
+        improvements.push('Image processing completed');
+      } else {
+        // Fallback: Just copy the original image
+        await fs.copyFile(imagePath, processedPath);
+        improvements.push('Basic image preparation (Sharp not available)');
       }
-
-      // 2. Contrast and brightness optimization
-      pipeline = pipeline.normalize({
-        lower: 5,
-        upper: 95
-      }).linear(1.2, -(128 * 1.2) + 128);
-      improvements.push('Contrast and brightness optimization');
-
-      // 3. Noise reduction
-      pipeline = pipeline.median(3);
-      improvements.push('Noise reduction filter');
-
-      // 4. Sharpening for text clarity
-      pipeline = pipeline.sharpen({
-        sigma: 1,
-        m1: 0.5,
-        m2: 2,
-        x1: 2,
-        y1: 10
-      });
-      improvements.push('Text sharpening');
-
-      // 5. Convert to high contrast grayscale
-      pipeline = pipeline.grayscale().gamma(1.2);
-      improvements.push('Grayscale conversion with gamma correction');
-
-      await pipeline.png({ quality: 100 }).toFile(processedPath);
       
       return { processedPath, improvements };
-
     } catch (error) {
-      console.error('Preprocessing error:', error);
-      return { processedPath: imagePath, improvements: ['Preprocessing failed - using original'] };
+      console.error('Image preprocessing failed:', error);
+      // Fallback to original image
+      return { processedPath: imagePath, improvements: ['Preprocessing failed, using original'] };
     }
   }
 
@@ -184,6 +177,46 @@ export class AdvancedOCRService {
     improvements.push('Normalized spacing and punctuation');
 
     return { cleanedText: text, improvements };
+  }
+
+  /**
+   * Basic OCR extraction using standard Tesseract
+   */
+  private async extractWithBasicOCR(filePath: string): Promise<OCRResult> {
+    try {
+      console.log(`Starting basic OCR for: ${filePath}`);
+      const worker = await Tesseract.createWorker('eng');
+      
+      await worker.setParameters({
+        tessedit_pageseg_mode: Tesseract.PSM.AUTO,
+        preserve_interword_spaces: '1',
+      });
+      
+      const result = await worker.recognize(filePath);
+      await worker.terminate();
+
+      const confidence = result.data.confidence || 0;
+      const text = result.data.text || '';
+      
+      console.log(`Basic OCR completed: ${text.length} characters, ${confidence}% confidence`);
+      
+      return {
+        text,
+        confidence,
+        method: 'tesseract-basic',
+        processedWords: text.split(/\s+/).filter(w => w.length > 0).length,
+        improvements: ['Basic Tesseract processing']
+      };
+    } catch (error) {
+      console.error('Basic OCR failed:', error);
+      return {
+        text: '',
+        confidence: 0,
+        method: 'tesseract-failed',
+        processedWords: 0,
+        improvements: [`Basic OCR failed: ${error.message}`]
+      };
+    }
   }
 
   /**

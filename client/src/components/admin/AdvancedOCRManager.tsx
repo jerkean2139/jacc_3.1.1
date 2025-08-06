@@ -6,7 +6,8 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, Eye, Zap, Settings, BarChart3, CheckCircle, AlertTriangle, Clock } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { FileText, Eye, Zap, Settings, BarChart3, CheckCircle, AlertTriangle, Clock, Trash2, Info } from 'lucide-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 
@@ -67,8 +68,9 @@ const AdvancedOCRManager: React.FC = () => {
 
   // Process single document with advanced OCR
   const processDocumentMutation = useMutation({
-    mutationFn: async ({ documentId, forceReprocess }: { documentId: string; forceReprocess: boolean }) => {
-      return apiRequest('POST', `/api/admin/ocr/process-document/${documentId}`, { forceReprocess });
+    mutationFn: async ({ documentId, forceReprocess }: { documentId: string; forceReprocess: boolean }): Promise<OCRResult> => {
+      const response = await apiRequest('POST', `/api/admin/ocr/process-document/${documentId}`, { forceReprocess });
+      return response as OCRResult;
     },
     onSuccess: (result: OCRResult) => {
       // Check if OCR actually extracted any content
@@ -118,6 +120,31 @@ const AdvancedOCRManager: React.FC = () => {
         variant: "destructive",
       });
       setBatchProcessing(false);
+    },
+  });
+
+  // Delete document mutation
+  const deleteDocumentMutation = useMutation({
+    mutationFn: async (documentId: string) => {
+      return apiRequest('DELETE', `/api/admin/documents/${documentId}`);
+    },
+    onSuccess: (data, variables) => {
+      toast({
+        title: "Document Deleted",
+        description: "Document has been permanently removed from the system",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/documents'] });
+      // Clear selected document if it was the deleted one
+      if (selectedDocument === variables) {
+        setSelectedDocument('');
+      }
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Delete Failed",
+        description: error.message || "Failed to delete document",
+        variant: "destructive",
+      });
     },
   });
 
@@ -201,6 +228,16 @@ const AdvancedOCRManager: React.FC = () => {
         </TabsList>
 
         <TabsContent value="process" className="space-y-4">
+          <Alert className="border-blue-200 bg-blue-50">
+            <Info className="h-4 w-4" />
+            <AlertDescription>
+              <strong>Button Guide:</strong> 
+              • <strong>Process</strong> - Extract text from documents that haven't been processed yet
+              • <strong>Force Reprocess</strong> - Re-extract text from documents (overwrites existing content)
+              • <strong>Delete</strong> - Permanently remove document from system
+            </AlertDescription>
+          </Alert>
+          
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -248,14 +285,29 @@ const AdvancedOCRManager: React.FC = () => {
                                   size="sm"
                                   variant="outline"
                                   onClick={() => handleProcessDocument(doc.id, false)}
+                                  title="Extract text from this document (first-time processing)"
                                 >
                                   Process
                                 </Button>
                                 <Button
                                   size="sm"
+                                  variant="secondary"
                                   onClick={() => handleProcessDocument(doc.id, true)}
+                                  title="Re-extract text from this document (overwrites existing content)"
                                 >
                                   Force Reprocess
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="destructive"
+                                  onClick={() => {
+                                    if (window.confirm(`Are you sure you want to delete "${doc.name}"? This action cannot be undone.`)) {
+                                      deleteDocumentMutation.mutate(doc.id);
+                                    }
+                                  }}
+                                  title="Permanently delete this document from the system"
+                                >
+                                  <Trash2 className="h-4 w-4" />
                                 </Button>
                               </>
                             )}
