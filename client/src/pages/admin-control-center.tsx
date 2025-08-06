@@ -234,6 +234,28 @@ export default function AdminControlCenter() {
     databaseLoadThreshold: 70
   });
   
+  // AI Configuration state management
+  const [localAiConfig, setLocalAiConfig] = useState({
+    primaryModel: 'claude-sonnet-4-20250514',
+    fallbackModel: 'claude-3.7',
+    responseStyle: 'professional',
+    temperature: 0.7,
+    maxTokens: 4096,
+    searchSensitivity: 0.8,
+    streamingEnabled: true,
+    cacheDuration: 3600
+  });
+
+  // Update local AI config when data is loaded
+  React.useEffect(() => {
+    if (aiConfigData && Object.keys(aiConfigData).length > 0) {
+      setLocalAiConfig(prevConfig => ({
+        ...prevConfig,
+        ...aiConfigData
+      }));
+    }
+  }, [aiConfigData]);
+
   // Slider states for AI & Search settings  
   const [temperature, setTemperature] = useState([0.7]);
   const [maxTokens, setMaxTokens] = useState([2048]);
@@ -787,6 +809,31 @@ export default function AdminControlCenter() {
       });
     },
   });
+
+  // AI Configuration Handlers
+  const handleModelChange = (value: string) => {
+    const updatedConfig = { ...localAiConfig, primaryModel: value };
+    setLocalAiConfig(updatedConfig);
+    updateAiConfigMutation.mutate(updatedConfig);
+  };
+
+  const handleResponseStyleChange = (value: string) => {
+    const updatedConfig = { ...localAiConfig, responseStyle: value };
+    setLocalAiConfig(updatedConfig);
+    updateAiConfigMutation.mutate(updatedConfig);
+  };
+
+  const handleTemperatureChange = (value: number[]) => {
+    const updatedConfig = { ...localAiConfig, temperature: value[0] };
+    setLocalAiConfig(updatedConfig);
+    updateAiConfigMutation.mutate(updatedConfig);
+  };
+
+  const handleSearchSensitivityChange = (value: number[]) => {
+    const updatedConfig = { ...localAiConfig, searchSensitivity: value[0] };
+    setLocalAiConfig(updatedConfig);
+    updateAiConfigMutation.mutate(updatedConfig);
+  };
 
   // User Management Mutations
   const createUserMutation = useMutation({
@@ -4132,47 +4179,28 @@ document.getElementById('jacc-sidebar-close').onclick = function() {
                             <div>
                               <Label>Primary AI Model</Label>
                               <Select 
-                                value={aiConfig?.primaryModel || 'claude-sonnet-4-20250514'}
-                                onValueChange={(value) => {
-                                  console.log('🔄 Updating AI model to:', value);
-                                  updateAiConfigMutation.mutate({ 
-                                    ...aiConfig || { 
-                                      temperature: 0.7,
-                                      fallbackModel: 'claude-3.7',
-                                      responseStyle: 'professional',
-                                      maxTokens: 4096,
-                                      streamingEnabled: true,
-                                      cacheDuration: 3600
-                                    }, 
-                                    primaryModel: value 
-                                  });
-                                }}
+                                value={localAiConfig.primaryModel}
+                                onValueChange={handleModelChange}
                               >
                                 <SelectTrigger>
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {aiModelsData?.models?.map((model: any) => (
-                                    <SelectItem key={model.id} value={model.id}>
-                                      {model.name}
-                                    </SelectItem>
-                                  ))}
+                                  <SelectItem value="claude-sonnet-4-20250514">Claude 4.0 Sonnet (Default)</SelectItem>
+                                  <SelectItem value="gpt-4.1-mini">GPT-4.1-mini</SelectItem>
+                                  <SelectItem value="gpt-4">GPT-4</SelectItem>
+                                  <SelectItem value="claude-3.7">Claude 3.7 Sonnet</SelectItem>
                                 </SelectContent>
                               </Select>
                             </div>
                             <div>
-                              <Label>Temperature: {aiConfig?.temperature || 0.7}</Label>
+                              <Label>Temperature: {Math.round(localAiConfig.temperature * 100)}%</Label>
                               <Slider
-                                value={[aiConfig?.temperature || 0.7]}
-                                onValueChange={([value]) => {
-                                  updateAiConfigMutation.mutate({ 
-                                    ...aiConfig || { primaryModel: 'claude-sonnet-4-20250514' }, 
-                                    temperature: value 
-                                  });
-                                }}
+                                value={[localAiConfig.temperature]}
+                                onValueChange={handleTemperatureChange}
                                 max={1}
                                 min={0}
-                                step={0.1}
+                                step={0.01}
                                 className="mt-2"
                               />
                             </div>
@@ -4182,13 +4210,8 @@ document.getElementById('jacc-sidebar-close').onclick = function() {
                             <div>
                               <Label>Response Style</Label>
                               <Select 
-                                value={aiConfig?.responseStyle || 'professional'}
-                                onValueChange={(value) => {
-                                  updateAiConfigMutation.mutate({ 
-                                    ...aiConfig, 
-                                    responseStyle: value 
-                                  });
-                                }}
+                                value={localAiConfig.responseStyle}
+                                onValueChange={handleResponseStyleChange}
                               >
                                 <SelectTrigger>
                                   <SelectValue />
@@ -4196,8 +4219,7 @@ document.getElementById('jacc-sidebar-close').onclick = function() {
                                 <SelectContent>
                                   <SelectItem value="professional">Professional</SelectItem>
                                   <SelectItem value="conversational">Conversational</SelectItem>
-                                  <SelectItem value="detailed">Detailed</SelectItem>
-                                  <SelectItem value="concise">Concise</SelectItem>
+                                  <SelectItem value="technical">Technical</SelectItem>
                                 </SelectContent>
                               </Select>
                             </div>
@@ -4237,18 +4259,13 @@ document.getElementById('jacc-sidebar-close').onclick = function() {
                         </CardHeader>
                         <CardContent className="space-y-4">
                           <div>
-                            <Label>Search Sensitivity: {searchParams?.sensitivity || 0.8}</Label>
+                            <Label>Search Sensitivity: {Math.round(localAiConfig.searchSensitivity * 100)}%</Label>
                             <Slider
-                              value={[searchParams?.sensitivity || 0.8]}
-                              onValueChange={([value]) => {
-                                updateSearchParamsMutation.mutate({ 
-                                  ...searchParams, 
-                                  sensitivity: value 
-                                });
-                              }}
+                              value={[localAiConfig.searchSensitivity]}
+                              onValueChange={handleSearchSensitivityChange}
                               max={1}
-                              min={0.1}
-                              step={0.1}
+                              min={0}
+                              step={0.01}
                               className="mt-2"
                             />
                             <p className="text-sm text-gray-500 mt-1">
