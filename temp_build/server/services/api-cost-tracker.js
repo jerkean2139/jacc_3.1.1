@@ -1,0 +1,366 @@
+import { db } from '../db';
+import { apiUsageLogs, monthlyUsageSummary } from '@shared/schema';
+import { eq, and, sql } from 'drizzle-orm';
+// Current LLM pricing (updated as of August 2025)
+export const LLM_PRICING = {
+    // Anthropic Claude pricing per 1M tokens
+    anthropic: {
+        'claude-4-sonnet-20250109': {
+            input: 3.00, // $3.00 per 1M input tokens - Claude 4 Sonnet (Jan 2025) - CURRENT BEST MODEL
+            output: 15.00 // $15.00 per 1M output tokens - Best performance/cost ratio
+        },
+        'claude-4-opus': {
+            input: 15.00, // Premium model - 5x more expensive but maximum intelligence
+            output: 75.00
+        },
+        'claude-sonnet-4-20250514': {
+            input: 3.00, // Legacy Claude 4.0 Sonnet
+            output: 15.00
+        },
+        'claude-3.7': {
+            input: 3.00, // Claude 3.7 Sonnet
+            output: 15.00
+        },
+        'claude-3.5-sonnet': {
+            input: 3.00, // $3.00 per 1M input tokens
+            output: 15.00 // $15.00 per 1M output tokens
+        },
+        'claude-3-opus': {
+            input: 15.00,
+            output: 75.00
+        },
+        'claude-3-haiku': {
+            input: 0.25,
+            output: 1.25
+        }
+    },
+    // OpenAI pricing per 1M tokens
+    openai: {
+        'gpt-4o-sonnet': {
+            input: 5.00, // GPT-4o Sonnet - Latest model
+            output: 20.00 // Updated pricing: $20.00 per 1M output tokens
+        },
+        'gpt-4o': {
+            input: 5.00, // $5.00 per 1M input tokens
+            output: 20.00 // Updated pricing: $20.00 per 1M output tokens
+        },
+        'gpt-4o-mini': {
+            input: 0.15, // Budget option
+            output: 0.60
+        },
+        'gpt-4.1-mini': {
+            input: 0.15, // GPT-4.1 Mini
+            output: 0.60
+        },
+        'gpt-4-turbo': {
+            input: 10.00,
+            output: 30.00
+        },
+        'gpt-3.5-turbo': {
+            input: 0.50,
+            output: 1.50
+        },
+        'text-embedding-3-small': {
+            input: 0.02,
+            output: 0.02
+        },
+        'text-embedding-3-large': {
+            input: 0.13,
+            output: 0.13
+        },
+        'text-embedding-ada-002': {
+            input: 0.10,
+            output: 0.10
+        }
+    },
+    // Pinecone pricing (estimated per 1K queries)
+    pinecone: {
+        'query': {
+            input: 0.40, // $0.40 per 1K queries
+            output: 0.40
+        },
+        'upsert': {
+            input: 0.40,
+            output: 0.40
+        }
+    }
+};
+export class ApiCostTracker {
+    /**
+     * Map legacy/alternative model names to current pricing model keys
+     */
+    mapModelName(provider, model) {
+        const modelMappings = {
+            anthropic: {
+                'claude-sonnet-4': 'claude-sonnet-4-20250514',
+                'claude-4-sonnet': 'claude-sonnet-4-20250514',
+                'claude-4.0-sonnet': 'claude-sonnet-4-20250514',
+                'claude-3.5': 'claude-3.5-sonnet',
+                'claude-3.7-sonnet': 'claude-3.7',
+                'claude-opus-4-1': 'claude-opus-4-1-20250805',
+                'claude-4.1-opus': 'claude-opus-4-1-20250805'
+            },
+            openai: {
+                'gpt-4o-mini': 'gpt-4o-mini',
+                'gpt-4.1-mini': 'gpt-4.1-mini',
+                'gpt4': 'gpt-4-turbo',
+                'gpt-4-turbo-preview': 'gpt-4-turbo'
+            }
+        };
+        return modelMappings[provider]?.[model] || model;
+    }
+    /**
+     * Calculate estimated cost based on usage metrics
+     */
+    calculateCost(metrics) {
+        const { provider, model, inputTokens = 0, outputTokens = 0, requestCount = 1 } = metrics;
+        // Map legacy model names to current pricing keys
+        const mappedModel = this.mapModelName(provider, model);
+        let cost = 0;
+        if (provider === 'anthropic' && LLM_PRICING.anthropic[mappedModel]) {
+            const pricing = LLM_PRICING.anthropic[mappedModel];
+            cost = (inputTokens * pricing.input / 1_000_000) + (outputTokens * pricing.output / 1_000_000);
+        }
+        else if (provider === 'openai' && LLM_PRICING.openai[mappedModel]) {
+            const pricing = LLM_PRICING.openai[mappedModel];
+            cost = (inputTokens * pricing.input / 1_000_000) + (outputTokens * pricing.output / 1_000_000);
+        }
+        else if (provider === 'pinecone' && LLM_PRICING.pinecone[mappedModel]) {
+            const pricing = LLM_PRICING.pinecone[mappedModel];
+            cost = requestCount * pricing.input / 1_000; // Per 1K queries
+        }
+        else {
+            // Log unmapped models for debugging
+            console.warn(`⚠️ Cost calculation: Unknown model '${model}' for provider '${provider}'. Mapped to: '${mappedModel}'`);
+        }
+        return Math.round(cost * 1_000_000) / 1_000_000; // Round to 6 decimal places
+    }
+    /**
+     * Log API usage and calculate costs
+     */
+    async logUsage(userId, metrics) {
+        try {
+            const startTime = Date.now();
+            const estimatedCost = this.calculateCost(metrics);
+            const totalTokens = (metrics.inputTokens || 0) + (metrics.outputTokens || 0);
+            const usageLog = {
+                userId,
+                provider: metrics.provider,
+                model: metrics.model,
+                operation: metrics.operation,
+                inputTokens: metrics.inputTokens || null,
+                outputTokens: metrics.outputTokens || null,
+                totalTokens: totalTokens || null,
+                requestCount: metrics.requestCount || 1,
+                estimatedCost: estimatedCost.toString(),
+                requestData: metrics.requestData || null,
+                responseTime: metrics.responseTime || (Date.now() - startTime),
+                success: metrics.success !== false,
+                errorMessage: metrics.errorMessage || null,
+            };
+            await db.insert(apiUsageLogs).values(usageLog);
+            // Update monthly summary
+            if (userId) {
+                await this.updateMonthlySummary(userId, metrics, estimatedCost, totalTokens);
+            }
+        }
+        catch (error) {
+            console.error('Failed to log API usage:', error);
+            // Don't throw error to avoid breaking main functionality
+        }
+    }
+    /**
+     * Update monthly usage summary
+     */
+    async updateMonthlySummary(userId, metrics, cost, totalTokens) {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1; // JavaScript months are 0-indexed
+        try {
+            // Check if record exists
+            const existing = await db
+                .select()
+                .from(monthlyUsageSummary)
+                .where(and(eq(monthlyUsageSummary.userId, userId), eq(monthlyUsageSummary.year, year), eq(monthlyUsageSummary.month, month), eq(monthlyUsageSummary.provider, metrics.provider), eq(monthlyUsageSummary.model, metrics.model)))
+                .limit(1);
+            if (existing.length > 0) {
+                // Update existing record
+                await db
+                    .update(monthlyUsageSummary)
+                    .set({
+                    totalRequests: sql `${monthlyUsageSummary.totalRequests} + ${metrics.requestCount || 1}`,
+                    totalInputTokens: sql `${monthlyUsageSummary.totalInputTokens} + ${metrics.inputTokens || 0}`,
+                    totalOutputTokens: sql `${monthlyUsageSummary.totalOutputTokens} + ${metrics.outputTokens || 0}`,
+                    totalTokens: sql `${monthlyUsageSummary.totalTokens} + ${totalTokens}`,
+                    totalCost: sql `${monthlyUsageSummary.totalCost} + ${cost}`,
+                    updatedAt: new Date(),
+                })
+                    .where(eq(monthlyUsageSummary.id, existing[0].id));
+            }
+            else {
+                // Create new record
+                const newSummary = {
+                    userId,
+                    year,
+                    month,
+                    provider: metrics.provider,
+                    model: metrics.model,
+                    totalRequests: metrics.requestCount || 1,
+                    totalInputTokens: metrics.inputTokens || 0,
+                    totalOutputTokens: metrics.outputTokens || 0,
+                    totalTokens,
+                    totalCost: cost.toString(),
+                };
+                await db.insert(monthlyUsageSummary).values(newSummary);
+            }
+        }
+        catch (error) {
+            console.error('Failed to update monthly summary:', error);
+        }
+    }
+    /**
+     * Get usage statistics for a user
+     */
+    async getUserUsageStats(userId, year, month) {
+        try {
+            let whereConditions = [eq(monthlyUsageSummary.userId, userId)];
+            if (year && month) {
+                whereConditions.push(eq(monthlyUsageSummary.year, year));
+                whereConditions.push(eq(monthlyUsageSummary.month, month));
+            }
+            else if (year) {
+                whereConditions.push(eq(monthlyUsageSummary.year, year));
+            }
+            const results = await db
+                .select()
+                .from(monthlyUsageSummary)
+                .where(and(...whereConditions));
+            const stats = {
+                totalCost: 0,
+                totalRequests: 0,
+                totalTokens: 0,
+                byProvider: {},
+            };
+            results.forEach((record) => {
+                const cost = parseFloat(record.totalCost || '0');
+                const requests = record.totalRequests || 0;
+                const tokens = record.totalTokens || 0;
+                stats.totalCost += cost;
+                stats.totalRequests += requests;
+                stats.totalTokens += tokens;
+                if (!stats.byProvider[record.provider]) {
+                    stats.byProvider[record.provider] = {
+                        cost: 0,
+                        requests: 0,
+                        tokens: 0,
+                        models: {},
+                    };
+                }
+                const provider = stats.byProvider[record.provider];
+                provider.cost += cost;
+                provider.requests += requests;
+                provider.tokens += tokens;
+                if (!provider.models[record.model]) {
+                    provider.models[record.model] = { cost: 0, requests: 0, tokens: 0 };
+                }
+                provider.models[record.model].cost += cost;
+                provider.models[record.model].requests += requests;
+                provider.models[record.model].tokens += tokens;
+            });
+            return stats;
+        }
+        catch (error) {
+            console.error('Failed to get user usage stats:', error);
+            return {
+                totalCost: 0,
+                totalRequests: 0,
+                totalTokens: 0,
+                byProvider: {},
+            };
+        }
+    }
+    /**
+     * Get current month usage for quick dashboard display
+     */
+    async getCurrentMonthUsage(userId) {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const stats = await this.getUserUsageStats(userId, year, month);
+        // Estimate full month cost based on current usage
+        const daysInMonth = new Date(year, month, 0).getDate();
+        const currentDay = now.getDate();
+        const estimatedMonthlyCost = (stats.totalCost / currentDay) * daysInMonth;
+        return {
+            totalCost: stats.totalCost,
+            totalRequests: stats.totalRequests,
+            estimatedMonthlyCost: Math.round(estimatedMonthlyCost * 100) / 100,
+        };
+    }
+    /**
+     * Get system-wide usage statistics (admin only)
+     */
+    async getSystemUsageStats() {
+        try {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const results = await db
+                .select({
+                userId: monthlyUsageSummary.userId,
+                provider: monthlyUsageSummary.provider,
+                totalCost: monthlyUsageSummary.totalCost,
+                totalRequests: monthlyUsageSummary.totalRequests,
+            })
+                .from(monthlyUsageSummary)
+                .where(and(eq(monthlyUsageSummary.year, year), eq(monthlyUsageSummary.month, month)));
+            const stats = {
+                totalUsers: new Set(),
+                totalCost: 0,
+                totalRequests: 0,
+                byProvider: {},
+                userStats: {},
+            };
+            results.forEach((record) => {
+                if (record.userId) {
+                    stats.totalUsers.add(record.userId);
+                    if (!stats.userStats[record.userId]) {
+                        stats.userStats[record.userId] = { cost: 0, requests: 0 };
+                    }
+                    const cost = parseFloat(record.totalCost || '0');
+                    const requests = record.totalRequests || 0;
+                    stats.totalCost += cost;
+                    stats.totalRequests += requests;
+                    stats.userStats[record.userId].cost += cost;
+                    stats.userStats[record.userId].requests += requests;
+                    if (!stats.byProvider[record.provider]) {
+                        stats.byProvider[record.provider] = 0;
+                    }
+                    stats.byProvider[record.provider] += cost;
+                }
+            });
+            const topUsers = Object.entries(stats.userStats)
+                .map(([userId, data]) => ({ userId, ...data }))
+                .sort((a, b) => b.cost - a.cost)
+                .slice(0, 10);
+            return {
+                totalUsers: stats.totalUsers.size,
+                totalCost: Math.round(stats.totalCost * 100) / 100,
+                totalRequests: stats.totalRequests,
+                byProvider: stats.byProvider,
+                topUsers,
+            };
+        }
+        catch (error) {
+            console.error('Failed to get system usage stats:', error);
+            return {
+                totalUsers: 0,
+                totalCost: 0,
+                totalRequests: 0,
+                byProvider: {},
+                topUsers: [],
+            };
+        }
+    }
+}
+export const apiCostTracker = new ApiCostTracker();
