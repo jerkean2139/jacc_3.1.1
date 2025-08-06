@@ -5120,7 +5120,15 @@ File Information:
         const ocrService = AdvancedOCRService.getInstance();
         
         if (doc.path) {
-          const filePath = path.join(process.cwd(), 'uploads', doc.path);
+          // Handle different path formats - some paths are /tmp/filename, others are hash names
+          let filePath;
+          if (doc.path.startsWith('/tmp/') || doc.path.startsWith('/')) {
+            // This is likely a test file path, try to find the actual file by name
+            filePath = path.join(process.cwd(), 'uploads', doc.name);
+          } else {
+            // This is probably a hash filename
+            filePath = path.join(process.cwd(), 'uploads', doc.path);
+          }
           
           // Check if file exists first
           try {
@@ -5142,10 +5150,30 @@ File Information:
               });
             }
           } catch (fileError) {
-            return res.status(400).json({ 
-              error: 'File not found at expected location',
-              details: `Could not access file: ${doc.path}`
-            });
+            // Try alternative file locations
+            const alternativePaths = [
+              path.join(process.cwd(), 'uploads', doc.name),
+              path.join(process.cwd(), 'uploads', path.basename(doc.path)),
+              path.join(process.cwd(), doc.path),
+              `/tmp/${doc.name}`
+            ];
+            
+            let foundFile = false;
+            for (const altPath of alternativePaths) {
+              try {
+                await fs.access(altPath);
+                filePath = altPath;
+                foundFile = true;
+                break;
+              } catch {}
+            }
+            
+            if (!foundFile) {
+              return res.status(400).json({ 
+                error: 'File not found at expected location',
+                details: `Could not access file: ${doc.path}. Tried alternative locations.`
+              });
+            }
           }
         } else {
           return res.status(400).json({ 
