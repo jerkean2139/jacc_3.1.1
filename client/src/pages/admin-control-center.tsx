@@ -246,15 +246,7 @@ export default function AdminControlCenter() {
     cacheDuration: 3600
   });
 
-  // Update local AI config when data is loaded
-  React.useEffect(() => {
-    if (aiConfigData && Object.keys(aiConfigData).length > 0) {
-      setLocalAiConfig(prevConfig => ({
-        ...prevConfig,
-        ...aiConfigData
-      }));
-    }
-  }, [aiConfigData]);
+
 
   // Slider states for AI & Search settings  
   const [temperature, setTemperature] = useState([0.7]);
@@ -410,6 +402,16 @@ export default function AdminControlCenter() {
     },
     retry: false,
   });
+
+  // Update local AI config when data is loaded
+  React.useEffect(() => {
+    if (aiConfigData && Object.keys(aiConfigData).length > 0) {
+      setLocalAiConfig(prevConfig => ({
+        ...prevConfig,
+        ...aiConfigData
+      }));
+    }
+  }, [aiConfigData]);
 
   // Enhanced conversation messages query for full thread display - CRITICAL: DO NOT CHANGE
   const { data: chatMessages = [], isLoading: messagesLoading, error: messagesError } = useQuery({
