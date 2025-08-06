@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { FileText, Eye, Zap, Settings, BarChart3, CheckCircle, AlertTriangle, Clock, Trash2, Info } from 'lucide-react';
+import { FileText, Eye, Zap, Settings, BarChart3, CheckCircle, AlertTriangle, Clock, Trash2, Info, Brain } from 'lucide-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 
@@ -201,8 +201,8 @@ const DocumentAnalysisManager: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Advanced OCR Management</h2>
-          <p className="text-muted-foreground">Process documents with multi-engine OCR and quality enhancement</p>
+          <h2 className="text-2xl font-bold tracking-tight">AI Document Analysis</h2>
+          <p className="text-muted-foreground">Intelligent document processing with Claude 4 Sonnet for business intelligence</p>
         </div>
         <div className="flex gap-2">
           <Button 
@@ -217,8 +217,8 @@ const DocumentAnalysisManager: React.FC = () => {
               </>
             ) : (
               <>
-                <Zap className="h-4 w-4" />
-                Batch Process
+                <Brain className="h-4 w-4" />
+                Batch Analyze
               </>
             )}
           </Button>
@@ -227,18 +227,18 @@ const DocumentAnalysisManager: React.FC = () => {
 
       <Tabs defaultValue="process" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="process">Process Documents</TabsTrigger>
-          <TabsTrigger value="analysis">Quality Analysis</TabsTrigger>
-          <TabsTrigger value="settings">OCR Settings</TabsTrigger>
+          <TabsTrigger value="process">Analyze Documents</TabsTrigger>
+          <TabsTrigger value="analysis">AI Insights</TabsTrigger>
+          <TabsTrigger value="settings">Analysis Settings</TabsTrigger>
         </TabsList>
 
         <TabsContent value="process" className="space-y-4">
           <Alert className="border-blue-200 bg-blue-50">
             <Info className="h-4 w-4" />
             <AlertDescription>
-              <strong>Button Guide:</strong> 
-              • <strong>Process</strong> - Extract text from documents that haven't been processed yet
-              • <strong>Force Reprocess</strong> - Re-extract text from documents (overwrites existing content)
+              <strong>Processing Guide:</strong> 
+              • <strong>Process</strong> - Analyze documents with Claude 4 Sonnet for business intelligence
+              • <strong>Force Reprocess</strong> - Re-analyze documents with updated AI models
               • <strong>Delete</strong> - Permanently remove document from system
             </AlertDescription>
           </Alert>
@@ -246,11 +246,11 @@ const DocumentAnalysisManager: React.FC = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
-                Document Processing
+                <Brain className="h-5 w-5" />
+                AI Document Analysis
               </CardTitle>
               <CardDescription>
-                Process PDF and image documents with advanced OCR techniques
+                Analyze documents with Claude 4 Sonnet for intelligent business insights
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -264,7 +264,7 @@ const DocumentAnalysisManager: React.FC = () => {
                   <div className="grid gap-4">
                     {documents.length === 0 ? (
                       <div className="text-center py-8 text-muted-foreground">
-                        No PDF or image documents found for OCR processing
+                        No documents found for AI analysis
                       </div>
                     ) : (
                       documents.slice(0, 20).map((doc) => (
@@ -282,7 +282,7 @@ const DocumentAnalysisManager: React.FC = () => {
                             {processingDocument === doc.id ? (
                               <Button disabled size="sm">
                                 <Clock className="h-4 w-4 animate-spin mr-2" />
-                                Processing...
+                                Analyzing...
                               </Button>
                             ) : (
                               <>
@@ -290,17 +290,17 @@ const DocumentAnalysisManager: React.FC = () => {
                                   size="sm"
                                   variant="outline"
                                   onClick={() => handleProcessDocument(doc.id, false)}
-                                  title="Extract text from this document (first-time processing)"
+                                  title="Analyze this document with Claude 4 Sonnet for business intelligence"
                                 >
-                                  Process
+                                  Analyze
                                 </Button>
                                 <Button
                                   size="sm"
                                   variant="secondary"
                                   onClick={() => handleProcessDocument(doc.id, true)}
-                                  title="Re-extract text from this document (overwrites existing content)"
+                                  title="Re-analyze document with updated AI models (overwrites existing content)"
                                 >
-                                  Force Reprocess
+                                  Re-analyze
                                 </Button>
                                 <Button
                                   size="sm"
@@ -331,8 +331,8 @@ const DocumentAnalysisManager: React.FC = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5" />
-                OCR Quality Analysis
+                <Brain className="h-5 w-5" />
+                AI Analysis Insights
               </CardTitle>
               <CardDescription>
                 Analyze OCR quality and processing results for documents
