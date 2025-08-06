@@ -8,6 +8,16 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (August 2025)
 
+### Memory Optimization & Performance Enhancement (Aug 6, 2025)
+- **CRITICAL**: Implemented aggressive memory optimization to resolve 97% memory usage issues
+- Reduced memory thresholds: Warning at 70%, Critical at 85% (down from 85%/95%)
+- Target memory limit: 200MB (down from 400MB) with 180MB proactive cleanup trigger
+- Enhanced garbage collection: Multiple GC cycles + every 60 seconds + on-demand cleanup
+- Request payload limits: Reduced from 10MB to 2MB to conserve memory
+- Faster monitoring cycles: Every 15 seconds (down from 30 seconds)
+- Added Node.js runtime flags: --max-old-space-size=200 --optimize-for-size --expose-gc
+- Aggressive require cache clearing for non-essential modules
+
 ### API Pricing Model & Cost Tracking Updates (Aug 6, 2025)
 - **NEW**: Added Claude Opus 4.1 model (released Aug 5, 2025) - latest AI model with enhanced coding capabilities
 - Updated OpenAI GPT-4o pricing to current market rates ($20 per 1M output tokens)

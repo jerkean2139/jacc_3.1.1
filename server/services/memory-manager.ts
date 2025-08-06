@@ -3,8 +3,8 @@ import { performance } from "perf_hooks";
 class MemoryManager {
   private static instance: MemoryManager;
   private cleanupIntervals: NodeJS.Timeout[] = [];
-  private memoryWarningThreshold = 0.85; // 85%
-  private memoryCriticalThreshold = 0.95; // 95%
+  private memoryWarningThreshold = 0.70; // 70% (reduced)
+  private memoryCriticalThreshold = 0.85; // 85% (reduced)
 
   static getInstance(): MemoryManager {
     if (!MemoryManager.instance) {
@@ -18,17 +18,17 @@ class MemoryManager {
   }
 
   private startMemoryMonitoring() {
-    // Monitor memory every 30 seconds
+    // Monitor memory every 15 seconds (more frequent)
     const memoryInterval = setInterval(() => {
       this.checkMemoryUsage();
-    }, 30000);
+    }, 15000);
     
     this.cleanupIntervals.push(memoryInterval);
   }
 
   private checkMemoryUsage() {
     const memUsage = process.memoryUsage();
-    const totalMemory = 1024 * 1024 * 1024; // 1GB in Replit
+    const totalMemory = 400 * 1024 * 1024; // 400MB realistic limit 
     const usedMemory = memUsage.rss;
     const memoryPercentage = usedMemory / totalMemory;
 

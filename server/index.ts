@@ -70,9 +70,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// Body parsers
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: false, limit: "10mb" }));
+// Body parsers - reduce limits to save memory
+app.use(express.json({ limit: "2mb" }));
+app.use(express.urlencoded({ extended: false, limit: "2mb" }));
 
 // Performance tracking
 app.use(performanceService.trackPerformance());
