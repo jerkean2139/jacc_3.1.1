@@ -1,6 +1,7 @@
 import Tesseract from 'tesseract.js';
 import fs from 'fs/promises';
 import path from 'path';
+
 // Note: Using lightweight fallback for image processing
 let sharp: any = null;
 try {

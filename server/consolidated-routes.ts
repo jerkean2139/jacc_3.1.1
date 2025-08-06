@@ -5116,7 +5116,7 @@ File Information:
       
       // Use OCR service to extract text
       try {
-        const { AdvancedOCRService } = await import('../advanced-ocr-service');
+        const { AdvancedOCRService } = await import('./advanced-ocr-service');
         const ocrService = AdvancedOCRService.getInstance();
         
         if (doc.path) {
@@ -5221,7 +5221,7 @@ File Information:
         
         // Use OCR service to extract text
         try {
-          const { AdvancedOCRService } = await import('../advanced-ocr-service');
+          const { AdvancedOCRService } = await import('./advanced-ocr-service');
           const ocrService = AdvancedOCRService.getInstance();
           
           // Try to extract text from the file path if available
