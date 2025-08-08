@@ -1,14 +1,31 @@
-import { pgTable, text, varchar, timestamp, jsonb, index, serial, integer, boolean, uuid, real, decimal } from "drizzle-orm/pg-core";
+import {
+    pgTable,
+    text,
+    varchar,
+    timestamp,
+    jsonb,
+    index,
+    serial,
+    integer,
+    boolean,
+    uuid,
+    real,
+    decimal,
+} from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
 // Session storage table.
 // (IMPORTANT) This table is mandatory for Replit Auth, don't drop it.
-export const sessions = pgTable("sessions", {
-    sid: varchar("sid").primaryKey(),
-    sess: jsonb("sess").notNull(),
-    expire: timestamp("expire").notNull(),
-}, (table) => [index("IDX_session_expire").on(table.expire)]);
+export const sessions = pgTable(
+    "sessions",
+    {
+        sid: varchar("sid").primaryKey(),
+        sess: jsonb("sess").notNull(),
+        expire: timestamp("expire").notNull(),
+    },
+    (table) => [index("IDX_session_expire").on(table.expire)],
+);
 // User storage table with authentication
 export const users = pgTable("users", {
     id: varchar("id").primaryKey().notNull(),
@@ -57,7 +74,9 @@ export const vendorComparisons = pgTable("vendor_comparisons", {
 // User session tracking for admin analytics
 export const userSessions = pgTable("user_sessions", {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
     sessionStart: timestamp("session_start").defaultNow(),
     sessionEnd: timestamp("session_end"),
     firstMessage: text("first_message"),
@@ -69,8 +88,13 @@ export const userSessions = pgTable("user_sessions", {
 });
 // User prompts management
 export const userPrompts = pgTable("user_prompts", {
-    id: varchar("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    id: varchar("id")
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => crypto.randomUUID()),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
     name: varchar("name").notNull(),
     content: text("content").notNull(),
     temperature: decimal("temperature"),
@@ -87,9 +111,15 @@ export const userPrompts = pgTable("user_prompts", {
 // Prompt usage analytics
 export const promptUsageLog = pgTable("prompt_usage_log", {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-    sessionId: uuid("session_id").references(() => userSessions.id, { onDelete: "cascade" }),
-    promptId: varchar("prompt_id").references(() => userPrompts.id, { onDelete: "set null" }),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    sessionId: uuid("session_id").references(() => userSessions.id, {
+        onDelete: "cascade",
+    }),
+    promptId: varchar("prompt_id").references(() => userPrompts.id, {
+        onDelete: "set null",
+    }),
     promptName: varchar("prompt_name").notNull(),
     promptCategory: varchar("prompt_category"),
     usedAt: timestamp("used_at").defaultNow(),
@@ -108,14 +138,16 @@ export const adminSettings = pgTable("admin_settings", {
     updatedBy: varchar("updated_by").references(() => users.id),
     updatedAt: timestamp("updated_at").defaultNow(),
 });
-// API Keys for external tool integration  
+// API Keys for external tool integration
 // API Keys for external tool integration
 export const apiKeys = pgTable("api_keys", {
     id: uuid("id").primaryKey().defaultRandom(),
     name: varchar("name").notNull(),
     keyHash: varchar("key_hash").notNull(),
     keyEncrypted: jsonb("key_encrypted"), // Encrypted API key storage
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
     permissions: text("permissions").array().default([]), // ['read', 'write', 'admin']
     isActive: boolean("is_active").default(true),
     lastUsed: timestamp("last_used"),
@@ -147,8 +179,12 @@ export const vendors = pgTable("vendors", {
 export const folders = pgTable("folders", {
     id: uuid("id").primaryKey().defaultRandom(),
     name: varchar("name", { length: 255 }).notNull(),
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-    parentId: uuid("parent_id").references(() => folders.id, { onDelete: "cascade" }),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    parentId: uuid("parent_id").references(() => folders.id, {
+        onDelete: "cascade",
+    }),
     color: varchar("color", { length: 50 }).default("blue"),
     vectorNamespace: varchar("vector_namespace", { length: 255 }).notNull(), // Pinecone namespace
     folderType: varchar("folder_type", { length: 50 }).default("custom"), // processor, gateway, hardware, sales, custom
@@ -160,8 +196,12 @@ export const folders = pgTable("folders", {
 export const chats = pgTable("chats", {
     id: uuid("id").primaryKey().defaultRandom(),
     title: varchar("title", { length: 255 }).notNull(),
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-    folderId: uuid("folder_id").references(() => folders.id, { onDelete: "set null" }),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    folderId: uuid("folder_id").references(() => folders.id, {
+        onDelete: "set null",
+    }),
     isActive: boolean("is_active").default(true),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
@@ -169,7 +209,9 @@ export const chats = pgTable("chats", {
 // Individual messages within chats
 export const messages = pgTable("messages", {
     id: uuid("id").primaryKey().defaultRandom(),
-    chatId: uuid("chat_id").notNull().references(() => chats.id, { onDelete: "cascade" }),
+    chatId: uuid("chat_id")
+        .notNull()
+        .references(() => chats.id, { onDelete: "cascade" }),
     content: text("content").notNull(),
     role: varchar("role", { length: 20 }).notNull(), // 'user' or 'assistant'
     metadata: jsonb("metadata"), // For storing additional data like file references
@@ -178,8 +220,12 @@ export const messages = pgTable("messages", {
 // Content Quality Management - Chunks needing human attention
 export const contentQualityFlags = pgTable("content_quality_flags", {
     id: uuid("id").primaryKey().defaultRandom(),
-    chunkId: varchar("chunk_id").notNull().references(() => documentChunks.id, { onDelete: "cascade" }),
-    documentId: uuid("document_id").notNull().references(() => documents.id, { onDelete: "cascade" }),
+    chunkId: varchar("chunk_id")
+        .notNull()
+        .references(() => documentChunks.id, { onDelete: "cascade" }),
+    documentId: uuid("document_id")
+        .notNull()
+        .references(() => documents.id, { onDelete: "cascade" }),
     flagType: varchar("flag_type").notNull(), // 'generic_template', 'too_short', 'needs_details', 'low_quality'
     flagReason: text("flag_reason").notNull(),
     priority: varchar("priority").default("medium"), // 'low', 'medium', 'high', 'critical'
@@ -195,23 +241,32 @@ export const contentQualityFlags = pgTable("content_quality_flags", {
     updatedAt: timestamp("updated_at").defaultNow(),
 });
 // Content Enhancement Workflow - Track improvement sessions
-export const contentEnhancementSessions = pgTable("content_enhancement_sessions", {
-    id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-    sessionName: varchar("session_name").notNull(),
-    description: text("description"),
-    chunksProcessed: integer("chunks_processed").default(0),
-    chunksEnhanced: integer("chunks_enhanced").default(0),
-    timeSpent: integer("time_spent_minutes").default(0),
-    status: varchar("status").default("active"), // 'active', 'paused', 'completed'
-    createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at").defaultNow(),
-});
+export const contentEnhancementSessions = pgTable(
+    "content_enhancement_sessions",
+    {
+        id: uuid("id").primaryKey().defaultRandom(),
+        userId: varchar("user_id")
+            .notNull()
+            .references(() => users.id, { onDelete: "cascade" }),
+        sessionName: varchar("session_name").notNull(),
+        description: text("description"),
+        chunksProcessed: integer("chunks_processed").default(0),
+        chunksEnhanced: integer("chunks_enhanced").default(0),
+        timeSpent: integer("time_spent_minutes").default(0),
+        status: varchar("status").default("active"), // 'active', 'paused', 'completed'
+        createdAt: timestamp("created_at").defaultNow(),
+        updatedAt: timestamp("updated_at").defaultNow(),
+    },
+);
 // Chat monitoring for analytics and debugging
 export const chatMonitoring = pgTable("chat_monitoring", {
     id: uuid("id").primaryKey().defaultRandom(),
-    chatId: uuid("chat_id").notNull().references(() => chats.id, { onDelete: "cascade" }),
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    chatId: uuid("chat_id")
+        .notNull()
+        .references(() => chats.id, { onDelete: "cascade" }),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
     firstMessage: text("first_message"),
     messageCount: integer("message_count").default(0),
     sessionDuration: integer("session_duration").default(0),
@@ -230,8 +285,12 @@ export const documents = pgTable("documents", {
     mimeType: varchar("mime_type", { length: 100 }).notNull(),
     size: integer("size").notNull(),
     path: text("path").notNull(),
-    userId: varchar("user_id").references(() => users.id, { onDelete: "cascade" }),
-    folderId: uuid("folder_id").references(() => folders.id, { onDelete: "set null" }),
+    userId: varchar("user_id").references(() => users.id, {
+        onDelete: "cascade",
+    }),
+    folderId: uuid("folder_id").references(() => folders.id, {
+        onDelete: "set null",
+    }),
     isFavorite: boolean("is_favorite").default(false),
     contentHash: varchar("content_hash", { length: 64 }), // SHA256 hash for duplicate detection
     nameHash: varchar("name_hash", { length: 32 }), // MD5 hash of normalized filename
@@ -259,8 +318,13 @@ export const personalDocuments = pgTable("personal_documents", {
     size: integer("size").notNull(),
     path: text("path").notNull(),
     content: text("content"), // Extracted text content for search
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-    personalFolderId: uuid("personal_folder_id").references(() => personalFolders.id, { onDelete: "set null" }),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    personalFolderId: uuid("personal_folder_id").references(
+        () => personalFolders.id,
+        { onDelete: "set null" },
+    ),
     isFavorite: boolean("is_favorite").default(false),
     tags: text("tags").array().default([]),
     notes: text("notes"), // User's personal notes about the document
@@ -274,8 +338,12 @@ export const personalFolders = pgTable("personal_folders", {
     description: text("description"),
     color: varchar("color", { length: 7 }).default("#3B82F6"), // Hex color code
     icon: varchar("icon", { length: 50 }).default("Folder"), // Lucide icon name
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-    parentId: uuid("parent_id").references(() => personalFolders.id, { onDelete: "cascade" }),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    parentId: uuid("parent_id").references(() => personalFolders.id, {
+        onDelete: "cascade",
+    }),
     sortOrder: integer("sort_order").default(0),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
@@ -292,14 +360,18 @@ export const scheduledUrls = pgTable("scheduled_urls", {
     scrapeCount: integer("scrape_count").notNull().default(0),
     lastStatus: varchar("last_status", { length: 20 }).default("pending"), // 'success', 'failed', 'pending'
     lastError: text("last_error"),
-    createdBy: varchar("created_by").notNull().references(() => users.id, { onDelete: "cascade" }),
+    createdBy: varchar("created_by")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
 });
 // User favorites (chats, documents, etc.)
 export const favorites = pgTable("favorites", {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
     itemType: varchar("item_type", { length: 50 }).notNull(), // 'chat', 'document', 'folder'
     itemId: uuid("item_id").notNull(),
     createdAt: timestamp("created_at").defaultNow(),
@@ -341,17 +413,25 @@ export const achievements = pgTable("achievements", {
 });
 export const userAchievements = pgTable("user_achievements", {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-    achievementId: uuid("achievement_id").notNull().references(() => achievements.id, { onDelete: "cascade" }),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    achievementId: uuid("achievement_id")
+        .notNull()
+        .references(() => achievements.id, { onDelete: "cascade" }),
     unlockedAt: timestamp("unlocked_at").defaultNow(),
     progress: jsonb("progress"), // Optional progress tracking
 });
 export const userStats = pgTable("user_stats", {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
     totalMessages: integer("total_messages").notNull().default(0),
     totalChats: integer("total_chats").notNull().default(0),
-    calculationsPerformed: integer("calculations_performed").notNull().default(0),
+    calculationsPerformed: integer("calculations_performed")
+        .notNull()
+        .default(0),
     documentsAnalyzed: integer("documents_analyzed").notNull().default(0),
     proposalsGenerated: integer("proposals_generated").notNull().default(0),
     currentStreak: integer("current_streak").notNull().default(0),
@@ -368,8 +448,12 @@ export const userStats = pgTable("user_stats", {
 // Chat ratings and feedback system
 export const chatRatings = pgTable("chat_ratings", {
     id: uuid("id").primaryKey().defaultRandom(),
-    chatId: uuid("chat_id").notNull().references(() => chats.id, { onDelete: "cascade" }),
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    chatId: uuid("chat_id")
+        .notNull()
+        .references(() => chats.id, { onDelete: "cascade" }),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
     rating: integer("rating").notNull(), // 1-5 stars
     feedback: text("feedback"), // Optional user feedback
     sessionNotes: text("session_notes"), // Admin notes about why rating was low
@@ -386,11 +470,15 @@ export const promptTemplates = pgTable("prompt_templates", {
     description: text("description"),
     category: varchar("category", { length: 100 }).notNull(), // system, user_facing, training, marketing
     template: text("template").notNull(),
-    temperature: decimal("temperature", { precision: 3, scale: 2 }).default("0.70"),
+    temperature: decimal("temperature", { precision: 3, scale: 2 }).default(
+        "0.70",
+    ),
     maxTokens: integer("max_tokens").default(1500),
     isActive: boolean("is_active").default(true),
     usageCount: integer("usage_count").default(0),
-    successRate: decimal("success_rate", { precision: 5, scale: 2 }).default("0.00"),
+    successRate: decimal("success_rate", { precision: 5, scale: 2 }).default(
+        "0.00",
+    ),
     lastUsed: timestamp("last_used"),
     createdBy: varchar("created_by").references(() => users.id),
     updatedBy: varchar("updated_by").references(() => users.id),
@@ -407,7 +495,9 @@ export const knowledgeBase = pgTable("knowledge_base", {
     isActive: boolean("is_active").default(true),
     tags: text("tags").array(),
     searchCount: integer("search_count").default(0),
-    effectiveness: decimal("effectiveness", { precision: 3, scale: 2 }).default("0.00"),
+    effectiveness: decimal("effectiveness", { precision: 3, scale: 2 }).default(
+        "0.00",
+    ),
     createdBy: varchar("created_by").references(() => users.id),
     updatedBy: varchar("updated_by").references(() => users.id),
     createdAt: timestamp("created_at").defaultNow(),
@@ -416,7 +506,9 @@ export const knowledgeBase = pgTable("knowledge_base", {
 // Daily usage tracking for streaks and engagement
 export const dailyUsage = pgTable("daily_usage", {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
     date: timestamp("date").notNull(),
     messagesCount: integer("messages_count").default(0),
     chatsCreated: integer("chats_created").default(0),
@@ -428,7 +520,9 @@ export const dailyUsage = pgTable("daily_usage", {
 // Leaderboard periods (weekly, monthly, all-time)
 export const leaderboards = pgTable("leaderboards", {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
     period: varchar("period").notNull(), // 'weekly', 'monthly', 'all_time'
     rank: integer("rank").notNull(),
     score: integer("score").notNull(),
@@ -446,7 +540,9 @@ export const qaKnowledgeBase = pgTable("qa_knowledge_base", {
     tags: text("tags").array(),
     isActive: boolean("is_active").default(true),
     priority: integer("priority").default(0),
-    createdBy: varchar("created_by").notNull().references(() => users.id),
+    createdBy: varchar("created_by")
+        .notNull()
+        .references(() => users.id),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -456,20 +552,28 @@ export const documentTags = pgTable("document_tags", {
     name: varchar("name").notNull(),
     color: varchar("color").notNull(),
     description: text("description"),
-    createdBy: varchar("created_by").notNull().references(() => users.id),
+    createdBy: varchar("created_by")
+        .notNull()
+        .references(() => users.id),
     createdAt: timestamp("created_at").defaultNow(),
 });
 // Document Tag Relationships
 export const documentTagRelations = pgTable("document_tag_relations", {
     id: uuid("id").primaryKey().defaultRandom(),
-    documentId: uuid("document_id").notNull().references(() => documents.id),
-    tagId: uuid("tag_id").notNull().references(() => documentTags.id),
+    documentId: uuid("document_id")
+        .notNull()
+        .references(() => documents.id),
+    tagId: uuid("tag_id")
+        .notNull()
+        .references(() => documentTags.id),
     createdAt: timestamp("created_at").defaultNow(),
 });
 // Document Chunks for Search
 export const documentChunks = pgTable("document_chunks", {
     id: varchar("id").primaryKey(),
-    documentId: uuid("document_id").notNull().references(() => documents.id, { onDelete: "cascade" }),
+    documentId: uuid("document_id")
+        .notNull()
+        .references(() => documents.id, { onDelete: "cascade" }),
     content: text("content").notNull(),
     chunkIndex: integer("chunk_index").notNull(),
     metadata: jsonb("metadata"),
@@ -538,7 +642,9 @@ export const faqKnowledgeBase = pgTable("faq_knowledge_base", {
     question: text("question").notNull(),
     answer: text("answer").notNull(),
     category: varchar("category").notNull(), // pos, integration, support, contact, etc.
-    categoryId: integer("category_id").references(() => faqCategories.id, { onDelete: "set null" }),
+    categoryId: integer("category_id").references(() => faqCategories.id, {
+        onDelete: "set null",
+    }),
     tags: text("tags").array().default([]),
     priority: integer("priority").default(1),
     isActive: boolean("is_active").default(true),
@@ -596,10 +702,14 @@ export const vendorUrls = pgTable("vendor_urls", {
     tags: text("tags").array().default([]),
     isActive: boolean("is_active").default(true),
     autoUpdate: boolean("auto_update").default(false), // Enable automatic content updates
-    updateFrequency: varchar("update_frequency", { length: 20 }).default("weekly"), // daily, weekly, monthly
+    updateFrequency: varchar("update_frequency", { length: 20 }).default(
+        "weekly",
+    ), // daily, weekly, monthly
     lastScraped: timestamp("last_scraped"),
     lastContentHash: varchar("last_content_hash", { length: 64 }), // SHA256 of content
-    scrapingStatus: varchar("scraping_status", { length: 20 }).default("pending"), // pending, success, failed
+    scrapingStatus: varchar("scraping_status", { length: 20 }).default(
+        "pending",
+    ), // pending, success, failed
     errorMessage: text("error_message"),
     wordCount: integer("word_count").default(0),
     createdBy: varchar("created_by").references(() => users.id),
@@ -609,10 +719,14 @@ export const vendorUrls = pgTable("vendor_urls", {
 // Admin logging table for tracking all first user chat requests
 export const userChatLogs = pgTable("user_chat_logs", {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
     sessionId: varchar("session_id"),
     firstMessage: text("first_message").notNull(),
-    chatId: uuid("chat_id").notNull().references(() => chats.id, { onDelete: "cascade" }),
+    chatId: uuid("chat_id")
+        .notNull()
+        .references(() => chats.id, { onDelete: "cascade" }),
     userRole: varchar("user_role"),
     ipAddress: varchar("ip_address"),
     userAgent: text("user_agent"),
@@ -622,7 +736,9 @@ export const userChatLogs = pgTable("user_chat_logs", {
 export const aiTrainingFeedback = pgTable("ai_training_feedback", {
     id: uuid("id").primaryKey().defaultRandom(),
     chatId: uuid("chat_id").references(() => chats.id, { onDelete: "cascade" }),
-    messageId: uuid("message_id").references(() => messages.id, { onDelete: "cascade" }),
+    messageId: uuid("message_id").references(() => messages.id, {
+        onDelete: "cascade",
+    }),
     userQuery: text("user_query").notNull(),
     aiResponse: text("ai_response").notNull(),
     correctResponse: text("correct_response"),
@@ -657,7 +773,9 @@ export const aiPromptTemplates = pgTable("ai_prompt_templates", {
 });
 export const aiKnowledgeCorrections = pgTable("ai_knowledge_corrections", {
     id: uuid("id").primaryKey().defaultRandom(),
-    feedbackId: uuid("feedback_id").references(() => aiTrainingFeedback.id, { onDelete: "cascade" }),
+    feedbackId: uuid("feedback_id").references(() => aiTrainingFeedback.id, {
+        onDelete: "cascade",
+    }),
     incorrectInformation: text("incorrect_information").notNull(),
     correctInformation: text("correct_information").notNull(),
     sourceDocuments: text("source_documents").array(),
@@ -688,7 +806,9 @@ export const aiTrainingMaterials = pgTable("ai_training_materials", {
 // Add missing columns to userStats table
 export const userStatsExtended = pgTable("user_stats_extended", {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
     averageRating: real("average_rating").default(0),
     totalRatings: integer("total_ratings").default(0),
     averageResponseTime: real("average_response_time").default(0),
@@ -697,7 +817,10 @@ export const userStatsExtended = pgTable("user_stats_extended", {
 });
 // Interchange rates management (updated by Visa/MC twice yearly)
 export const interchangeRates = pgTable("interchange_rates", {
-    id: varchar("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+    id: varchar("id")
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => crypto.randomUUID()),
     category: varchar("category").notNull().unique(), // CPS/Retail, CPS/Restaurant, etc.
     rate: decimal("rate", { precision: 6, scale: 4 }).notNull(),
     effectiveDate: timestamp("effective_date").notNull(),
@@ -709,14 +832,26 @@ export const interchangeRates = pgTable("interchange_rates", {
 });
 // Processor markup intelligence (competitive analysis)
 export const processorMarkups = pgTable("processor_markups", {
-    id: varchar("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+    id: varchar("id")
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => crypto.randomUUID()),
     processorName: varchar("processor_name").notNull(),
     merchantType: varchar("merchant_type").notNull(), // restaurant, retail, ecommerce, etc.
     volumeTier: varchar("volume_tier").notNull(), // 0-10k, 10k-50k, 50k-250k, 250k+
-    creditMarkup: decimal("credit_markup", { precision: 6, scale: 4 }).notNull(),
+    creditMarkup: decimal("credit_markup", {
+        precision: 6,
+        scale: 4,
+    }).notNull(),
     debitMarkup: decimal("debit_markup", { precision: 6, scale: 4 }).notNull(),
-    authFeeMarkup: decimal("auth_fee_markup", { precision: 6, scale: 4 }).notNull(),
-    averageEffectiveRate: decimal("average_effective_rate", { precision: 6, scale: 4 }).notNull(),
+    authFeeMarkup: decimal("auth_fee_markup", {
+        precision: 6,
+        scale: 4,
+    }).notNull(),
+    averageEffectiveRate: decimal("average_effective_rate", {
+        precision: 6,
+        scale: 4,
+    }).notNull(),
     competitivePosition: varchar("competitive_position").notNull(), // aggressive, competitive, premium
     dataSource: varchar("data_source").notNull(), // market_research, client_analysis, industry_report
     confidenceLevel: integer("confidence_level").notNull(), // 1-10 scale
@@ -724,88 +859,123 @@ export const processorMarkups = pgTable("processor_markups", {
     updatedBy: varchar("updated_by").notNull(),
 });
 // Security tables for bank-level protection
-export const loginAttempts = pgTable('login_attempts', {
-    id: serial('id').primaryKey(),
-    username: varchar('username').notNull(),
-    ipAddress: varchar('ip_address').notNull(),
-    userAgent: text('user_agent'),
-    attemptTime: timestamp('attempt_time').defaultNow().notNull(),
-    success: boolean('success').default(false)
-}, (table) => [
-    index('idx_login_username').on(table.username),
-    index('idx_login_ip').on(table.ipAddress),
-    index('idx_login_time').on(table.attemptTime)
-]);
-export const userSecuritySettings = pgTable('user_security_settings', {
-    userId: varchar('user_id').primaryKey().references(() => users.id),
-    totpEnabled: boolean('totp_enabled').default(false),
-    totpSecret: varchar('totp_secret'),
-    backupCodes: text('backup_codes').array(),
-    lastPasswordChange: timestamp('last_password_change').defaultNow(),
-    passwordHistory: text('password_history').array(),
-    securityQuestions: jsonb('security_questions'),
-    createdAt: timestamp('created_at').defaultNow(),
-    updatedAt: timestamp('updated_at').defaultNow()
+export const loginAttempts = pgTable(
+    "login_attempts",
+    {
+        id: serial("id").primaryKey(),
+        username: varchar("username").notNull(),
+        ipAddress: varchar("ip_address").notNull(),
+        userAgent: text("user_agent"),
+        attemptTime: timestamp("attempt_time").defaultNow().notNull(),
+        success: boolean("success").default(false),
+    },
+    (table) => [
+        index("idx_login_username").on(table.username),
+        index("idx_login_ip").on(table.ipAddress),
+        index("idx_login_time").on(table.attemptTime),
+    ],
+);
+export const userSecuritySettings = pgTable("user_security_settings", {
+    userId: varchar("user_id")
+        .primaryKey()
+        .references(() => users.id),
+    totpEnabled: boolean("totp_enabled").default(false),
+    totpSecret: varchar("totp_secret"),
+    backupCodes: text("backup_codes").array(),
+    lastPasswordChange: timestamp("last_password_change").defaultNow(),
+    passwordHistory: text("password_history").array(),
+    securityQuestions: jsonb("security_questions"),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
 });
-export const documentAccessLogs = pgTable('document_access_logs', {
-    id: serial('id').primaryKey(),
-    userId: varchar('user_id').notNull(),
-    documentId: varchar('document_id').notNull(),
-    accessType: varchar('access_type').notNull(), // view, download, edit
-    allowed: boolean('allowed').notNull(),
-    reason: varchar('reason'),
-    ipAddress: varchar('ip_address').notNull(),
-    userAgent: text('user_agent'),
-    timestamp: timestamp('timestamp').defaultNow().notNull()
-}, (table) => [
-    index('idx_doc_access_user').on(table.userId),
-    index('idx_doc_access_doc').on(table.documentId),
-    index('idx_doc_access_time').on(table.timestamp)
-]);
+export const documentAccessLogs = pgTable(
+    "document_access_logs",
+    {
+        id: serial("id").primaryKey(),
+        userId: varchar("user_id").notNull(),
+        documentId: varchar("document_id").notNull(),
+        accessType: varchar("access_type").notNull(), // view, download, edit
+        allowed: boolean("allowed").notNull(),
+        reason: varchar("reason"),
+        ipAddress: varchar("ip_address").notNull(),
+        userAgent: text("user_agent"),
+        timestamp: timestamp("timestamp").defaultNow().notNull(),
+    },
+    (table) => [
+        index("idx_doc_access_user").on(table.userId),
+        index("idx_doc_access_doc").on(table.documentId),
+        index("idx_doc_access_time").on(table.timestamp),
+    ],
+);
 // Security sessions for bank-level authentication
-export const securitySessions = pgTable('security_sessions', {
-    id: varchar('id').primaryKey(),
-    userId: varchar('user_id').notNull().references(() => users.id),
-    ipAddress: varchar('ip_address').notNull(),
-    userAgent: text('user_agent'),
-    createdAt: timestamp('created_at').defaultNow().notNull(),
-    expiresAt: timestamp('expires_at').notNull(),
-    lastActivity: timestamp('last_activity').defaultNow().notNull(),
-    isActive: boolean('is_active').default(true)
-}, (table) => [
-    index('idx_security_session_user').on(table.userId),
-    index('idx_security_session_active').on(table.isActive),
-    index('idx_security_session_expires').on(table.expiresAt)
-]);
-export const documentPermissions = pgTable('document_permissions', {
-    id: serial('id').primaryKey(),
-    documentId: varchar('document_id').notNull(),
-    userId: varchar('user_id'),
-    groupId: varchar('group_id'),
-    permissionLevel: varchar('permission_level').notNull(), // read, download, write, admin
-    grantedBy: varchar('granted_by').notNull(),
-    grantedAt: timestamp('granted_at').defaultNow(),
-    expiresAt: timestamp('expires_at')
-}, (table) => [
-    index('idx_doc_perm_doc').on(table.documentId),
-    index('idx_doc_perm_user').on(table.userId),
-    index('idx_doc_perm_group').on(table.groupId)
-]);
+export const securitySessions = pgTable(
+    "security_sessions",
+    {
+        id: varchar("id").primaryKey(),
+        userId: varchar("user_id")
+            .notNull()
+            .references(() => users.id),
+        ipAddress: varchar("ip_address").notNull(),
+        userAgent: text("user_agent"),
+        createdAt: timestamp("created_at").defaultNow().notNull(),
+        expiresAt: timestamp("expires_at").notNull(),
+        lastActivity: timestamp("last_activity").defaultNow().notNull(),
+        isActive: boolean("is_active").default(true),
+    },
+    (table) => [
+        index("idx_security_session_user").on(table.userId),
+        index("idx_security_session_active").on(table.isActive),
+        index("idx_security_session_expires").on(table.expiresAt),
+    ],
+);
+export const documentPermissions = pgTable(
+    "document_permissions",
+    {
+        id: serial("id").primaryKey(),
+        documentId: varchar("document_id").notNull(),
+        userId: varchar("user_id"),
+        groupId: varchar("group_id"),
+        permissionLevel: varchar("permission_level").notNull(), // read, download, write, admin
+        grantedBy: varchar("granted_by").notNull(),
+        grantedAt: timestamp("granted_at").defaultNow(),
+        expiresAt: timestamp("expires_at"),
+    },
+    (table) => [
+        index("idx_doc_perm_doc").on(table.documentId),
+        index("idx_doc_perm_user").on(table.userId),
+        index("idx_doc_perm_group").on(table.groupId),
+    ],
+);
 // Define relations
 export const vendorsRelations = relations(vendors, ({ many }) => ({
     intelligence: many(vendorIntelligence),
 }));
-export const vendorIntelligenceRelations = relations(vendorIntelligence, ({ one }) => ({
-    vendor: one(vendors, { fields: [vendorIntelligence.vendorId], references: [vendors.id] }),
-}));
-export const vendorComparisonsRelations = relations(vendorComparisons, ({ one }) => ({
-    user: one(users, { fields: [vendorComparisons.userId], references: [users.id] }),
-}));
+export const vendorIntelligenceRelations = relations(
+    vendorIntelligence,
+    ({ one }) => ({
+        vendor: one(vendors, {
+            fields: [vendorIntelligence.vendorId],
+            references: [vendors.id],
+        }),
+    }),
+);
+export const vendorComparisonsRelations = relations(
+    vendorComparisons,
+    ({ one }) => ({
+        user: one(users, {
+            fields: [vendorComparisons.userId],
+            references: [users.id],
+        }),
+    }),
+);
 export const usersRelations = relations(users, ({ one, many }) => ({
     folders: many(folders),
     chats: many(chats),
     documents: many(documents),
-    stats: one(userStats, { fields: [users.id], references: [userStats.userId] }),
+    stats: one(userStats, {
+        fields: [users.id],
+        references: [userStats.userId],
+    }),
     userAchievements: many(userAchievements),
     favorites: many(favorites),
     trainingFeedback: many(aiTrainingFeedback),
@@ -814,24 +984,48 @@ export const usersRelations = relations(users, ({ one, many }) => ({
 }));
 export const foldersRelations = relations(folders, ({ one, many }) => ({
     user: one(users, { fields: [folders.userId], references: [users.id] }),
-    parent: one(folders, { fields: [folders.parentId], references: [folders.id] }),
+    parent: one(folders, {
+        fields: [folders.parentId],
+        references: [folders.id],
+    }),
     children: many(folders),
     chats: many(chats),
     documents: many(documents),
 }));
-export const personalFoldersRelations = relations(personalFolders, ({ one, many }) => ({
-    user: one(users, { fields: [personalFolders.userId], references: [users.id] }),
-    parent: one(personalFolders, { fields: [personalFolders.parentId], references: [personalFolders.id] }),
-    children: many(personalFolders),
-    documents: many(personalDocuments),
-}));
-export const personalDocumentsRelations = relations(personalDocuments, ({ one }) => ({
-    user: one(users, { fields: [personalDocuments.userId], references: [users.id] }),
-    folder: one(personalFolders, { fields: [personalDocuments.personalFolderId], references: [personalFolders.id] }),
-}));
+export const personalFoldersRelations = relations(
+    personalFolders,
+    ({ one, many }) => ({
+        user: one(users, {
+            fields: [personalFolders.userId],
+            references: [users.id],
+        }),
+        parent: one(personalFolders, {
+            fields: [personalFolders.parentId],
+            references: [personalFolders.id],
+        }),
+        children: many(personalFolders),
+        documents: many(personalDocuments),
+    }),
+);
+export const personalDocumentsRelations = relations(
+    personalDocuments,
+    ({ one }) => ({
+        user: one(users, {
+            fields: [personalDocuments.userId],
+            references: [users.id],
+        }),
+        folder: one(personalFolders, {
+            fields: [personalDocuments.personalFolderId],
+            references: [personalFolders.id],
+        }),
+    }),
+);
 export const chatsRelations = relations(chats, ({ one, many }) => ({
     user: one(users, { fields: [chats.userId], references: [users.id] }),
-    folder: one(folders, { fields: [chats.folderId], references: [folders.id] }),
+    folder: one(folders, {
+        fields: [chats.folderId],
+        references: [folders.id],
+    }),
     messages: many(messages),
 }));
 export const messagesRelations = relations(messages, ({ one }) => ({
@@ -839,7 +1033,10 @@ export const messagesRelations = relations(messages, ({ one }) => ({
 }));
 export const documentsRelations = relations(documents, ({ one }) => ({
     user: one(users, { fields: [documents.userId], references: [users.id] }),
-    folder: one(folders, { fields: [documents.folderId], references: [folders.id] }),
+    folder: one(folders, {
+        fields: [documents.folderId],
+        references: [folders.id],
+    }),
 }));
 export const favoritesRelations = relations(favorites, ({ one }) => ({
     user: one(users, { fields: [favorites.userId], references: [users.id] }),
@@ -869,14 +1066,16 @@ export const insertFavoriteSchema = createInsertSchema(favorites).omit({
     createdAt: true,
 });
 // Insert schemas for new tables
-export const insertUserSchema = createInsertSchema(users).omit({
-    id: true,
-    createdAt: true,
-    updatedAt: true,
-    passwordHash: true,
-}).extend({
-    password: z.string().min(6),
-});
+export const insertUserSchema = createInsertSchema(users)
+    .omit({
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        passwordHash: true,
+    })
+    .extend({
+        password: z.string().min(6),
+    });
 export const insertApiKeySchema = createInsertSchema(apiKeys).omit({
     id: true,
     createdAt: true,
@@ -884,7 +1083,10 @@ export const insertApiKeySchema = createInsertSchema(apiKeys).omit({
 });
 // Learning System Tables
 export const learningPaths = pgTable("learning_paths", {
-    id: varchar("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+    id: varchar("id")
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => crypto.randomUUID()),
     name: varchar("name").notNull(),
     description: text("description").notNull(),
     category: varchar("category").notNull(),
@@ -895,7 +1097,10 @@ export const learningPaths = pgTable("learning_paths", {
     updatedAt: timestamp("updated_at").defaultNow(),
 });
 export const learningModules = pgTable("learning_modules", {
-    id: varchar("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+    id: varchar("id")
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => crypto.randomUUID()),
     title: varchar("title").notNull(),
     description: text("description").notNull(),
     content: text("content").notNull(),
@@ -910,8 +1115,13 @@ export const learningModules = pgTable("learning_modules", {
     updatedAt: timestamp("updated_at").defaultNow(),
 });
 export const userSkills = pgTable("user_skills", {
-    id: varchar("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
-    userId: varchar("user_id").notNull().references(() => users.id),
+    id: varchar("id")
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => crypto.randomUUID()),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id),
     skillName: varchar("skill_name").notNull(),
     category: varchar("category").notNull(),
     level: integer("level").default(1),
@@ -919,7 +1129,10 @@ export const userSkills = pgTable("user_skills", {
     lastUpdated: timestamp("last_updated").defaultNow(),
 });
 export const learningAchievements = pgTable("learning_achievements", {
-    id: varchar("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+    id: varchar("id")
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => crypto.randomUUID()),
     title: varchar("title").notNull(),
     description: text("description").notNull(),
     icon: varchar("icon").notNull(),
@@ -930,15 +1143,29 @@ export const learningAchievements = pgTable("learning_achievements", {
     createdAt: timestamp("created_at").defaultNow(),
 });
 export const userLearningAchievements = pgTable("user_learning_achievements", {
-    id: varchar("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
-    userId: varchar("user_id").notNull().references(() => users.id),
-    achievementId: varchar("achievement_id").notNull().references(() => learningAchievements.id),
+    id: varchar("id")
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => crypto.randomUUID()),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id),
+    achievementId: varchar("achievement_id")
+        .notNull()
+        .references(() => learningAchievements.id),
     unlockedAt: timestamp("unlocked_at").defaultNow(),
 });
 export const userModuleProgress = pgTable("user_module_progress", {
-    id: varchar("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
-    userId: varchar("user_id").notNull().references(() => users.id),
-    moduleId: varchar("module_id").notNull().references(() => learningModules.id),
+    id: varchar("id")
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => crypto.randomUUID()),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id),
+    moduleId: varchar("module_id")
+        .notNull()
+        .references(() => learningModules.id),
     status: varchar("status").notNull(), // not_started, in_progress, completed
     score: integer("score"), // completion score (0-100)
     timeSpent: integer("time_spent").default(0), // in minutes
@@ -947,23 +1174,43 @@ export const userModuleProgress = pgTable("user_module_progress", {
     createdAt: timestamp("created_at").defaultNow(),
 });
 export const userPathProgress = pgTable("user_path_progress", {
-    id: varchar("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
-    userId: varchar("user_id").notNull().references(() => users.id),
-    pathId: varchar("path_id").notNull().references(() => learningPaths.id),
+    id: varchar("id")
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => crypto.randomUUID()),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id),
+    pathId: varchar("path_id")
+        .notNull()
+        .references(() => learningPaths.id),
     currentModuleIndex: integer("current_module_index").default(0),
     completionRate: integer("completion_rate").default(0), // percentage
     startedAt: timestamp("started_at").defaultNow(),
     completedAt: timestamp("completed_at"),
 });
 export const pathModules = pgTable("path_modules", {
-    id: varchar("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
-    pathId: varchar("path_id").notNull().references(() => learningPaths.id),
-    moduleId: varchar("module_id").notNull().references(() => learningModules.id),
+    id: varchar("id")
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => crypto.randomUUID()),
+    pathId: varchar("path_id")
+        .notNull()
+        .references(() => learningPaths.id),
+    moduleId: varchar("module_id")
+        .notNull()
+        .references(() => learningModules.id),
     orderIndex: integer("order_index").notNull(),
 });
 export const userLearningStats = pgTable("user_learning_stats", {
-    id: varchar("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
-    userId: varchar("user_id").notNull().references(() => users.id).unique(),
+    id: varchar("id")
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => crypto.randomUUID()),
+    userId: varchar("user_id")
+        .notNull()
+        .references(() => users.id)
+        .unique(),
     totalXP: integer("total_xp").default(0),
     currentLevel: integer("current_level").default(1),
     modulesCompleted: integer("modules_completed").default(0),
@@ -975,7 +1222,10 @@ export const userLearningStats = pgTable("user_learning_stats", {
 });
 // Training interactions for unified learning system
 export const trainingInteractions = pgTable("training_interactions", {
-    id: varchar("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+    id: varchar("id")
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => crypto.randomUUID()),
     query: text("query").notNull(),
     response: text("response").notNull(),
     source: varchar("source").notNull(), // user_chat, admin_test, admin_correction
@@ -987,33 +1237,49 @@ export const trainingInteractions = pgTable("training_interactions", {
     createdAt: timestamp("created_at").defaultNow(),
 });
 // Personal documents types
-export const insertPersonalDocumentSchema = createInsertSchema(personalDocuments).omit({
+export const insertPersonalDocumentSchema = createInsertSchema(
+    personalDocuments,
+).omit({
     id: true,
     createdAt: true,
     updatedAt: true,
 });
-export const insertPersonalFolderSchema = createInsertSchema(personalFolders).omit({
+export const insertPersonalFolderSchema = createInsertSchema(
+    personalFolders,
+).omit({
     id: true,
     createdAt: true,
     updatedAt: true,
 });
 // Processor pricing management
 export const processorPricing = pgTable("processor_pricing", {
-    id: varchar("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+    id: varchar("id")
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => crypto.randomUUID()),
     processorName: varchar("processor_name").notNull().unique(),
     pricingType: varchar("pricing_type").notNull(), // interchange_plus, tiered, flat_rate, subscription
-    qualifiedRate: decimal("qualified_rate", { precision: 6, scale: 4 }).notNull(),
+    qualifiedRate: decimal("qualified_rate", {
+        precision: 6,
+        scale: 4,
+    }).notNull(),
     midQualifiedRate: decimal("mid_qualified_rate", { precision: 6, scale: 4 }),
     nonQualifiedRate: decimal("non_qualified_rate", { precision: 6, scale: 4 }),
     interchangePlus: decimal("interchange_plus", { precision: 6, scale: 4 }),
     authFee: decimal("auth_fee", { precision: 6, scale: 4 }).notNull(),
     monthlyFee: decimal("monthly_fee", { precision: 8, scale: 2 }).notNull(),
-    statementFee: decimal("statement_fee", { precision: 6, scale: 2 }).notNull(),
+    statementFee: decimal("statement_fee", {
+        precision: 6,
+        scale: 2,
+    }).notNull(),
     batchFee: decimal("batch_fee", { precision: 6, scale: 4 }).notNull(),
     gatewayFee: decimal("gateway_fee", { precision: 6, scale: 2 }),
     pciFee: decimal("pci_fee", { precision: 6, scale: 2 }),
     setupFee: decimal("setup_fee", { precision: 8, scale: 2 }),
-    earlyTerminationFee: decimal("early_termination_fee", { precision: 8, scale: 2 }),
+    earlyTerminationFee: decimal("early_termination_fee", {
+        precision: 8,
+        scale: 2,
+    }),
     contractLength: integer("contract_length").notNull().default(12),
     features: jsonb("features").$type().default([]),
     compatibleHardware: jsonb("compatible_hardware").$type().default([]),
@@ -1024,12 +1290,18 @@ export const processorPricing = pgTable("processor_pricing", {
 });
 // Hardware options management
 export const hardwareOptions = pgTable("hardware_options", {
-    id: varchar("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+    id: varchar("id")
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => crypto.randomUUID()),
     name: varchar("name").notNull(),
     category: varchar("category").notNull(), // terminal, mobile, virtual, gateway, pos_system
     manufacturer: varchar("manufacturer").notNull(),
     model: varchar("model").notNull(),
-    purchasePrice: decimal("purchase_price", { precision: 8, scale: 2 }).notNull(),
+    purchasePrice: decimal("purchase_price", {
+        precision: 8,
+        scale: 2,
+    }).notNull(),
     monthlyLease: decimal("monthly_lease", { precision: 6, scale: 2 }),
     setupFee: decimal("setup_fee", { precision: 6, scale: 2 }),
     features: jsonb("features").$type().default([]),
@@ -1042,7 +1314,10 @@ export const hardwareOptions = pgTable("hardware_options", {
 });
 // PDF reports tracking
 export const pdfReports = pgTable("pdf_reports", {
-    id: varchar("id").primaryKey().notNull().$defaultFn(() => crypto.randomUUID()),
+    id: varchar("id")
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => crypto.randomUUID()),
     reportType: varchar("report_type").notNull(), // comparison, savings, proposal
     merchantName: varchar("merchant_name").notNull(),
     processorName: varchar("processor_name"),
@@ -1057,11 +1332,15 @@ export const insertVendorSchema = createInsertSchema(vendors).omit({
     createdAt: true,
     updatedAt: true,
 });
-export const insertVendorIntelligenceSchema = createInsertSchema(vendorIntelligence).omit({
+export const insertVendorIntelligenceSchema = createInsertSchema(
+    vendorIntelligence,
+).omit({
     id: true,
     createdAt: true,
 });
-export const insertVendorComparisonSchema = createInsertSchema(vendorComparisons).omit({
+export const insertVendorComparisonSchema = createInsertSchema(
+    vendorComparisons,
+).omit({
     id: true,
     createdAt: true,
 });
@@ -1083,31 +1362,41 @@ export const apiUsageLogs = pgTable("api_usage_logs", {
     errorMessage: text("error_message"),
     createdAt: timestamp("created_at").defaultNow(),
 });
-// Monthly Usage Summary for dashboard display  
-export const monthlyUsageSummary = pgTable("monthly_usage_summary", {
-    id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("user_id").references(() => users.id),
-    year: integer("year").notNull(),
-    month: integer("month").notNull(), // 1-12
-    provider: varchar("provider").notNull(),
-    model: varchar("model").notNull(),
-    totalRequests: integer("total_requests").default(0),
-    totalInputTokens: integer("total_input_tokens").default(0),
-    totalOutputTokens: integer("total_output_tokens").default(0),
-    totalTokens: integer("total_tokens").default(0),
-    totalCost: decimal("total_cost", { precision: 10, scale: 2 }), // USD
-    createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at").defaultNow(),
-}, (table) => [
-    index("idx_monthly_usage_user_date").on(table.userId, table.year, table.month),
-    index("idx_monthly_usage_provider").on(table.provider, table.model),
-]);
+// Monthly Usage Summary for dashboard display
+export const monthlyUsageSummary = pgTable(
+    "monthly_usage_summary",
+    {
+        id: uuid("id").primaryKey().defaultRandom(),
+        userId: varchar("user_id").references(() => users.id),
+        year: integer("year").notNull(),
+        month: integer("month").notNull(), // 1-12
+        provider: varchar("provider").notNull(),
+        model: varchar("model").notNull(),
+        totalRequests: integer("total_requests").default(0),
+        totalInputTokens: integer("total_input_tokens").default(0),
+        totalOutputTokens: integer("total_output_tokens").default(0),
+        totalTokens: integer("total_tokens").default(0),
+        totalCost: decimal("total_cost", { precision: 10, scale: 2 }), // USD
+        createdAt: timestamp("created_at").defaultNow(),
+        updatedAt: timestamp("updated_at").defaultNow(),
+    },
+    (table) => [
+        index("idx_monthly_usage_user_date").on(
+            table.userId,
+            table.year,
+            table.month,
+        ),
+        index("idx_monthly_usage_provider").on(table.provider, table.model),
+    ],
+);
 // Insert schemas for admin tables
 export const insertUserSessionSchema = createInsertSchema(userSessions).omit({
     id: true,
     createdAt: true,
 });
-export const insertPromptUsageLogSchema = createInsertSchema(promptUsageLog).omit({
+export const insertPromptUsageLogSchema = createInsertSchema(
+    promptUsageLog,
+).omit({
     id: true,
     usedAt: true,
 });
@@ -1144,7 +1433,7 @@ export const vectorIndices = pgTable("vector_indices", {
     name: varchar("name").notNull(),
     description: text("description"),
     dimensions: integer("dimensions").default(1536),
-    indexType: varchar("index_type").default('cosine'), // cosine, euclidean, dot_product
+    indexType: varchar("index_type").default("cosine"), // cosine, euclidean, dot_product
     documentCount: integer("document_count").default(0),
     lastOptimized: timestamp("last_optimized"),
     isActive: boolean("is_active").default(true),
@@ -1155,7 +1444,7 @@ export const vectorIndices = pgTable("vector_indices", {
 export const documentProcessingJobs = pgTable("document_processing_jobs", {
     id: uuid("id").primaryKey().defaultRandom(),
     documentId: uuid("document_id").references(() => documents.id),
-    status: varchar("status").default('pending'), // pending, processing, completed, failed
+    status: varchar("status").default("pending"), // pending, processing, completed, failed
     jobType: varchar("job_type").notNull(), // extract, vectorize, analyze, reindex
     priority: integer("priority").default(1),
     attempts: integer("attempts").default(0),
@@ -1206,8 +1495,12 @@ export const systemAnalytics = pgTable("system_analytics", {
 // Chat Review Status for Admin Review Center
 export const chatReviews = pgTable("chat_reviews", {
     id: uuid("id").primaryKey().defaultRandom(),
-    chatId: uuid("chat_id").notNull().references(() => chats.id, { onDelete: "cascade" }),
-    reviewedBy: varchar("reviewed_by").references(() => users.id, { onDelete: "set null" }),
+    chatId: uuid("chat_id")
+        .notNull()
+        .references(() => chats.id, { onDelete: "cascade" }),
+    reviewedBy: varchar("reviewed_by").references(() => users.id, {
+        onDelete: "set null",
+    }),
     reviewStatus: varchar("review_status").notNull().default("pending"), // pending, approved, needs_correction, skipped
     reviewNotes: text("review_notes"),
     correctionsMade: integer("corrections_made").default(0),
@@ -1219,31 +1512,54 @@ export const chatReviews = pgTable("chat_reviews", {
 // Message Corrections for tracking admin improvements
 export const messageCorrections = pgTable("message_corrections", {
     id: uuid("id").primaryKey().defaultRandom(),
-    messageId: uuid("message_id").notNull().references(() => messages.id, { onDelete: "cascade" }),
-    chatId: uuid("chat_id").notNull().references(() => chats.id, { onDelete: "cascade" }),
+    messageId: uuid("message_id")
+        .notNull()
+        .references(() => messages.id, { onDelete: "cascade" }),
+    chatId: uuid("chat_id")
+        .notNull()
+        .references(() => chats.id, { onDelete: "cascade" }),
     originalContent: text("original_content").notNull(),
     correctedContent: text("corrected_content").notNull(),
-    correctedBy: varchar("corrected_by").notNull().references(() => users.id, { onDelete: "cascade" }),
+    correctedBy: varchar("corrected_by")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
     improvementType: varchar("improvement_type").notNull(), // accuracy, completeness, tone, factual_error
     createdAt: timestamp("created_at").defaultNow(),
 });
 // Chat Review Center relations (defined after tables)
 export const chatReviewsRelations = relations(chatReviews, ({ one }) => ({
     chat: one(chats, { fields: [chatReviews.chatId], references: [chats.id] }),
-    reviewer: one(users, { fields: [chatReviews.reviewedBy], references: [users.id] }),
+    reviewer: one(users, {
+        fields: [chatReviews.reviewedBy],
+        references: [users.id],
+    }),
 }));
-export const messageCorrectionsRelations = relations(messageCorrections, ({ one }) => ({
-    message: one(messages, { fields: [messageCorrections.messageId], references: [messages.id] }),
-    chat: one(chats, { fields: [messageCorrections.chatId], references: [chats.id] }),
-    corrector: one(users, { fields: [messageCorrections.correctedBy], references: [users.id] }),
-}));
+export const messageCorrectionsRelations = relations(
+    messageCorrections,
+    ({ one }) => ({
+        message: one(messages, {
+            fields: [messageCorrections.messageId],
+            references: [messages.id],
+        }),
+        chat: one(chats, {
+            fields: [messageCorrections.chatId],
+            references: [chats.id],
+        }),
+        corrector: one(users, {
+            fields: [messageCorrections.correctedBy],
+            references: [users.id],
+        }),
+    }),
+);
 // Chat Review Center schema exports
 export const insertChatReviewSchema = createInsertSchema(chatReviews).omit({
     id: true,
     createdAt: true,
     updatedAt: true,
 });
-export const insertMessageCorrectionSchema = createInsertSchema(messageCorrections).omit({
+export const insertMessageCorrectionSchema = createInsertSchema(
+    messageCorrections,
+).omit({
     id: true,
     createdAt: true,
 });
@@ -1255,8 +1571,10 @@ export const retrievalConfigs = pgTable("retrieval_configs", {
     maxResults: integer("max_results").default(10),
     chunkSize: integer("chunk_size").default(1000),
     chunkOverlap: integer("chunk_overlap").default(200),
-    searchStrategy: varchar("search_strategy").default('hybrid'),
-    embeddingModel: varchar("embedding_model").default('text-embedding-3-large'),
+    searchStrategy: varchar("search_strategy").default("hybrid"),
+    embeddingModel: varchar("embedding_model").default(
+        "text-embedding-3-large",
+    ),
     isDefault: boolean("is_default").default(false),
     createdAt: timestamp("created_at").defaultNow(),
 });
@@ -1266,8 +1584,8 @@ export const contentFilters = pgTable("content_filters", {
     name: varchar("name").notNull(),
     filterType: varchar("filter_type").notNull(), // profanity, bias, compliance
     pattern: text("pattern").notNull(),
-    severity: varchar("severity").default('medium'), // low, medium, high, critical
-    action: varchar("action").default('flag'), // flag, block, modify
+    severity: varchar("severity").default("medium"), // low, medium, high, critical
+    action: varchar("action").default("flag"), // flag, block, modify
     isActive: boolean("is_active").default(true),
     createdAt: timestamp("created_at").defaultNow(),
 });
@@ -1275,11 +1593,15 @@ export const insertAdminSettingSchema = createInsertSchema(adminSettings).omit({
     id: true,
     updatedAt: true,
 });
-export const insertAdminSettingsSchema = createInsertSchema(adminSettings).omit({
-    id: true,
-    updatedAt: true,
-});
-export const insertQAKnowledgeBaseSchema = createInsertSchema(qaKnowledgeBase).omit({
+export const insertAdminSettingsSchema = createInsertSchema(adminSettings).omit(
+    {
+        id: true,
+        updatedAt: true,
+    },
+);
+export const insertQAKnowledgeBaseSchema = createInsertSchema(
+    qaKnowledgeBase,
+).omit({
     id: true,
     createdAt: true,
     updatedAt: true,
@@ -1288,7 +1610,9 @@ export const insertDocumentTagSchema = createInsertSchema(documentTags).omit({
     id: true,
     createdAt: true,
 });
-export const insertMerchantApplicationSchema = createInsertSchema(merchantApplications).omit({
+export const insertMerchantApplicationSchema = createInsertSchema(
+    merchantApplications,
+).omit({
     id: true,
     createdAt: true,
     updatedAt: true,
@@ -1298,7 +1622,9 @@ export const insertAchievementSchema = createInsertSchema(achievements).omit({
     id: true,
     createdAt: true,
 });
-export const insertUserAchievementSchema = createInsertSchema(userAchievements).omit({
+export const insertUserAchievementSchema = createInsertSchema(
+    userAchievements,
+).omit({
     id: true,
     unlockedAt: true,
 });
@@ -1347,7 +1673,9 @@ export const insertUserChatLogSchema = createInsertSchema(userChatLogs).omit({
 // Vendor Intelligence Tables - Note: vendors table defined above
 export const vendorDocuments = pgTable("vendor_documents", {
     id: varchar("id").primaryKey().notNull(),
-    vendorId: uuid("vendor_id").notNull().references(() => vendors.id),
+    vendorId: uuid("vendor_id")
+        .notNull()
+        .references(() => vendors.id),
     url: varchar("url").notNull(),
     directDownloadUrl: varchar("direct_download_url"), // Direct PDF/file link
     title: varchar("title").notNull(),
@@ -1368,7 +1696,9 @@ export const vendorDocuments = pgTable("vendor_documents", {
 });
 export const documentChanges = pgTable("document_changes", {
     id: varchar("id").primaryKey().notNull(),
-    documentId: varchar("document_id").notNull().references(() => vendorDocuments.id),
+    documentId: varchar("document_id")
+        .notNull()
+        .references(() => vendorDocuments.id),
     changeType: varchar("change_type").notNull(), // 'new', 'updated', 'removed'
     changeDetails: jsonb("change_details"), // Detailed diff information
     detectedAt: timestamp("detected_at").defaultNow(),
@@ -1377,7 +1707,9 @@ export const documentChanges = pgTable("document_changes", {
 // Document approval workflow tables
 export const pendingDocumentApprovals = pgTable("pending_document_approvals", {
     id: varchar("id").primaryKey().notNull(),
-    vendorId: uuid("vendor_id").notNull().references(() => vendors.id),
+    vendorId: uuid("vendor_id")
+        .notNull()
+        .references(() => vendors.id),
     documentTitle: varchar("document_title").notNull(),
     documentUrl: varchar("document_url").notNull(),
     documentType: varchar("document_type").notNull(), // 'pdf', 'sales_flyer', 'product_announcement', 'blog_post', 'news', 'promotion'
@@ -1387,22 +1719,29 @@ export const pendingDocumentApprovals = pgTable("pending_document_approvals", {
     suggestedFolder: varchar("suggested_folder"), // AI suggested folder placement
     newsWorthiness: integer("news_worthiness").default(0), // 1-10 scale
     detectedAt: timestamp("detected_at").defaultNow(),
-    status: varchar("status").default('pending'), // 'pending', 'approved', 'rejected', 'archived'
+    status: varchar("status").default("pending"), // 'pending', 'approved', 'rejected', 'archived'
 });
-export const documentApprovalDecisions = pgTable("document_approval_decisions", {
-    id: varchar("id").primaryKey().notNull(),
-    approvalId: varchar("approval_id").notNull().references(() => pendingDocumentApprovals.id),
-    adminUserId: varchar("admin_user_id").notNull(),
-    decision: varchar("decision").notNull(), // 'approve', 'reject'
-    selectedFolder: varchar("selected_folder"), // Admin chosen folder
-    permissionLevel: varchar("permission_level"), // 'public', 'admin_only', 'manager_access', 'training_data'
-    decidedAt: timestamp("decided_at").defaultNow(),
-    notes: text("notes"), // Admin notes
-});
+export const documentApprovalDecisions = pgTable(
+    "document_approval_decisions",
+    {
+        id: varchar("id").primaryKey().notNull(),
+        approvalId: varchar("approval_id")
+            .notNull()
+            .references(() => pendingDocumentApprovals.id),
+        adminUserId: varchar("admin_user_id").notNull(),
+        decision: varchar("decision").notNull(), // 'approve', 'reject'
+        selectedFolder: varchar("selected_folder"), // Admin chosen folder
+        permissionLevel: varchar("permission_level"), // 'public', 'admin_only', 'manager_access', 'training_data'
+        decidedAt: timestamp("decided_at").defaultNow(),
+        notes: text("notes"), // Admin notes
+    },
+);
 // News and updates dashboard
 export const vendorNews = pgTable("vendor_news", {
     id: varchar("id").primaryKey().notNull(),
-    vendorId: uuid("vendor_id").notNull().references(() => vendors.id),
+    vendorId: uuid("vendor_id")
+        .notNull()
+        .references(() => vendors.id),
     title: varchar("title").notNull(),
     summary: text("summary"),
     content: text("content"),
@@ -1417,26 +1756,36 @@ export const vendorNews = pgTable("vendor_news", {
 export const vendorRelations = relations(vendors, ({ many }) => ({
     documents: many(vendorDocuments),
 }));
-export const vendorDocumentRelations = relations(vendorDocuments, ({ one, many }) => ({
-    vendor: one(vendors, {
-        fields: [vendorDocuments.vendorId],
-        references: [vendors.id],
+export const vendorDocumentRelations = relations(
+    vendorDocuments,
+    ({ one, many }) => ({
+        vendor: one(vendors, {
+            fields: [vendorDocuments.vendorId],
+            references: [vendors.id],
+        }),
+        changes: many(documentChanges),
     }),
-    changes: many(documentChanges),
-}));
-export const documentChangeRelations = relations(documentChanges, ({ one }) => ({
-    document: one(vendorDocuments, {
-        fields: [documentChanges.documentId],
-        references: [vendorDocuments.id],
+);
+export const documentChangeRelations = relations(
+    documentChanges,
+    ({ one }) => ({
+        document: one(vendorDocuments, {
+            fields: [documentChanges.documentId],
+            references: [vendorDocuments.id],
+        }),
     }),
-}));
+);
 // Additional vendor document schema types (insertVendorSchema already defined above)
-export const insertVendorDocumentSchema = createInsertSchema(vendorDocuments).omit({
+export const insertVendorDocumentSchema = createInsertSchema(
+    vendorDocuments,
+).omit({
     id: true,
     discoveredAt: true,
     lastChecked: true,
 });
-export const insertDocumentChangeSchema = createInsertSchema(documentChanges).omit({
+export const insertDocumentChangeSchema = createInsertSchema(
+    documentChanges,
+).omit({
     id: true,
     detectedAt: true,
 });
