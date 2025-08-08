@@ -230,7 +230,7 @@ export const documents = pgTable("documents", {
     mimeType: varchar("mime_type", { length: 100 }).notNull(),
     size: integer("size").notNull(),
     path: text("path").notNull(),
-    userId: varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    userId: varchar("user_id").references(() => users.id, { onDelete: "cascade" }),
     folderId: uuid("folder_id").references(() => folders.id, { onDelete: "set null" }),
     isFavorite: boolean("is_favorite").default(false),
     contentHash: varchar("content_hash", { length: 64 }), // SHA256 hash for duplicate detection
